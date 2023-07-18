@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class IndexScreen extends StatefulWidget {
   const IndexScreen({Key? key}) : super(key: key);
@@ -11,6 +12,9 @@ class IndexScreen extends StatefulWidget {
 class _IndexScreenState extends State<IndexScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context)!;
+
     return Container(
       width: 390,
       height: 844,
@@ -23,16 +27,26 @@ class _IndexScreenState extends State<IndexScreen> {
       ),
       child: Stack(
         children: [
-          Positioned(
-            top: 189,
-            left: 61,
-            child: Container(
-              width: 273,
-              height: 100.76394653320312,
-              decoration: const BoxDecoration(
-                color: Color.fromRGBO(255, 255, 255, 0),
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 300.0),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color.fromRGBO(255, 255, 255, 0),
+                ),
+                child: SvgPicture.asset("assets/dribla_logo.svg"),
               ),
-              child: SvgPicture.asset("assets/dribla_logo.svg"),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 300.0),
+              child: Text(
+                loc.lookingForMat,
+                style: theme.textTheme.headlineMedium,
+              ),
             ),
           ),
         ],
