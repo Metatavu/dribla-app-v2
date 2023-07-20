@@ -14,5 +14,13 @@
     "settingsButtonText": "Asetukset",
     "@settingsButtonText": {
         "description": "Settings button text"
+    },
+    "unableToConnectTitle": "Yhteyden muodostaminen Dribla-laitteeseen epäonnistui",
+    "@unableToConnectTitle": {
+        "description": "Unable to connect dialog title"
+    },
+    "unableToConnectBody": "Laite voi olla pois päältä, tai sovelluksella ei ole lupaa Bluetoothin käyttöön. Varmista että laite on päällä ja että mobiililaitteesi sallii Bluetoothin käytön asetuksista.",
+    "@unableToConnectBody": {
+        "description": "Unable to connect dialog body"
     }
 }
