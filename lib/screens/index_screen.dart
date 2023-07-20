@@ -16,10 +16,8 @@ class _IndexScreenState extends State<IndexScreen> {
     final loc = AppLocalizations.of(context)!;
 
     return Container(
-      width: 390,
-      height: 844,
       decoration: const BoxDecoration(
-        color: Color.fromRGBO(255, 255, 255, 0),
+        color: Colors.transparent,
         image: DecorationImage(
           image: AssetImage("assets/dribla_background.jpg"),
           fit: BoxFit.fill,

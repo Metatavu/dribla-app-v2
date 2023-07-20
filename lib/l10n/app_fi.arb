@@ -2,5 +2,17 @@
     "lookingForMat": "Etsitään mattoa...",
     "@lookingForMat": {
         "description": "Looking for mat message"
+    },
+    "chooseGame": "Valitse peli",
+    "@chooseGame": {
+        "description": "Choose game message"
+    },
+    "playButtonText": "PELAAMAAN",
+    "@playButtonText": {
+        "description": "Play button text"
+    },
+    "settingsButtonText": "Asetukset",
+    "@settingsButtonText": {
+        "description": "Settings button text"
     }
 }

@@ -1,3 +1,5 @@
+import "package:dribla_app_v2/bluetooth/mock_bluetooth.dart";
+import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:dribla_app_v2/screens/index_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -41,11 +43,56 @@ class MyApp extends StatelessWidget {
             fontStyle: FontStyle.italic,
             fontSize: 28.0,
           ),
+          bodySmall: TextStyle(
+            color: Colors.white,
+            decoration: TextDecoration.none,
+            fontFamily: "Nunito",
+            fontWeight: FontWeight.normal,
+            fontStyle: FontStyle.normal,
+            fontSize: 16.0,
+          ),
+        ),
+        elevatedButtonTheme: const ElevatedButtonThemeData(
+          style: ButtonStyle(
+            shape: MaterialStatePropertyAll(ContinuousRectangleBorder()),
+            backgroundColor: MaterialStatePropertyAll(Colors.red),
+            shadowColor: MaterialStatePropertyAll(Colors.white),
+          ),
         ),
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const IndexScreen(),
+      home: const DriblaAppScreen(),
+    );
+  }
+}
+
+class DriblaAppScreen extends StatefulWidget {
+  const DriblaAppScreen({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _DriblaAppScreenState();
+}
+
+class _DriblaAppScreenState extends State<DriblaAppScreen> {
+  bool _btConnected = false;
+  final BluetoothService _btService = BluetoothService();
+
+  @override
+  void initState() {
+    super.initState();
+    _btService.connect().then(
+          (value) => setState(() {
+            _btConnected = value;
+          }),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 250),
+      child: _btConnected ? const ChooseGameScreen() : const IndexScreen(),
     );
   }
 }

@@ -1,3 +1,6 @@
 {
-    "lookingForMat": "Looking for mat..."
+    "lookingForMat": "Looking for mat...",
+    "chooseGame": "Choose game",
+    "playButtonText": "START GAME",
+    "settingsButtonText": "Settings"
 }

@@ -38,6 +38,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  flutter_swiper_plus: ^2.0.4
+  flutter_blue: ^0.8.0
 
 dev_dependencies:
   flutter_test:
