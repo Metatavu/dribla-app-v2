@@ -1,7 +1,7 @@
-import "package:dribla_app_v2/bluetooth/mock_bluetooth.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:dribla_app_v2/screens/index_screen.dart";
 import "package:flutter/material.dart";
+import "package:flutter_blue/flutter_blue.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 void main() {
@@ -75,24 +75,117 @@ class DriblaAppScreen extends StatefulWidget {
 }
 
 class _DriblaAppScreenState extends State<DriblaAppScreen> {
-  bool _btConnected = false;
-  final BluetoothService _btService = BluetoothService();
+  bool _connected = false;
+
+  final FlutterBlue _flutterBlue = FlutterBlue.instance;
+  BluetoothDevice? _selectedDevice;
+
+  BluetoothCharacteristic? _sensorCharacteristic;
+  BluetoothCharacteristic? _ledCharacteristic;
+
+  void _showErrorDialog() {
+    final loc = AppLocalizations.of(context)!;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(loc.unableToConnectTitle),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  Text(loc.unableToConnectTitle),
+                  Text(loc.unableToConnectBody),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<void> _connect(
+      [Duration scanTimeout = const Duration(seconds: 3)]) async {
+    _flutterBlue.scan(timeout: scanTimeout).listen((scanResult) async {
+      if (scanResult.device.name.isNotEmpty && _selectedDevice == null) {
+        await scanResult.device.connect();
+        List<BluetoothService> bluetoothServices =
+            await scanResult.device.discoverServices();
+        BluetoothService? service = bluetoothServices
+            .where((element) =>
+                element.uuid.toString() ==
+                'cb421a98-1247-442f-880d-e8259078f1f4')
+            .firstOrNull;
+        BluetoothService? ledService = bluetoothServices
+            .where((element) =>
+                element.uuid.toString() ==
+                '4a82064c-e97b-44b3-9006-1871994ebc02')
+            .firstOrNull;
+        if (service != null) {
+          setState(() {
+            _connected = true;
+            _selectedDevice = scanResult.device;
+            _sensorCharacteristic = service.characteristics
+                .where((element) =>
+                    element.uuid.toString() ==
+                    "cf6b3e9f-caa7-42ff-89d0-5309b95c9c7b")
+                .firstOrNull;
+            _ledCharacteristic = ledService?.characteristics
+                .where((element) =>
+                    element.uuid.toString() ==
+                    "5444a605-ac7e-4c2f-96ee-170293b4292a")
+                .firstOrNull;
+          });
+        } else {
+          await scanResult.device.disconnect();
+        }
+      }
+    }).onDone(() async {
+      if (!_connected) {
+        _showErrorDialog();
+      } else {
+        await _sensorCharacteristic?.setNotifyValue(true);
+        _sensorCharacteristic?.value.listen((value) async {
+          if (value.first == 1) {
+            await _ledCharacteristic
+                ?.write([0, 0, 0, 0], withoutResponse: true);
+          } else {
+            await _ledCharacteristic
+                ?.write([0, 255, 0, 255], withoutResponse: true);
+          }
+        });
+      }
+    });
+  }
+
+  Future<void> _disconnect() async {
+    _flutterBlue.stopScan();
+    _selectedDevice?.disconnect();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _disconnect();
+  }
 
   @override
   void initState() {
     super.initState();
-    _btService.connect().then(
-          (value) => setState(() {
-            _btConnected = value;
-          }),
-        );
+    _connect();
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
-      child: _btConnected ? const ChooseGameScreen() : const IndexScreen(),
+      child: _connected ? const ChooseGameScreen() : const IndexScreen(),
     );
   }
 }
