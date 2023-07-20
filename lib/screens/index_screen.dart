@@ -1,3 +1,4 @@
+import "package:dribla_app_v2/assets.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -19,7 +20,7 @@ class _IndexScreenState extends State<IndexScreen> {
       decoration: const BoxDecoration(
         color: Colors.transparent,
         image: DecorationImage(
-          image: AssetImage("assets/dribla_background.jpg"),
+          image: AssetImage(Assets.backgroundImageAsset),
           fit: BoxFit.fill,
         ),
       ),
@@ -33,7 +34,7 @@ class _IndexScreenState extends State<IndexScreen> {
                 decoration: const BoxDecoration(
                   color: Color.fromRGBO(255, 255, 255, 0),
                 ),
-                child: SvgPicture.asset("assets/dribla_logo.svg"),
+                child: SvgPicture.asset(Assets.logoAsset),
               ),
             ),
           ),

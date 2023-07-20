@@ -1,3 +1,4 @@
+import 'package:dribla_app_v2/assets.dart';
 import 'package:flutter/material.dart';
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,7 +27,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
       decoration: const BoxDecoration(
         color: Colors.transparent,
         image: DecorationImage(
-          image: AssetImage("assets/dribla_choose_game_background.jpg"),
+          image: AssetImage(Assets.chooseGameBackgroundImageAsset),
           fit: BoxFit.fill,
         ),
       ),
@@ -41,7 +42,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                   color: Color.fromRGBO(255, 255, 255, 0),
                 ),
                 child: SvgPicture.asset(
-                  "assets/dribla_logo.svg",
+                  Assets.logoAsset,
                   width: 138,
                 ),
               ),
@@ -66,7 +67,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
-                      SvgPicture.asset("assets/game_icon.svg"),
+                      SvgPicture.asset(Assets.gameIconAsset),
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0),
                         child: Text(
