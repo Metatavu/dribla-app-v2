@@ -86,7 +86,11 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     final loc = AppLocalizations.of(context)!;
 
     setState(() {
-      _gameTitle = loc.startGameText;
+      if (_timerValue > 0) {
+        _gameTitle = loc.startGameText;
+      } else {
+        _gameTitle = loc.tapsLeft;
+      }
     });
 
     return Container(
@@ -138,7 +142,7 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        _timerValue > 0 ? _timerValue.toString() : 'Taps left: $_tapCount',
+                        _timerValue > 0 ? _timerValue.toString() : _tapCount.toString(),
                         style: theme.textTheme.headlineMedium?.copyWith(fontSize: (2 * num.parse(theme.textTheme.headlineMedium?.fontSize.toString() ?? "20")).toDouble()), // Double the font size
                         textAlign: TextAlign.center,
                       ),
