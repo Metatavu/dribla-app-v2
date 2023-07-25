@@ -1,36 +1,79 @@
 import 'package:dribla_app_v2/assets.dart';
-import 'package:dribla_app_v2/screens/play_game_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_swiper_plus/flutter_swiper_plus.dart';
+import 'dart:async';
 
-class ChooseGameScreen extends StatefulWidget {
+import 'choose_game_screen.dart';
+
+class PlayGameScreen extends StatefulWidget {
   final BluetoothCharacteristic? sensorCharacteristic;
   final BluetoothCharacteristic? ledCharacteristic;
 
-  const ChooseGameScreen({
+  const PlayGameScreen({
     Key? key,
     this.sensorCharacteristic,
     this.ledCharacteristic,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ChooseGameScreenState();
+  State<StatefulWidget> createState() => _PlayGameScreenState();
 }
 
-class _ChooseGameScreenState extends State<ChooseGameScreen> {
-  static const String _gameDescription =
-      """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
-      eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce 
-      cubilia, pretium sagittis non feugiat hendrerit.""";
-  static const String _gameTitle = "Pujottelu";
+class _PlayGameScreenState extends State<PlayGameScreen> {
+  String _gameTitle = "";
+  int _tapCount = 10; // Total taps allowed
+  bool _timerActive = true;
+  int _timerValue = 5; // Starting value for the timer
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    Timer.periodic(oneSec, (timer) {
+      setState(() {
+        if (_timerValue > 0) {
+          _timerValue--;
+        } else {
+          _timerActive = false;
+          timer.cancel(); // Stop the timer when it reaches 0
+        }
+      });
+    });
+  }
+
+  void handleTap() {
+    setState(() {
+      if (!_timerActive && _tapCount > 0) {
+        _tapCount--;
+        if (_tapCount == 0) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChooseGameScreen(
+                sensorCharacteristic: widget.sensorCharacteristic,
+                ledCharacteristic: widget.ledCharacteristic,
+              ),
+            ),
+          );
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
+
+    setState(() {
+      _gameTitle = loc.startGameText;
+    });
 
     return Container(
       decoration: const BoxDecoration(
@@ -57,53 +100,34 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-              child: Text(
-                loc.chooseGame,
-                style: theme.textTheme.headlineMedium,
-              ),
-            ),
-          ),
+          
           Expanded(
-            //  width: 200,
-            //height: 400,
-            child: SizedBox(
-              width: 300,
-              child: Swiper(
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      SvgPicture.asset(Assets.gameIconAsset),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                        child: Text(
-                          _gameTitle,
-                          style: theme.textTheme.headlineMedium,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Text(
-                          _gameDescription,
-                          style: theme.textTheme.bodySmall,
-                          textAlign: TextAlign.center,
-                        ),
-                      )
-                    ],
-                  );
-                },
-                itemCount: 3,
-                loop: false,
-                pagination: const SwiperPagination(
-                  alignment: Alignment.topCenter,
-                  margin: EdgeInsets.only(top: 400.0),
-                  builder: DotSwiperPaginationBuilder(activeColor: Colors.red),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Text(
+                    _gameTitle,
+                    style: theme.textTheme.headlineMedium,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: handleTap,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        _timerActive ? _timerValue.toString() : 'Taps left: $_tapCount',
+                        style: theme.textTheme.headlineMedium?.copyWith(fontSize: (2 * num.parse(theme.textTheme.headlineMedium?.fontSize.toString() ?? "20")).toDouble()), // Double the font size
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Container(
@@ -120,7 +144,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlayGameScreen(
+                    builder: (context) => ChooseGameScreen(
                       sensorCharacteristic: widget.sensorCharacteristic,
                       ledCharacteristic: widget.ledCharacteristic,
                     ),
@@ -128,9 +152,11 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 );
               },
               style: theme.elevatedButtonTheme.style?.copyWith(
-                  fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0))),
+                fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
+                backgroundColor: const MaterialStatePropertyAll(Colors.blue),
+              ),
               child: Text(
-                loc.playButtonText,
+                loc.backButtonText,
                 style: theme.textTheme.headlineMedium,
               ),
             ),

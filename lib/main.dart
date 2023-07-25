@@ -1,23 +1,22 @@
-import "package:dribla_app_v2/screens/choose_game_screen.dart";
-import "package:dribla_app_v2/screens/index_screen.dart";
-import "package:flutter/material.dart";
-import "package:flutter_blue/flutter_blue.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import 'package:dribla_app_v2/screens/choose_game_screen.dart';
+import 'package:dribla_app_v2/screens/index_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Flutter Demo",
       theme: ThemeData(
-        // This is the theme of your application.
+                // This is the theme of your application.
         //
         // TRY THIS: Try running your application with "flutter run". You"ll see
         // the application has a blue toolbar. Then, without quitting the app,
@@ -68,7 +67,7 @@ class MyApp extends StatelessWidget {
 }
 
 class DriblaAppScreen extends StatefulWidget {
-  const DriblaAppScreen({super.key});
+  const DriblaAppScreen({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DriblaAppScreenState();
@@ -185,7 +184,16 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
-      child: _connected ? const ChooseGameScreen() : const IndexScreen(),
+      child: ChooseGameScreen(
+             sensorCharacteristic: _sensorCharacteristic,
+              ledCharacteristic: _ledCharacteristic,
+            )
+      // child: _connected
+      //     ? ChooseGameScreen(
+      //         sensorCharacteristic: _sensorCharacteristic,
+      //         ledCharacteristic: _ledCharacteristic,
+      //       )
+      //     : const IndexScreen(),
     );
   }
 }

@@ -4,5 +4,9 @@
     "playButtonText": "START GAME",
     "settingsButtonText": "Settings",
     "unableToConnectTitle": "Unable to connect to Dribla device.",
-    "unableToConnectBody": "Device may be offline, or then app isn't allowed to access bluetooth devices.\nPlease make sure the device is online, and your mobile device permits bluetooth access for the application."
+    "unableToConnectBody": "Device may be offline, or then app isn't allowed to access bluetooth devices.\nPlease make sure the device is online, and your mobile device permits bluetooth access for the application.",
+    "backButtonText": "Back",
+    "startGameText": "LET`S START",
+    "tapsLeft": "Left"
+
 }
