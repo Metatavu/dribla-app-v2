@@ -24,7 +24,6 @@ class PlayGameScreen extends StatefulWidget {
 class _PlayGameScreenState extends State<PlayGameScreen> {
   String _gameTitle = "";
   int _tapCount = 10; // Total taps allowed
-  bool _timerActive = true;
   int _timerValue = 5; // Starting value for the timer
 
   @override
@@ -40,28 +39,43 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
         if (_timerValue > 0) {
           _timerValue--;
         } else {
-          _timerActive = false;
           timer.cancel(); // Stop the timer when it reaches 0
+          listenToSensorCharacteristic();
         }
       });
     });
   }
 
-  void handleTap() {
+  void listenToSensorCharacteristic() {
+    widget.sensorCharacteristic?.value.listen((value) async {
+      if (value.first == 1 && _tapCount > 0) {
+        // If the first value is 1 in the characteristic value and tap count is greater than 0
+        await writeLedCharacteristic([0, 0, 0, 0]);
+        decreaseTapCount(); // Decrease the tap count
+      } else if (value.first == 0) {
+        // If the first value is 0 in the characteristic value
+        await writeLedCharacteristic([0, 255, 0, 255]);
+      }
+    });
+  }
+
+  Future<void> writeLedCharacteristic(List<int> value) async {
+    await widget.ledCharacteristic?.write(value, withoutResponse: true);
+  }
+
+  void decreaseTapCount() {
     setState(() {
-      if (!_timerActive && _tapCount > 0) {
-        _tapCount--;
-        if (_tapCount == 0) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChooseGameScreen(
-                sensorCharacteristic: widget.sensorCharacteristic,
-                ledCharacteristic: widget.ledCharacteristic,
-              ),
+      _tapCount--;
+      if (_tapCount == 0) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChooseGameScreen(
+              sensorCharacteristic: widget.sensorCharacteristic,
+              ledCharacteristic: widget.ledCharacteristic,
             ),
-          );
-        }
+          ),
+        );
       }
     });
   }
@@ -116,11 +130,15 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                 ),
                 Expanded(
                   child: GestureDetector(
-                    onTap: handleTap,
+                    onTap: () {
+                      if (_timerValue == 0) {
+                        decreaseTapCount();
+                      }
+                    },
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        _timerActive ? _timerValue.toString() : 'Taps left: $_tapCount',
+                        _timerValue > 0 ? _timerValue.toString() : 'Taps left: $_tapCount',
                         style: theme.textTheme.headlineMedium?.copyWith(fontSize: (2 * num.parse(theme.textTheme.headlineMedium?.fontSize.toString() ?? "20")).toDouble()), // Double the font size
                         textAlign: TextAlign.center,
                       ),
