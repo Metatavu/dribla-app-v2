@@ -148,7 +148,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () {},
-                style: theme.elevatedButtonTheme.style?.copyWith(
+                style: theme.elevatedButtonTheme.style!.copyWith(
                   fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
                   backgroundColor: const MaterialStatePropertyAll(Colors.blue),
                 ),
