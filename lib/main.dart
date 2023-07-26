@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
 }
 
 class DriblaAppScreen extends StatefulWidget {
-  const DriblaAppScreen({Key? key}) : super(key: key);
+  const DriblaAppScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _DriblaAppScreenState();
