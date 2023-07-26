@@ -150,7 +150,7 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                               : _tapCount == 0
                                   ? "Hihhihhii. Voitit pelin!!1"
                                   : _tapCount.toString(),
-                          style: theme.textTheme.headlineMedium?.copyWith(
+                          style: theme.textTheme.headlineMedium!.copyWith(
                             fontSize: (2 *
                                     num.parse(
                                       theme.textTheme.headlineMedium?.fontSize
