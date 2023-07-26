@@ -11,7 +11,7 @@ class ChooseGameScreen extends StatefulWidget {
   final BluetoothCharacteristic? ledCharacteristic;
 
   const ChooseGameScreen({
-    Key? key,
+    super.key,
     this.sensorCharacteristic,
     this.ledCharacteristic,
   }) : super(key: key);
