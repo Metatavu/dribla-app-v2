@@ -82,46 +82,56 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
             ),
             actions: [
               TextButton(
-                child: const Text("OK"),
                 onPressed: () {
+                  _connect();
                   Navigator.of(context).pop();
                 },
+                child: Text(loc.retryButtonText),
               ),
             ],
           );
         });
   }
 
-  Future<void> _connect(
-      [Duration scanTimeout = const Duration(seconds: 30)]) async {
+  Future<void> _connect({
+    Duration scanTimeout = const Duration(seconds: 30),
+  }) async {
     _flutterBlue.scan(timeout: scanTimeout).listen((scanResult) async {
       if (scanResult.device.name.isNotEmpty && _selectedDevice == null) {
         await scanResult.device.connect();
         List<BluetoothService> bluetoothServices =
             await scanResult.device.discoverServices();
         BluetoothService? service = bluetoothServices
-            .where((element) =>
-                element.uuid.toString() ==
-                "cb421a98-1247-442f-880d-e8259078f1f4")
+            .where(
+              (element) =>
+                  element.uuid.toString() ==
+                  "cb421a98-1247-442f-880d-e8259078f1f4",
+            )
             .firstOrNull;
         BluetoothService? ledService = bluetoothServices
-            .where((element) =>
-                element.uuid.toString() ==
-                "4a82064c-e97b-44b3-9006-1871994ebc02")
+            .where(
+              (element) =>
+                  element.uuid.toString() ==
+                  "4a82064c-e97b-44b3-9006-1871994ebc02",
+            )
             .firstOrNull;
         if (service != null) {
           setState(() {
             _connected = true;
             _selectedDevice = scanResult.device;
             _sensorCharacteristic = service.characteristics
-                .where((element) =>
-                    element.uuid.toString() ==
-                    "cf6b3e9f-caa7-42ff-89d0-5309b95c9c7b")
+                .where(
+                  (element) =>
+                      element.uuid.toString() ==
+                      "cf6b3e9f-caa7-42ff-89d0-5309b95c9c7b",
+                )
                 .firstOrNull;
             _ledCharacteristic = ledService?.characteristics
-                .where((element) =>
-                    element.uuid.toString() ==
-                    "5444a605-ac7e-4c2f-96ee-170293b4292a")
+                .where(
+                  (element) =>
+                      element.uuid.toString() ==
+                      "5444a605-ac7e-4c2f-96ee-170293b4292a",
+                )
                 .firstOrNull;
           });
         } else {
