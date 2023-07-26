@@ -26,6 +26,14 @@ class MyApp extends StatelessWidget {
             fontStyle: FontStyle.italic,
             fontSize: 28.0,
           ),
+          headlineLarge: TextStyle(
+            color: Colors.white,
+            decoration: TextDecoration.none,
+            fontFamily: "Nunito",
+            fontWeight: FontWeight.w900,
+            fontStyle: FontStyle.italic,
+            fontSize: 56.0,
+          ),
           bodySmall: TextStyle(
             color: Colors.white,
             decoration: TextDecoration.none,
