@@ -8,6 +8,7 @@
     "backButtonText": "Back",
     "startGameText": "LET`S START",
     "tapsLeft": "Left",
-    "gameEnded": "Game ended"
-
+    "gameEnded": "Game ended",
+    "gameTime": "Game time: ",
+    "replay": "Replay"
 }

@@ -1,4 +1,5 @@
 import 'package:dribla_app_v2/assets.dart';
+import 'package:dribla_app_v2/screens/play_game_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -29,6 +30,7 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
   void initState() {
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,29 +80,31 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                // New "Time passed" text added here
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    "Time passed: ",
-                    style: theme.textTheme.headlineMedium?.copyWith(fontSize: (1.5 * num.parse(theme.textTheme.headlineMedium?.fontSize.toString() ?? "20")).toDouble()), // Adjust the font size if needed
-                    textAlign: TextAlign.center,
-                  ),
-                ),
                 Expanded(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      widget.gameTime?.toString() ?? "",
-                      style: theme.textTheme.headlineMedium?.copyWith(fontSize: (2 * num.parse(theme.textTheme.headlineMedium?.fontSize.toString() ?? "20")).toDouble()), // Double the font size
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            loc.gameTime,
+                            style: theme.textTheme.headlineMedium?.copyWith(fontSize: (num.parse(theme.textTheme.headlineMedium?.fontSize.toString() ?? "20")).toDouble()), // Double the font size
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            widget.gameTime?.toString() ?? "",
+                            style: theme.textTheme.headlineMedium?.copyWith(fontSize: (2 * num.parse(theme.textTheme.headlineMedium?.fontSize.toString() ?? "20")).toDouble()), // Double the font size
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )
+                    )
+                    
                 ),
               ],
             ),
           ),
-
           Container(
             decoration: const BoxDecoration(
               boxShadow: [
@@ -111,6 +115,39 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
               ],
             ),
             child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PlayGameScreen(
+                      sensorCharacteristic: widget.sensorCharacteristic,
+                      ledCharacteristic: widget.ledCharacteristic,
+                    ),
+                  ),
+                );
+              },
+              style: theme.elevatedButtonTheme.style?.copyWith(
+                fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
+                backgroundColor: const MaterialStatePropertyAll(Colors.blue),
+              ),
+              child: Text(
+                loc.replay,
+                style: theme.textTheme.headlineMedium,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
+            child: Container(
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white,
+                    offset: Offset(5, 5),
+                  ),
+                ],
+              ),
+              child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
@@ -131,29 +168,6 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
                 style: theme.textTheme.headlineMedium,
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(5, 5),
-                  ),
-                ],
-              ),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: theme.elevatedButtonTheme.style?.copyWith(
-                  fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
-                  backgroundColor: const MaterialStatePropertyAll(Colors.blue),
-                ),
-                child: Text(
-                  loc.settingsButtonText,
-                  style: theme.textTheme.headlineMedium,
-                ),
-              ),
             ),
           ),
         ],

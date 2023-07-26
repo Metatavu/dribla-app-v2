@@ -27,6 +27,7 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
   int _tapCount = 10; // Total taps allowed
   int _beginningTimerValue = 5; // Starting value for the timer
   int _gameTimerValue = 0;
+  Timer? gameTimer;
 
   @override
   void initState() {
@@ -51,9 +52,11 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
 
   void startGameTimer() {
     const oneSec = Duration(seconds: 1);
-    Timer.periodic(oneSec, (timer) { 
-      _gameTimerValue++;
-    });
+    setState(() {
+      gameTimer = Timer.periodic(oneSec, (timer) { 
+        _gameTimerValue++;
+      });
+    }); 
   }
 
   Future<void> listenToSensorCharacteristic() async {
@@ -78,6 +81,7 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     setState(() {
       _tapCount--;
       if (_tapCount == 0) {
+        gameTimer?.cancel();
         Navigator.push(
           context,
           MaterialPageRoute(
