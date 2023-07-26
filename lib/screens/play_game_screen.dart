@@ -46,7 +46,8 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     });
   }
 
-  void listenToSensorCharacteristic() {
+  Future<void> listenToSensorCharacteristic() async {
+    await widget.sensorCharacteristic?.setNotifyValue(true);
     widget.sensorCharacteristic?.value.listen((value) async {
       if (value.first == 1 && _tapCount > 0) {
         // If the first value is 1 in the characteristic value and tap count is greater than 0
