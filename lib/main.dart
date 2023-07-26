@@ -1,4 +1,4 @@
-import "package:dribla_app_v2/bluetoothIds.dart";
+import "package:dribla_app_v2/bluetooth_ids.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:dribla_app_v2/screens/index_screen.dart";
 import "package:flutter/material.dart";
