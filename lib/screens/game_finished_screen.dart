@@ -1,95 +1,33 @@
 import 'package:dribla_app_v2/assets.dart';
-import 'package:dribla_app_v2/screens/game_finished_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:async';
 
 import 'choose_game_screen.dart';
 
-class PlayGameScreen extends StatefulWidget {
+class GameFinisihedScreen extends StatefulWidget {
   final BluetoothCharacteristic? sensorCharacteristic;
   final BluetoothCharacteristic? ledCharacteristic;
+  final int? gameTime;
 
-  const PlayGameScreen({
+  const GameFinisihedScreen({
     Key? key,
     this.sensorCharacteristic,
     this.ledCharacteristic,
+    this.gameTime,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _PlayGameScreenState();
+  State<StatefulWidget> createState() => _GameFinisihedScreenState();
 }
 
-class _PlayGameScreenState extends State<PlayGameScreen> {
+class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
   String _gameTitle = "";
-  int _tapCount = 10; // Total taps allowed
-  int _beginningTimerValue = 5; // Starting value for the timer
-  int _gameTimerValue = 0;
 
   @override
   void initState() {
     super.initState();
-    startBeginningTimer();
-  }
-
-  void startBeginningTimer() {
-    const oneSec = Duration(seconds: 1);
-    Timer.periodic(oneSec, (timer) {
-      setState(() {
-        if (_beginningTimerValue > 0) {
-          _beginningTimerValue--;
-        } else {
-          timer.cancel(); // Stop the timer when it reaches 0
-          listenToSensorCharacteristic();
-          startGameTimer();
-        }
-      });
-    });
-  }
-
-  void startGameTimer() {
-    const oneSec = Duration(seconds: 1);
-    Timer.periodic(oneSec, (timer) { 
-      _gameTimerValue++;
-    });
-  }
-
-  Future<void> listenToSensorCharacteristic() async {
-    await widget.sensorCharacteristic?.setNotifyValue(true);
-    widget.sensorCharacteristic?.value.listen((value) async {
-      if (value.first == 1 && _tapCount > 0) {
-        // If the first value is 1 in the characteristic value and tap count is greater than 0
-        await writeLedCharacteristic([0, 0, 0, 0]);
-        decreaseTapCount(); // Decrease the tap count
-      } else if (value.first == 0) {
-        // If the first value is 0 in the characteristic value
-        await writeLedCharacteristic([0, 255, 0, 255]);
-      }
-    });
-  }
-
-  Future<void> writeLedCharacteristic(List<int> value) async {
-    await widget.ledCharacteristic?.write(value, withoutResponse: true);
-  }
-
-  void decreaseTapCount() {
-    setState(() {
-      _tapCount--;
-      if (_tapCount == 0) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => GameFinisihedScreen(
-              gameTime: _gameTimerValue, 
-              sensorCharacteristic: widget.sensorCharacteristic, 
-              ledCharacteristic: widget.ledCharacteristic
-              ),
-          ),
-        );
-      }
-    });
   }
 
   @override
@@ -98,11 +36,7 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     final loc = AppLocalizations.of(context)!;
 
     setState(() {
-      if (_beginningTimerValue > 0) {
-        _gameTitle = loc.startGameText;
-      } else {
-        _gameTitle = loc.tapsLeft;
-      }
+      _gameTitle = loc.gameEnded;
     });
 
     return Container(
@@ -144,26 +78,29 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                     textAlign: TextAlign.center,
                   ),
                 ),
+                // New "Time passed" text added here
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    "Time passed: ",
+                    style: theme.textTheme.headlineMedium?.copyWith(fontSize: (1.5 * num.parse(theme.textTheme.headlineMedium?.fontSize.toString() ?? "20")).toDouble()), // Adjust the font size if needed
+                    textAlign: TextAlign.center,
+                  ),
+                ),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      if (_beginningTimerValue == 0) {
-                        decreaseTapCount();
-                      }
-                    },
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        _beginningTimerValue > 0 ? _beginningTimerValue.toString() : _tapCount.toString(),
-                        style: theme.textTheme.headlineMedium?.copyWith(fontSize: (2 * num.parse(theme.textTheme.headlineMedium?.fontSize.toString() ?? "20")).toDouble()), // Double the font size
-                        textAlign: TextAlign.center,
-                      ),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      widget.gameTime?.toString() ?? "",
+                      style: theme.textTheme.headlineMedium?.copyWith(fontSize: (2 * num.parse(theme.textTheme.headlineMedium?.fontSize.toString() ?? "20")).toDouble()), // Double the font size
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
               ],
             ),
           ),
+
           Container(
             decoration: const BoxDecoration(
               boxShadow: [

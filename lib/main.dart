@@ -185,12 +185,16 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
 
-      child: _connected
-          ? ChooseGameScreen(
+      child: ChooseGameScreen(
               sensorCharacteristic: _sensorCharacteristic,
               ledCharacteristic: _ledCharacteristic,
-            )
-          : const IndexScreen(),
+            ) 
+          //   _connected
+          // ? ChooseGameScreen(
+          //     sensorCharacteristic: _sensorCharacteristic,
+          //     ledCharacteristic: _ledCharacteristic,
+          //   )
+          // : const IndexScreen(),
     );
   }
 }

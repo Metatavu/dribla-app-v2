@@ -25,5 +25,6 @@
     },
     "backButtonText": "Takaisin",
     "startGameText": "ALOITETAAN",
-    "tapsLeft": "Jäljellä"
+    "tapsLeft": "Jäljellä",
+    "gameEnded": "Peli päättyi"
 }
