@@ -1,11 +1,11 @@
-import 'package:dribla_app_v2/assets.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
+import "package:dribla_app_v2/assets.dart";
+import "package:flutter/material.dart";
+import "package:flutter_blue/flutter_blue.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:async';
+import "package:flutter_svg/flutter_svg.dart";
+import "dart:async";
 
-import 'choose_game_screen.dart';
+import "choose_game_screen.dart";
 
 class PlayGameScreen extends StatefulWidget {
   final BluetoothCharacteristic? sensorCharacteristic;
@@ -29,10 +29,10 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
   @override
   void initState() {
     super.initState();
-    startTimer();
+    _startTimer();
   }
 
-  void startTimer() {
+  void _startTimer() {
     const oneSec = Duration(seconds: 1);
     Timer.periodic(oneSec, (timer) {
       setState(() {
@@ -40,45 +40,50 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
           _timerValue--;
         } else {
           timer.cancel(); // Stop the timer when it reaches 0
-          listenToSensorCharacteristic();
+          _listenToSensorCharacteristic();
         }
       });
     });
   }
 
-  Future<void> listenToSensorCharacteristic() async {
+  Future<void> _listenToSensorCharacteristic() async {
     await widget.sensorCharacteristic?.setNotifyValue(true);
     widget.sensorCharacteristic?.value.listen((value) async {
-      if (value.first == 1 && _tapCount > 0) {
+      if (value.firstOrNull == 1 && _tapCount > 0) {
         // If the first value is 1 in the characteristic value and tap count is greater than 0
-        await writeLedCharacteristic([0, 0, 0, 0]);
-        decreaseTapCount(); // Decrease the tap count
-      } else if (value.first == 0) {
+        await _writeLedCharacteristic([0, 0, 0, 0]);
+        _decreaseTapCount(); // Decrease the tap count
+      } else if (value.firstOrNull == 0) {
         // If the first value is 0 in the characteristic value
-        await writeLedCharacteristic([0, 255, 0, 255]);
+        await _writeLedCharacteristic([0, 255, 0, 255]);
       }
     });
   }
 
-  Future<void> writeLedCharacteristic(List<int> value) async {
-    await widget.ledCharacteristic?.write(value, withoutResponse: true);
+  Future<void> _writeLedCharacteristic(List<int> value) async {
+    await widget.ledCharacteristic?.write(value);
   }
 
-  void decreaseTapCount() {
-    setState(() {
-      _tapCount--;
-      if (_tapCount == 0) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChooseGameScreen(
-              sensorCharacteristic: widget.sensorCharacteristic,
-              ledCharacteristic: widget.ledCharacteristic,
-            ),
+  void _navigateBack() {
+    if (_tapCount == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChooseGameScreen(
+            sensorCharacteristic: widget.sensorCharacteristic,
+            ledCharacteristic: widget.ledCharacteristic,
           ),
-        );
-      }
-    });
+        ),
+      );
+    }
+  }
+
+  void _decreaseTapCount() {
+    if (_timerValue == 0) {
+      setState(() {
+        _tapCount--;
+      });
+    }
   }
 
   @override
@@ -119,7 +124,6 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
               ),
             ),
           ),
-          
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -135,17 +139,28 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                 ),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () {
-                      if (_timerValue == 0) {
-                        decreaseTapCount();
-                      }
-                    },
+                    onTap: _decreaseTapCount,
                     child: Align(
                       alignment: Alignment.center,
-                      child: Text(
-                        _timerValue > 0 ? _timerValue.toString() : _tapCount.toString(),
-                        style: theme.textTheme.headlineMedium?.copyWith(fontSize: (2 * num.parse(theme.textTheme.headlineMedium?.fontSize.toString() ?? "20")).toDouble()), // Double the font size
-                        textAlign: TextAlign.center,
+                      child: GestureDetector(
+                        onTap: _navigateBack,
+                        child: Text(
+                          _timerValue > 0
+                              ? _timerValue.toString()
+                              : _tapCount == 0
+                                  ? "Hihhihhii. Voitit pelin!!1"
+                                  : _tapCount.toString(),
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            fontSize: (2 *
+                                    num.parse(
+                                      theme.textTheme.headlineMedium?.fontSize
+                                              .toString() ??
+                                          "20",
+                                    ))
+                                .toDouble(),
+                          ), // Double the font size
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),

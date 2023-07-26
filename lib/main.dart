@@ -1,12 +1,10 @@
-import 'package:dribla_app_v2/screens/choose_game_screen.dart';
-import 'package:dribla_app_v2/screens/index_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:dribla_app_v2/screens/choose_game_screen.dart";
+import "package:dribla_app_v2/screens/index_screen.dart";
+import "package:flutter/material.dart";
+import "package:flutter_blue/flutter_blue.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -14,23 +12,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Flutter Demo",
+      title: "Dribla App V2",
       theme: ThemeData(
-                // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You"ll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn"t reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
         textTheme: const TextTheme(
@@ -110,7 +93,7 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
   }
 
   Future<void> _connect(
-      [Duration scanTimeout = const Duration(seconds: 3)]) async {
+      [Duration scanTimeout = const Duration(seconds: 30)]) async {
     _flutterBlue.scan(timeout: scanTimeout).listen((scanResult) async {
       if (scanResult.device.name.isNotEmpty && _selectedDevice == null) {
         await scanResult.device.connect();
@@ -119,12 +102,12 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
         BluetoothService? service = bluetoothServices
             .where((element) =>
                 element.uuid.toString() ==
-                'cb421a98-1247-442f-880d-e8259078f1f4')
+                "cb421a98-1247-442f-880d-e8259078f1f4")
             .firstOrNull;
         BluetoothService? ledService = bluetoothServices
             .where((element) =>
                 element.uuid.toString() ==
-                '4a82064c-e97b-44b3-9006-1871994ebc02')
+                "4a82064c-e97b-44b3-9006-1871994ebc02")
             .firstOrNull;
         if (service != null) {
           setState(() {
@@ -173,7 +156,6 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
-
       child: _connected
           ? ChooseGameScreen(
               sensorCharacteristic: _sensorCharacteristic,
