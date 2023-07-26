@@ -148,17 +148,6 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
     }).onDone(() async {
       if (!_connected) {
         _showErrorDialog();
-      } else {
-        await _sensorCharacteristic?.setNotifyValue(true);
-        _sensorCharacteristic?.value.listen((value) async {
-          if (value.first == 1) {
-            await _ledCharacteristic
-                ?.write([0, 0, 0, 0], withoutResponse: true);
-          } else {
-            await _ledCharacteristic
-                ?.write([0, 255, 0, 255], withoutResponse: true);
-          }
-        });
       }
     });
   }
