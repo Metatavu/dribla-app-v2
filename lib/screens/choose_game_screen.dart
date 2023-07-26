@@ -14,7 +14,7 @@ class ChooseGameScreen extends StatefulWidget {
     super.key,
     this.sensorCharacteristic,
     this.ledCharacteristic,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _ChooseGameScreenState();
