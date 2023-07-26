@@ -1,11 +1,20 @@
-import 'package:dribla_app_v2/assets.dart';
-import 'package:flutter/material.dart';
+import "package:dribla_app_v2/assets.dart";
+import "package:dribla_app_v2/screens/play_game_screen.dart";
+import "package:flutter/material.dart";
+import "package:flutter_blue/flutter_blue.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_swiper_plus/flutter_swiper_plus.dart';
+import "package:flutter_svg/flutter_svg.dart";
+import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
 
 class ChooseGameScreen extends StatefulWidget {
-  const ChooseGameScreen({super.key});
+  final BluetoothCharacteristic? sensorCharacteristic;
+  final BluetoothCharacteristic? ledCharacteristic;
+
+  const ChooseGameScreen({
+    super.key,
+    this.sensorCharacteristic,
+    this.ledCharacteristic,
+  });
 
   @override
   State<StatefulWidget> createState() => _ChooseGameScreenState();
@@ -107,8 +116,18 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
               ],
             ),
             child: ElevatedButton(
-              onPressed: () {},
-              style: theme.elevatedButtonTheme.style!.copyWith(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PlayGameScreen(
+                      sensorCharacteristic: widget.sensorCharacteristic,
+                      ledCharacteristic: widget.ledCharacteristic,
+                    ),
+                  ),
+                );
+              },
+              style: theme.elevatedButtonTheme.style?.copyWith(
                   fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0))),
               child: Text(
                 loc.playButtonText,

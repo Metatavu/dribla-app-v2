@@ -22,5 +22,12 @@
     "unableToConnectBody": "Laite voi olla pois päältä, tai sovelluksella ei ole lupaa Bluetoothin käyttöön. Varmista että laite on päällä ja että mobiililaitteesi sallii Bluetoothin käytön asetuksista.",
     "@unableToConnectBody": {
         "description": "Unable to connect dialog body"
-    }
+    },
+    "retryButtonText": "Yritä uudelleen",
+    "@retryButtonText": {
+        "description": "Retry button text"
+    },
+    "backButtonText": "Takaisin",
+    "startGameText": "ALOITETAAN",
+    "tapsLeft": "Jäljellä"
 }
