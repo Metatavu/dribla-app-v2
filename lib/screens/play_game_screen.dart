@@ -12,7 +12,7 @@ class PlayGameScreen extends StatefulWidget {
   final BluetoothCharacteristic? ledCharacteristic;
 
   const PlayGameScreen({
-    Key? key,
+    super.key,
     this.sensorCharacteristic,
     this.ledCharacteristic,
   }) : super(key: key);
