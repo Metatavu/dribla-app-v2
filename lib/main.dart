@@ -1,3 +1,4 @@
+import "package:dribla_app_v2/bluetoothIds.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:dribla_app_v2/screens/index_screen.dart";
 import "package:flutter/material.dart";
@@ -104,15 +105,12 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
         BluetoothService? service = bluetoothServices
             .where(
               (element) =>
-                  element.uuid.toString() ==
-                  "cb421a98-1247-442f-880d-e8259078f1f4",
+                  element.uuid.toString() == BluetoothIds.sensorServiceId,
             )
             .firstOrNull;
         BluetoothService? ledService = bluetoothServices
             .where(
-              (element) =>
-                  element.uuid.toString() ==
-                  "4a82064c-e97b-44b3-9006-1871994ebc02",
+              (element) => element.uuid.toString() == BluetoothIds.ledServiceId,
             )
             .firstOrNull;
         if (service != null) {
@@ -123,14 +121,14 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
                 .where(
                   (element) =>
                       element.uuid.toString() ==
-                      "cf6b3e9f-caa7-42ff-89d0-5309b95c9c7b",
+                      BluetoothIds.sensorCharacteristicIds[0],
                 )
                 .firstOrNull;
             _ledCharacteristic = ledService?.characteristics
                 .where(
                   (element) =>
                       element.uuid.toString() ==
-                      "5444a605-ac7e-4c2f-96ee-170293b4292a",
+                      BluetoothIds.ledCharacteristicIds[0],
                 )
                 .firstOrNull;
           });

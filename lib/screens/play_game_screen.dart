@@ -152,11 +152,9 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                                   : _tapCount.toString(),
                           style: theme.textTheme.headlineMedium!.copyWith(
                             fontSize: (2 *
-                                    num.parse(
-                                      theme.textTheme.headlineMedium?.fontSize
-                                              .toString() ??
-                                          "20",
-                                    ))
+                                    num.parse(theme
+                                        .textTheme.headlineMedium!.fontSize
+                                        .toString()))
                                 .toDouble(),
                           ), // Double the font size
                           textAlign: TextAlign.center,
