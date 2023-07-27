@@ -87,23 +87,12 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
                           children: [
                             Text(
                               loc.gameTime,
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                  fontSize: (num.parse(theme.textTheme
-                                              .headlineMedium?.fontSize
-                                              .toString() ??
-                                          "20"))
-                                      .toDouble()), // Double the font size
+                              style: theme.textTheme.headlineMedium,
                               textAlign: TextAlign.center,
                             ),
                             Text(
                               widget.gameTime?.toString() ?? "",
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                  fontSize: (2 *
-                                          num.parse(theme.textTheme
-                                                  .headlineMedium?.fontSize
-                                                  .toString() ??
-                                              "20"))
-                                      .toDouble()), // Double the font size
+                              style: theme.textTheme.headlineLarge,
                               textAlign: TextAlign.center,
                             ),
                           ],
