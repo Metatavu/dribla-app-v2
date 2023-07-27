@@ -31,15 +31,21 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
     super.initState();
   }
 
+  /// Init game title
+  void initGameTitle(String title) {
+    if (_gameTitle == "") {
+      setState(() {
+        _gameTitle = title;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
 
-    setState(() {
-      _gameTitle = loc.gameEnded;
-    });
-
+    initGameTitle(loc.gameEnded);
     return Container(
       decoration: const BoxDecoration(
         color: Colors.transparent,

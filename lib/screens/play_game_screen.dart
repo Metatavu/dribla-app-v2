@@ -39,6 +39,9 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     const oneSec = Duration(seconds: 1);
     Timer.periodic(oneSec, (timer) {
       setState(() {
+        if (_beginningTimerValue == 1) {
+          _gameTitle = "";
+        }
         if (_beginningTimerValue > 0) {
           _beginningTimerValue--;
         } else {
@@ -115,18 +118,24 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     }
   }
 
+  void initGameTitle(String title) {
+    if (_gameTitle == "") {
+      setState(() {
+        _gameTitle = title;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
 
-    setState(() {
-      if (_beginningTimerValue > 0) {
-        _gameTitle = loc.startGameText;
-      } else {
-        _gameTitle = loc.tapsLeft;
-      }
-    });
+    if (_beginningTimerValue > 1) {
+      initGameTitle(loc.startGameText);
+    } else {
+      initGameTitle(loc.tapsLeft);
+    }
 
     return Container(
       decoration: const BoxDecoration(
