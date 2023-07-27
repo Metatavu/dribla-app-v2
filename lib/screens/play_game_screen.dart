@@ -41,7 +41,9 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     final loc = AppLocalizations.of(context)!;
 
     setState(() {
-      _gameTitle = loc.startGameText;
+      if (_gameTitle == "") {
+        _gameTitle = loc.startGameText;
+      }
     });
   }
 

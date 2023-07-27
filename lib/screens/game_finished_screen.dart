@@ -35,7 +35,9 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final loc = AppLocalizations.of(context)!;
-    _gameTitle = loc.gameEnded;
+    if (_gameTitle == "") {
+      _gameTitle = loc.gameEnded;
+    }
   }
 
   @override
