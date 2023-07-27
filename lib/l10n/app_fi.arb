@@ -29,5 +29,8 @@
     },
     "backButtonText": "Takaisin",
     "startGameText": "ALOITETAAN",
-    "tapsLeft": "Jäljellä"
+    "tapsLeft": "Jäljellä",
+    "gameEnded": "Peli päättyi",
+    "gameTime": "Aikaa kului:",
+    "replay": "Uudelleen"
 }
