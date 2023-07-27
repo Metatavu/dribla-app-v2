@@ -7,7 +7,7 @@ import "package:flutter_svg/flutter_svg.dart";
 
 import "choose_game_screen.dart";
 
-class GameFinisihedScreen extends StatefulWidget {
+class GameFinisihedScreen extends StatelessWidget {
   final BluetoothCharacteristic? sensorCharacteristic;
   final BluetoothCharacteristic? ledCharacteristic;
   final int? gameTime;
@@ -20,22 +20,11 @@ class GameFinisihedScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _GameFinisihedScreenState();
-}
-
-class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
-  String _gameTitle = "";
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    String gameTitle = "";
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
-    _gameTitle = loc.gameEnded;
+    gameTitle = loc.gameEnded;
     return Container(
       decoration: const BoxDecoration(
         color: Colors.transparent,
@@ -69,7 +58,7 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
-                    _gameTitle,
+                    gameTitle,
                     style: theme.textTheme.headlineMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -87,7 +76,7 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              widget.gameTime?.toString() ?? "",
+                              gameTime?.toString() ?? "",
                               style: theme.textTheme.headlineLarge,
                               textAlign: TextAlign.center,
                             ),
@@ -111,8 +100,8 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => PlayGameScreen(
-                      sensorCharacteristic: widget.sensorCharacteristic,
-                      ledCharacteristic: widget.ledCharacteristic,
+                      sensorCharacteristic: sensorCharacteristic,
+                      ledCharacteristic: ledCharacteristic,
                     ),
                   ),
                 );
@@ -144,8 +133,8 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ChooseGameScreen(
-                        sensorCharacteristic: widget.sensorCharacteristic,
-                        ledCharacteristic: widget.ledCharacteristic,
+                        sensorCharacteristic: sensorCharacteristic,
+                        ledCharacteristic: ledCharacteristic,
                       ),
                     ),
                   );
