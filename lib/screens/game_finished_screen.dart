@@ -32,19 +32,10 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final loc = AppLocalizations.of(context)!;
-    if (_gameTitle == "") {
-      _gameTitle = loc.gameEnded;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
-
+    _gameTitle = loc.gameEnded;
     return Container(
       decoration: const BoxDecoration(
         color: Colors.transparent,
