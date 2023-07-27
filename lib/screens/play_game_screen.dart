@@ -1,4 +1,5 @@
 import "package:dribla_app_v2/assets.dart";
+import "package:dribla_app_v2/screens/game_finished_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_blue/flutter_blue.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -24,23 +25,26 @@ class PlayGameScreen extends StatefulWidget {
 class _PlayGameScreenState extends State<PlayGameScreen> {
   String _gameTitle = "";
   int _tapCount = 10; // Total taps allowed
-  int _timerValue = 5; // Starting value for the timer
+  int _beginningTimerValue = 5; // Starting value for the timer
+  Timer? _gameTimer;
+  int _gameTimerValue = 0;
 
   @override
   void initState() {
     super.initState();
-    _startTimer();
+    _startBeginningTimer();
   }
 
-  void _startTimer() {
+  void _startBeginningTimer() {
     const oneSec = Duration(seconds: 1);
     Timer.periodic(oneSec, (timer) {
       setState(() {
-        if (_timerValue > 0) {
-          _timerValue--;
+        if (_beginningTimerValue > 0) {
+          _beginningTimerValue--;
         } else {
           timer.cancel(); // Stop the timer when it reaches 0
           _listenToSensorCharacteristic();
+          _startGameTimer();
         }
       });
     });
@@ -64,24 +68,49 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     await widget.ledCharacteristic?.write(value);
   }
 
-  void _navigateBack() {
-    if (_tapCount == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChooseGameScreen(
-            sensorCharacteristic: widget.sensorCharacteristic,
-            ledCharacteristic: widget.ledCharacteristic,
-          ),
+  void _startGameTimer() {
+    const oneSec = Duration(seconds: 1);
+    setState(() {
+      _gameTimer = Timer.periodic(oneSec, (timer) {
+        _gameTimerValue++;
+      });
+    });
+  }
+
+  void _navigateNextScreen() {
+    _gameTimer?.cancel();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GameFinisihedScreen(
+          sensorCharacteristic: widget.sensorCharacteristic,
+          ledCharacteristic: widget.ledCharacteristic,
+          gameTime: _gameTimerValue,
         ),
-      );
-    }
+      ),
+    );
+  }
+
+  void _navigateBack() {
+    _gameTimer?.cancel();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChooseGameScreen(
+          sensorCharacteristic: widget.sensorCharacteristic,
+          ledCharacteristic: widget.ledCharacteristic,
+        ),
+      ),
+    );
   }
 
   void _decreaseTapCount() {
-    if (_timerValue == 0) {
+    if (_beginningTimerValue == 0) {
       setState(() {
         _tapCount--;
+        if (_tapCount == 0) {
+          _navigateNextScreen();
+        }
       });
     }
   }
@@ -91,13 +120,11 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
 
-    setState(() {
-      if (_timerValue > 0) {
-        _gameTitle = loc.startGameText;
-      } else {
-        _gameTitle = loc.tapsLeft;
-      }
-    });
+    if (_beginningTimerValue > 0) {
+      _gameTitle = loc.startGameText;
+    } else {
+      _gameTitle = loc.tapsLeft;
+    }
 
     return Container(
       decoration: const BoxDecoration(
@@ -142,18 +169,13 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                     onTap: _decreaseTapCount,
                     child: Align(
                       alignment: Alignment.center,
-                      child: GestureDetector(
-                        onTap: _navigateBack,
-                        child: Text(
-                          _timerValue > 0
-                              ? _timerValue.toString()
-                              : _tapCount == 0
-                                  ? "Hihhihhii. Voitit pelin!!1"
-                                  : _tapCount.toString(),
-                          style: theme
-                              .textTheme.headlineLarge, // Double the font size
-                          textAlign: TextAlign.center,
-                        ),
+                      child: Text(
+                        _beginningTimerValue > 0
+                            ? _beginningTimerValue.toString()
+                            : _tapCount.toString(),
+                        style: theme
+                            .textTheme.headlineLarge, // Double the font size
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -171,17 +193,7 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
               ],
             ),
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChooseGameScreen(
-                      sensorCharacteristic: widget.sensorCharacteristic,
-                      ledCharacteristic: widget.ledCharacteristic,
-                    ),
-                  ),
-                );
-              },
+              onPressed: _navigateBack,
               style: theme.elevatedButtonTheme.style!.copyWith(
                 fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
                 backgroundColor: const MaterialStatePropertyAll(Colors.blue),
