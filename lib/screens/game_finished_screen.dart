@@ -17,7 +17,7 @@ class GameFinisihedScreen extends StatelessWidget {
     this.sensorCharacteristic,
     this.ledCharacteristic,
     this.gameTime,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
