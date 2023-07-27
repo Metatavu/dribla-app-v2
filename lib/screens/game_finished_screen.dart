@@ -31,13 +31,11 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
     super.initState();
   }
 
-  /// Init game title
-  void initGameTitle(String title) {
-    if (_gameTitle == "") {
-      setState(() {
-        _gameTitle = title;
-      });
-    }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final loc = AppLocalizations.of(context)!;
+    _gameTitle = loc.gameEnded;
   }
 
   @override
@@ -45,7 +43,6 @@ class _GameFinisihedScreenState extends State<GameFinisihedScreen> {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
 
-    initGameTitle(loc.gameEnded);
     return Container(
       decoration: const BoxDecoration(
         color: Colors.transparent,
