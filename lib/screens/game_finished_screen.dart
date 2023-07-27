@@ -13,7 +13,7 @@ class GameFinisihedScreen extends StatelessWidget {
   final int? gameTime;
 
   const GameFinisihedScreen({
-    Key? key,
+    super.key,
     this.sensorCharacteristic,
     this.ledCharacteristic,
     this.gameTime,
