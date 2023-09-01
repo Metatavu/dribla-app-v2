@@ -1,21 +1,16 @@
 import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/screens/play_game_screen.dart";
 import "package:flutter/material.dart";
-import "package:flutter_blue/flutter_blue.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
 import "choose_game_screen.dart";
 
-class GameFinisihedScreen extends StatelessWidget {
-  final BluetoothCharacteristic? sensorCharacteristic;
-  final BluetoothCharacteristic? ledCharacteristic;
+class GameFinishedScreen extends StatelessWidget {
   final int? gameTime;
 
-  const GameFinisihedScreen({
+  const GameFinishedScreen({
     super.key,
-    this.sensorCharacteristic,
-    this.ledCharacteristic,
     this.gameTime,
   });
 
@@ -99,10 +94,7 @@ class GameFinisihedScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlayGameScreen(
-                      sensorCharacteristic: sensorCharacteristic,
-                      ledCharacteristic: ledCharacteristic,
-                    ),
+                    builder: (context) => const PlayGameScreen(),
                   ),
                 );
               },
@@ -132,10 +124,7 @@ class GameFinisihedScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ChooseGameScreen(
-                        sensorCharacteristic: sensorCharacteristic,
-                        ledCharacteristic: ledCharacteristic,
-                      ),
+                      builder: (context) => const ChooseGameScreen(),
                     ),
                   );
                 },

@@ -1,9 +1,14 @@
+import "dart:developer";
+import "dart:io";
+
 import "package:dribla_app_v2/bluetooth_ids.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:dribla_app_v2/screens/index_screen.dart";
 import "package:flutter/material.dart";
-import "package:flutter_blue/flutter_blue.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:flutter_reactive_ble/flutter_reactive_ble.dart";
+
+import "device_connection.dart";
 
 void main() => runApp(const MyApp());
 
@@ -66,118 +71,84 @@ class DriblaAppScreen extends StatefulWidget {
 }
 
 class _DriblaAppScreenState extends State<DriblaAppScreen> {
-  bool _connected = false;
+  bool _connecting = false;
 
-  final FlutterBlue _flutterBlue = FlutterBlue.instance;
-  BluetoothDevice? _selectedDevice;
-
-  BluetoothCharacteristic? _sensorCharacteristic;
-  BluetoothCharacteristic? _ledCharacteristic;
-
-  void _showErrorDialog() {
-    final loc = AppLocalizations.of(context)!;
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(loc.unableToConnectTitle),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  Text(loc.unableToConnectTitle),
-                  Text(loc.unableToConnectBody),
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  _connect();
-                  Navigator.of(context).pop();
-                },
-                child: Text(loc.retryButtonText),
-              ),
-            ],
+  Future<void> _scanDevices() async {
+    log("Scanning for devices");
+    DeviceConnection.controller.scanForDevices(
+      withServices: [],
+      scanMode: ScanMode.lowLatency,
+    ).listen((device) async {
+      if (device.name == "Dribla" && !_connecting) {
+        if (Platform.isAndroid) {
+          await DeviceConnection.controller.requestConnectionPriority(
+            deviceId: device.id,
+            priority: ConnectionPriority.highPerformance,
           );
-        });
-  }
-
-  Future<void> _connect({
-    Duration scanTimeout = const Duration(seconds: 30),
-  }) async {
-    _flutterBlue.scan(timeout: scanTimeout).listen((scanResult) async {
-      if (scanResult.device.name.isNotEmpty && _selectedDevice == null) {
-        await scanResult.device.connect();
-        List<BluetoothService> bluetoothServices =
-            await scanResult.device.discoverServices();
-        BluetoothService? service = bluetoothServices
-            .where(
-              (element) =>
-                  element.uuid.toString() == BluetoothIds.sensorServiceId,
-            )
-            .firstOrNull;
-        BluetoothService? ledService = bluetoothServices
-            .where(
-              (element) => element.uuid.toString() == BluetoothIds.ledServiceId,
-            )
-            .firstOrNull;
-        if (service != null) {
-          setState(() {
-            _connected = true;
-            _selectedDevice = scanResult.device;
-            _sensorCharacteristic = service.characteristics
-                .where(
-                  (element) =>
-                      element.uuid.toString() ==
-                      BluetoothIds.sensorCharacteristicIds[0],
-                )
-                .firstOrNull;
-            _ledCharacteristic = ledService?.characteristics
-                .where(
-                  (element) =>
-                      element.uuid.toString() ==
-                      BluetoothIds.ledCharacteristicIds[0],
-                )
-                .firstOrNull;
-          });
-        } else {
-          await scanResult.device.disconnect();
         }
+
+        await DeviceConnection.controller.discoverAllServices(device.id);
+        connectToDevice(device.id);
       }
-    }).onDone(() async {
-      if (!_connected) {
-        _showErrorDialog();
-      }
+    }, onError: (error) {
+      log("Error while scanning for devices: $error");
     });
   }
 
-  Future<void> _disconnect() async {
-    _flutterBlue.stopScan();
-    _selectedDevice?.disconnect();
+  Future<void> connectToDevice(String deviceId) async {
+    log("Connecting to device $deviceId");
+    _connecting = true;
+
+    DeviceConnection.controller.connectToDevice(id: deviceId).listen(
+          (connectionStateUpdate) =>
+              handleDeviceConnectionStateUpdate(connectionStateUpdate),
+        );
+  }
+
+  void handleDeviceConnectionStateUpdate(
+    ConnectionStateUpdate stateUpdate,
+  ) async {
+    log(stateUpdate.toString());
+    if (stateUpdate.connectionState != DeviceConnectionState.connected) return;
+
+    final services = await DeviceConnection.controller
+        .getDiscoveredServices(stateUpdate.deviceId);
+
+    final sensorService = services.firstWhere(
+      (service) => service.id == BluetoothIds.sensorServiceId,
+    );
+    DeviceConnection.sensorValueStream =
+        sensorService.characteristics.first.subscribe();
+
+    final ledService = services.firstWhere(
+      (service) => service.id == BluetoothIds.ledServiceId,
+    );
+
+    DeviceConnection.ledCharacteristics = ledService.characteristics;
+    if (context.mounted) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const ChooseGameScreen(),
+      ));
+    }
+  }
+
+  void subscribeToDeviceCharacteristic(
+      QualifiedCharacteristic characteristic) {}
+
+  @override
+  void initState() {
+    super.initState();
+    _scanDevices();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _disconnect();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _connect();
+    _connecting = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 250),
-      child: _connected
-          ? ChooseGameScreen(
-              sensorCharacteristic: _sensorCharacteristic,
-              ledCharacteristic: _ledCharacteristic,
-            )
-          : const IndexScreen(),
-    );
+    return const IndexScreen();
   }
 }

@@ -1,20 +1,12 @@
 import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/screens/play_game_screen.dart";
 import "package:flutter/material.dart";
-import "package:flutter_blue/flutter_blue.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
 
 class ChooseGameScreen extends StatefulWidget {
-  final BluetoothCharacteristic? sensorCharacteristic;
-  final BluetoothCharacteristic? ledCharacteristic;
-
-  const ChooseGameScreen({
-    super.key,
-    this.sensorCharacteristic,
-    this.ledCharacteristic,
-  });
+  const ChooseGameScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _ChooseGameScreenState();
@@ -23,7 +15,7 @@ class ChooseGameScreen extends StatefulWidget {
 class _ChooseGameScreenState extends State<ChooseGameScreen> {
   static const String _gameDescription =
       """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
-      eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce 
+      eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce
       cubilia, pretium sagittis non feugiat hendrerit.""";
   static const String _gameTitle = "Pujottelu";
 
@@ -120,10 +112,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlayGameScreen(
-                      sensorCharacteristic: widget.sensorCharacteristic,
-                      ledCharacteristic: widget.ledCharacteristic,
-                    ),
+                    builder: (context) => PlayGameScreen(),
                   ),
                 );
               },
@@ -132,30 +121,6 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
               child: Text(
                 loc.playButtonText,
                 style: theme.textTheme.headlineMedium,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(5, 5),
-                  ),
-                ],
-              ),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: theme.elevatedButtonTheme.style!.copyWith(
-                  fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
-                  backgroundColor: const MaterialStatePropertyAll(Colors.blue),
-                ),
-                child: Text(
-                  loc.settingsButtonText,
-                  style: theme.textTheme.headlineMedium,
-                ),
               ),
             ),
           ),

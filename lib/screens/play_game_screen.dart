@@ -1,38 +1,44 @@
+import "dart:developer" as developer;
+import "dart:math";
+import "package:collection/collection.dart";
+
 import "package:dribla_app_v2/assets.dart";
+import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/screens/game_finished_screen.dart";
 import "package:flutter/material.dart";
-import "package:flutter_blue/flutter_blue.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "dart:async";
 
-import "choose_game_screen.dart";
-
 class PlayGameScreen extends StatefulWidget {
-  final BluetoothCharacteristic? sensorCharacteristic;
-  final BluetoothCharacteristic? ledCharacteristic;
-
-  const PlayGameScreen({
-    super.key,
-    this.sensorCharacteristic,
-    this.ledCharacteristic,
-  });
+  const PlayGameScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _PlayGameScreenState();
 }
 
 class _PlayGameScreenState extends State<PlayGameScreen> {
-  String _gameTitle = "";
-  int _tapCount = 10; // Total taps allowed
-  int _beginningTimerValue = 5; // Starting value for the timer
+  StreamSubscription<List<int>>? _subscription;
+
+  int _beginningTimerValue = 10; // Starting value for the timer
   Timer? _gameTimer;
   int _gameTimerValue = 0;
+
+  int? currentTarget;
+  int points = 0;
+  int maxPoints = 10;
 
   @override
   void initState() {
     super.initState();
     _startBeginningTimer();
+  }
+
+  @override
+  void dispose() {
+    _gameTimer?.cancel();
+    _subscription?.cancel();
+    super.dispose();
   }
 
   void _startBeginningTimer() {
@@ -45,36 +51,51 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
           timer.cancel(); // Stop the timer when it reaches 0
           _listenToSensorCharacteristic();
           _startGameTimer();
+          _progressGame();
         }
       });
     });
   }
 
   Future<void> _listenToSensorCharacteristic() async {
-    await widget.sensorCharacteristic?.setNotifyValue(true);
-    widget.sensorCharacteristic?.value.listen((value) async {
-      if (value.firstOrNull == 1 && _tapCount > 0) {
-        // If the first value is 1 in the characteristic value and tap count is greater than 0
-        await _writeLedCharacteristic([0, 0, 0, 0]);
-        _decreaseTapCount(); // Decrease the tap count
-      } else if (value.firstOrNull == 0) {
-        // If the first value is 0 in the characteristic value
-        await _writeLedCharacteristic([0, 255, 0, 255]);
+    _subscription = DeviceConnection.sensorValueStream.listen((data) {
+      developer.log("SENSOR DATA: ${data.toString()}");
+      final activeSensors = DeviceConnection.parseSensorData(data.first);
+
+      if (activeSensors.contains(currentTarget)) {
+        _progressGame();
       }
     });
   }
 
-  Future<void> _writeLedCharacteristic(List<int> value) async {
-    await widget.ledCharacteristic?.write(value);
+  void _progressGame() {
+    points++;
+    int nextTarget;
+
+    do {
+      nextTarget = Random().nextInt(8) + 1;
+    } while (nextTarget == currentTarget);
+
+    if (points >= maxPoints) {
+      _navigateNextScreen();
+    } else {
+      currentTarget = nextTarget;
+      _updateTargetLed(nextTarget);
+    }
+  }
+
+  Future<void> _updateTargetLed(int currentTarget) async {
+    DeviceConnection.ledCharacteristics.forEachIndexed((index, characteristic) {
+      characteristic.write(index + 1 == currentTarget ? [0xFF] : [0x00]);
+    });
   }
 
   void _startGameTimer() {
     const oneSec = Duration(seconds: 1);
-    setState(() {
-      _gameTimer = Timer.periodic(oneSec, (timer) {
-        _gameTimerValue++;
-      });
-    });
+    _gameTimer = Timer.periodic(
+      oneSec,
+      (timer) => setState(() => _gameTimerValue++),
+    );
   }
 
   void _navigateNextScreen() {
@@ -82,9 +103,7 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => GameFinisihedScreen(
-          sensorCharacteristic: widget.sensorCharacteristic,
-          ledCharacteristic: widget.ledCharacteristic,
+        builder: (context) => GameFinishedScreen(
           gameTime: _gameTimerValue,
         ),
       ),
@@ -93,38 +112,13 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
 
   void _navigateBack() {
     _gameTimer?.cancel();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChooseGameScreen(
-          sensorCharacteristic: widget.sensorCharacteristic,
-          ledCharacteristic: widget.ledCharacteristic,
-        ),
-      ),
-    );
-  }
-
-  void _decreaseTapCount() {
-    if (_beginningTimerValue == 0) {
-      setState(() {
-        _tapCount--;
-        if (_tapCount == 0) {
-          _navigateNextScreen();
-        }
-      });
-    }
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final loc = AppLocalizations.of(context)!;
-
-    if (_beginningTimerValue > 0) {
-      _gameTitle = loc.startGameText;
-    } else {
-      _gameTitle = loc.tapsLeft;
-    }
+    final locale = AppLocalizations.of(context)!;
 
     return Container(
       decoration: const BoxDecoration(
@@ -159,25 +153,11 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
-                    _gameTitle,
+                    _beginningTimerValue > 0
+                        ? _beginningTimerValue.toString()
+                        : _gameTimerValue.toString(),
                     style: theme.textTheme.headlineMedium,
                     textAlign: TextAlign.center,
-                  ),
-                ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: _decreaseTapCount,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        _beginningTimerValue > 0
-                            ? _beginningTimerValue.toString()
-                            : _tapCount.toString(),
-                        style: theme
-                            .textTheme.headlineLarge, // Double the font size
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
                   ),
                 ),
               ],
@@ -199,32 +179,8 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                 backgroundColor: const MaterialStatePropertyAll(Colors.blue),
               ),
               child: Text(
-                loc.backButtonText,
+                locale.backButtonText,
                 style: theme.textTheme.headlineMedium,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(5, 5),
-                  ),
-                ],
-              ),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: theme.elevatedButtonTheme.style?.copyWith(
-                  fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
-                  backgroundColor: const MaterialStatePropertyAll(Colors.blue),
-                ),
-                child: Text(
-                  loc.settingsButtonText,
-                  style: theme.textTheme.headlineMedium,
-                ),
               ),
             ),
           ),
