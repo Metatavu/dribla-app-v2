@@ -1,18 +1,43 @@
 import "package:dribla_app_v2/assets.dart";
-import "package:dribla_app_v2/screens/play_game_screen.dart";
+import "package:dribla_app_v2/audio_players.dart";
+import "package:dribla_app_v2/screens/play_minefield_game_screen.dart";
+import "package:dribla_app_v2/screens/play_ten_game_screen.dart";
+import "package:dribla_app_v2/screens/play_zigzag_game_screen.dart";
+import "package:dribla_app_v2/timer_formatters.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
 import "choose_game_screen.dart";
 
-class GameFinishedScreen extends StatelessWidget {
+class GameFinishedScreen extends StatefulWidget {
   final int? gameTime;
+  final int gameIndex;
+  final bool win;
 
-  const GameFinishedScreen({
-    super.key,
-    this.gameTime,
-  });
+  const GameFinishedScreen(
+      {Key? key, this.gameTime, required this.gameIndex, required this.win})
+      : super(key: key);
+
+  @override
+  State<GameFinishedScreen> createState() => _GameFinishedScreen();
+}
+
+class _GameFinishedScreen extends State<GameFinishedScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.win) {
+      AudioPlayers.playVictory();
+    } else {
+      AudioPlayers.playFailure();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,12 +91,16 @@ class GameFinishedScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              loc.gameTime,
+                              widget.win
+                                  ? loc.gameTime
+                                  : "Parempi onni ensi kerralla :(",
                               style: theme.textTheme.headlineMedium,
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              gameTime?.toString() ?? "",
+                              widget.win
+                                  ? TimerFormatter.format(widget.gameTime ?? 0)
+                                  : "",
                               style: theme.textTheme.headlineLarge,
                               textAlign: TextAlign.center,
                             ),
@@ -91,10 +120,15 @@ class GameFinishedScreen extends StatelessWidget {
             ),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const PlayGameScreen(),
+                    builder: (context) => switch (widget.gameIndex) {
+                      0 => const PlayZigZagGameScreen(),
+                      1 => const PlayTenGameScreen(),
+                      2 => const PlayMinefieldGameScreen(),
+                      _ => const PlayTenGameScreen()
+                    },
                   ),
                 );
               },
@@ -121,7 +155,7 @@ class GameFinishedScreen extends StatelessWidget {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const ChooseGameScreen(),

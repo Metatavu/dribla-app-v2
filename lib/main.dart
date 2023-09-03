@@ -1,6 +1,7 @@
 import "dart:developer";
 import "dart:io";
 
+import "package:dribla_app_v2/audio_players.dart";
 import "package:dribla_app_v2/bluetooth_ids.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:dribla_app_v2/screens/index_screen.dart";
@@ -74,6 +75,7 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
   bool _connecting = false;
 
   Future<void> _scanDevices() async {
+    await AudioPlayers.init();
     log("Scanning for devices");
     DeviceConnection.controller.scanForDevices(
       withServices: [],
@@ -81,10 +83,13 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
     ).listen((device) async {
       if (device.name == "Dribla" && !_connecting) {
         if (Platform.isAndroid) {
-          await DeviceConnection.controller.requestConnectionPriority(
-            deviceId: device.id,
-            priority: ConnectionPriority.highPerformance,
-          );
+          await DeviceConnection.controller
+              .requestConnectionPriority(
+                deviceId: device.id,
+                priority: ConnectionPriority.highPerformance,
+              )
+              .onError((error, stackTrace) =>
+                  log("Connection priority request failed"));
         }
 
         await DeviceConnection.controller.discoverAllServices(device.id);
@@ -117,14 +122,15 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
     final sensorService = services.firstWhere(
       (service) => service.id == BluetoothIds.sensorServiceId,
     );
-    DeviceConnection.sensorValueStream =
-        sensorService.characteristics.first.subscribe();
+    DeviceConnection.initSensor(
+        sensorService.characteristics.first.subscribe());
 
     final ledService = services.firstWhere(
       (service) => service.id == BluetoothIds.ledServiceId,
     );
 
     DeviceConnection.ledCharacteristics = ledService.characteristics;
+    //await DeviceConnection.setAllLedColors(0x00);
     if (context.mounted) {
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => const ChooseGameScreen(),
@@ -145,6 +151,7 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
   void dispose() {
     super.dispose();
     _connecting = false;
+    AudioPlayers.deinit();
   }
 
   @override

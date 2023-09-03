@@ -1,30 +1,33 @@
 import "dart:developer" as developer;
 import "dart:math";
-import "package:collection/collection.dart";
+import "package:audioplayers/audioplayers.dart";
 
 import "package:dribla_app_v2/assets.dart";
+import "package:dribla_app_v2/audio_players.dart";
 import "package:dribla_app_v2/device_connection.dart";
+import "package:dribla_app_v2/led_colors.dart";
 import "package:dribla_app_v2/screens/game_finished_screen.dart";
+import "package:dribla_app_v2/timer_formatters.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "dart:async";
 
-class PlayGameScreen extends StatefulWidget {
-  const PlayGameScreen({super.key});
+class PlayTenGameScreen extends StatefulWidget {
+  const PlayTenGameScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => _PlayGameScreenState();
+  State<StatefulWidget> createState() => _PlayTenGameScreen();
 }
 
-class _PlayGameScreenState extends State<PlayGameScreen> {
-  StreamSubscription<List<int>>? _subscription;
-
+class _PlayTenGameScreen extends State<PlayTenGameScreen> {
   int _beginningTimerValue = 10; // Starting value for the timer
+  String _gameStatusText = "ALOITETAAN!"; // TODO: localize
   Timer? _gameTimer;
+  Timer? _beginningTimer;
   int _gameTimerValue = 0;
 
-  int? currentTarget;
+  int currentTarget = 1;
   int points = 0;
   int maxPoints = 10;
 
@@ -37,74 +40,97 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
   @override
   void dispose() {
     _gameTimer?.cancel();
-    _subscription?.cancel();
+    _beginningTimer?.cancel();
+    DeviceConnection.clearListeners();
     super.dispose();
   }
 
   void _startBeginningTimer() {
     const oneSec = Duration(seconds: 1);
-    Timer.periodic(oneSec, (timer) {
+    var onoff = false;
+    var countDownStarted = false;
+    setState(() {
+      _gameStatusText = "ALOITETAAN!";
+    });
+    _beginningTimer = Timer.periodic(oneSec, (timer) {
       setState(() {
-        if (_beginningTimerValue > 0) {
-          _beginningTimerValue--;
-        } else {
-          timer.cancel(); // Stop the timer when it reaches 0
-          _listenToSensorCharacteristic();
-          _startGameTimer();
-          _progressGame();
-        }
+        _beginningTimerValue--;
       });
+
+      if (_beginningTimerValue < 4 && !countDownStarted) {
+        countDownStarted = true;
+        AudioPlayers.playCountDown();
+      }
+
+      if (_beginningTimerValue > 0) {
+        DeviceConnection.setLedColor(
+            onoff ? LedColors.RED : LedColors.OFF, currentTarget - 1);
+        onoff = !onoff;
+      } else {
+        setState(() {
+          _gameStatusText = "AIKAA KULUNUT:";
+        });
+        _beginningTimer?.cancel(); // Stop the timer when it reaches 0
+        _listenToSensorCharacteristic();
+        _startGameTimer();
+        _startGame();
+      }
     });
   }
 
   Future<void> _listenToSensorCharacteristic() async {
-    _subscription = DeviceConnection.sensorValueStream.listen((data) {
-      developer.log("SENSOR DATA: ${data.toString()}");
-      final activeSensors = DeviceConnection.parseSensorData(data.first);
-
-      if (activeSensors.contains(currentTarget)) {
+    DeviceConnection.addSensorValueListerner((data) {
+      if (data.contains(currentTarget)) {
         _progressGame();
       }
     });
   }
 
+  void _startGame() {
+    _updateTargetLed(currentTarget);
+  }
+
   void _progressGame() {
     points++;
-    int nextTarget;
+    AudioPlayers.playSuccess();
 
+    int nextTarget;
     do {
       nextTarget = Random().nextInt(8) + 1;
     } while (nextTarget == currentTarget);
 
     if (points >= maxPoints) {
+      developer.log("Game finished!");
       _navigateNextScreen();
     } else {
       currentTarget = nextTarget;
+      developer.log("Next target: $nextTarget");
       _updateTargetLed(nextTarget);
     }
   }
 
   Future<void> _updateTargetLed(int currentTarget) async {
-    DeviceConnection.ledCharacteristics.forEachIndexed((index, characteristic) {
-      characteristic.write(index + 1 == currentTarget ? [0xFF] : [0x00]);
-    });
+    await DeviceConnection.setSingleLedActive(
+        LedColors.BLUE, currentTarget - 1);
   }
 
   void _startGameTimer() {
-    const oneSec = Duration(seconds: 1);
+    const millis100 = Duration(milliseconds: 100);
     _gameTimer = Timer.periodic(
-      oneSec,
-      (timer) => setState(() => _gameTimerValue++),
+      millis100,
+      (timer) => setState(() => _gameTimerValue += 100),
     );
   }
 
   void _navigateNextScreen() {
     _gameTimer?.cancel();
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => GameFinishedScreen(
           gameTime: _gameTimerValue,
+          win: true,
+          gameIndex: 1,
         ),
       ),
     );
@@ -145,6 +171,16 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
               ),
             ),
           ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+                padding: const EdgeInsets.only(top: 25.0),
+                child: Text(
+                  _gameStatusText,
+                  style: theme.textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
+                )),
+          ),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -155,8 +191,15 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                   child: Text(
                     _beginningTimerValue > 0
                         ? _beginningTimerValue.toString()
-                        : _gameTimerValue.toString(),
-                    style: theme.textTheme.headlineMedium,
+                        : TimerFormatter.format(_gameTimerValue),
+                    style: TextStyle(
+                      color: Colors.white,
+                      decoration: TextDecoration.none,
+                      fontFamily: "Nunito",
+                      fontWeight: FontWeight.w900,
+                      fontStyle: FontStyle.italic,
+                      fontSize: _beginningTimerValue > 0 ? 160.0 : 84.0,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -164,6 +207,7 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
             ),
           ),
           Container(
+            margin: const EdgeInsets.only(bottom: 25.0),
             decoration: const BoxDecoration(
               boxShadow: [
                 BoxShadow(

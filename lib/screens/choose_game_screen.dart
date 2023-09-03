@@ -1,5 +1,7 @@
 import "package:dribla_app_v2/assets.dart";
-import "package:dribla_app_v2/screens/play_game_screen.dart";
+import "package:dribla_app_v2/screens/play_minefield_game_screen.dart";
+import "package:dribla_app_v2/screens/play_ten_game_screen.dart";
+import "package:dribla_app_v2/screens/play_zigzag_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
@@ -13,11 +15,29 @@ class ChooseGameScreen extends StatefulWidget {
 }
 
 class _ChooseGameScreenState extends State<ChooseGameScreen> {
-  static const String _gameDescription =
-      """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
+  int chosenGame = 0;
+
+  static final List<String> _gameDescriptions = [
+    """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
       eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce
-      cubilia, pretium sagittis non feugiat hendrerit.""";
-  static const String _gameTitle = "Pujottelu";
+      cubilia, pretium sagittis non feugiat hendrerit.""",
+    """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
+      eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce
+      cubilia, pretium sagittis non feugiat hendrerit.""",
+    """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
+      eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce
+      cubilia, pretium sagittis non feugiat hendrerit."""
+  ];
+  static final List<String> _gameTitles = [
+    "Pujottelu",
+    "10 - Peli",
+    "Miinakenttä"
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +72,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+              padding: const EdgeInsets.only(top: 20.0, bottom: 40.0),
               child: Text(
                 loc.chooseGame,
                 style: theme.textTheme.headlineMedium,
@@ -72,7 +92,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0),
                         child: Text(
-                          _gameTitle,
+                          _gameTitles[index],
                           style: theme.textTheme.headlineMedium,
                           textAlign: TextAlign.center,
                         ),
@@ -80,7 +100,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
-                          _gameDescription,
+                          _gameDescriptions[index],
                           style: theme.textTheme.bodySmall,
                           textAlign: TextAlign.center,
                         ),
@@ -90,6 +110,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 },
                 itemCount: 3,
                 loop: false,
+                onIndexChanged: (index) => chosenGame = index,
                 pagination: const SwiperPagination(
                   alignment: Alignment.topCenter,
                   margin: EdgeInsets.only(top: 400.0),
@@ -99,6 +120,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
             ),
           ),
           Container(
+            margin: const EdgeInsets.only(bottom: 25.0),
             decoration: const BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -112,8 +134,12 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlayGameScreen(),
-                  ),
+                      builder: (context) => switch (chosenGame) {
+                            0 => const PlayZigZagGameScreen(),
+                            1 => const PlayTenGameScreen(),
+                            2 => const PlayMinefieldGameScreen(),
+                            _ => const PlayTenGameScreen()
+                          }),
                 );
               },
               style: theme.elevatedButtonTheme.style?.copyWith(
