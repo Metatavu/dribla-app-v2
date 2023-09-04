@@ -1,31 +1,43 @@
 import "package:dribla_app_v2/assets.dart";
-import "package:dribla_app_v2/screens/play_game_screen.dart";
+import "package:dribla_app_v2/screens/play_minefield_game_screen.dart";
+import "package:dribla_app_v2/screens/play_ten_game_screen.dart";
+import "package:dribla_app_v2/screens/play_zigzag_game_screen.dart";
 import "package:flutter/material.dart";
-import "package:flutter_blue/flutter_blue.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
 
 class ChooseGameScreen extends StatefulWidget {
-  final BluetoothCharacteristic? sensorCharacteristic;
-  final BluetoothCharacteristic? ledCharacteristic;
-
-  const ChooseGameScreen({
-    super.key,
-    this.sensorCharacteristic,
-    this.ledCharacteristic,
-  });
+  const ChooseGameScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _ChooseGameScreenState();
 }
 
 class _ChooseGameScreenState extends State<ChooseGameScreen> {
-  static const String _gameDescription =
-      """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
-      eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce 
-      cubilia, pretium sagittis non feugiat hendrerit.""";
-  static const String _gameTitle = "Pujottelu";
+  int chosenGame = 0;
+
+  static final List<String> _gameDescriptions = [
+    """• Harjoittele sisä-ja ulkosyrjäkäännöksiä
+      • Pidä hyvä peliasento
+      • Pyri nostamaan katsetta pois pallosta, jotta voit havannoida paremmin""",
+    """• Harjoittele kuljettamista molemmilla jaloilla ja käytä erilaisia tapoja muuttaa suuntaa.
+      • Pidä hyvä peliasento koko ajan
+      • Pyri nostamaan katsetta pois pallosta, jotta voit havannoida paremmin""",
+    """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
+      eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce
+      cubilia, pretium sagittis non feugiat hendrerit."""
+  ];
+  static final List<String> _gameTitles = [
+    "Zig-Zag",
+    "10 - Peli",
+    "Miinakenttä"
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +72,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+              padding: const EdgeInsets.only(top: 20.0, bottom: 40.0),
               child: Text(
                 loc.chooseGame,
                 style: theme.textTheme.headlineMedium,
@@ -80,7 +92,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0),
                         child: Text(
-                          _gameTitle,
+                          _gameTitles[index],
                           style: theme.textTheme.headlineMedium,
                           textAlign: TextAlign.center,
                         ),
@@ -88,7 +100,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
-                          _gameDescription,
+                          _gameDescriptions[index],
                           style: theme.textTheme.bodySmall,
                           textAlign: TextAlign.center,
                         ),
@@ -98,6 +110,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 },
                 itemCount: 3,
                 loop: false,
+                onIndexChanged: (index) => chosenGame = index,
                 pagination: const SwiperPagination(
                   alignment: Alignment.topCenter,
                   margin: EdgeInsets.only(top: 400.0),
@@ -107,6 +120,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
             ),
           ),
           Container(
+            margin: const EdgeInsets.only(bottom: 25.0),
             decoration: const BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -120,11 +134,12 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlayGameScreen(
-                      sensorCharacteristic: widget.sensorCharacteristic,
-                      ledCharacteristic: widget.ledCharacteristic,
-                    ),
-                  ),
+                      builder: (context) => switch (chosenGame) {
+                            0 => const PlayZigZagGameScreen(),
+                            1 => const PlayTenGameScreen(),
+                            2 => const PlayMinefieldGameScreen(),
+                            _ => const PlayTenGameScreen()
+                          }),
                 );
               },
               style: theme.elevatedButtonTheme.style?.copyWith(
@@ -132,30 +147,6 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
               child: Text(
                 loc.playButtonText,
                 style: theme.textTheme.headlineMedium,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(5, 5),
-                  ),
-                ],
-              ),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: theme.elevatedButtonTheme.style!.copyWith(
-                  fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
-                  backgroundColor: const MaterialStatePropertyAll(Colors.blue),
-                ),
-                child: Text(
-                  loc.settingsButtonText,
-                  style: theme.textTheme.headlineMedium,
-                ),
               ),
             ),
           ),

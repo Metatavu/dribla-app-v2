@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  collection: 1.17.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -39,7 +40,9 @@ dependencies:
     sdk: flutter
   intl: any
   flutter_swiper_plus: ^2.0.4
-  flutter_blue: ^0.8.0
+  flutter_reactive_ble: ^5.2.0
+  fixnum: ^1.1.0
+  audioplayers: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +71,11 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/
+    - assets/audio/success.wav
+    - assets/audio/countdown.wav
+    - assets/audio/victory.mp3
+    - assets/audio/explosion.wav
+    - assets/audio/failure.wav
   generate: true
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
