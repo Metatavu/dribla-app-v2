@@ -18,18 +18,18 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
   int chosenGame = 0;
 
   static final List<String> _gameDescriptions = [
-    """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
-      eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce
-      cubilia, pretium sagittis non feugiat hendrerit.""",
-    """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
-      eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce
-      cubilia, pretium sagittis non feugiat hendrerit.""",
+    """• Harjoittele sisä-ja ulkosyrjäkäännöksiä
+      • Pidä hyvä peliasento
+      • Pyri nostamaan katsetta pois pallosta, jotta voit havannoida paremmin""",
+    """• Harjoittele kuljettamista molemmilla jaloilla ja käytä erilaisia tapoja muuttaa suuntaa.
+      • Pidä hyvä peliasento koko ajan
+      • Pyri nostamaan katsetta pois pallosta, jotta voit havannoida paremmin""",
     """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
       eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce
       cubilia, pretium sagittis non feugiat hendrerit."""
   ];
   static final List<String> _gameTitles = [
-    "Pujottelu",
+    "Zig-Zag",
     "10 - Peli",
     "Miinakenttä"
   ];
