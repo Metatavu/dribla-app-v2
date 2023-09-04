@@ -4,7 +4,9 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class IndexScreen extends StatefulWidget {
-  const IndexScreen({Key? key}) : super(key: key);
+  String connectionErrorMessage;
+  IndexScreen({Key? key, required this.connectionErrorMessage})
+      : super(key: key);
 
   @override
   State<IndexScreen> createState() => _IndexScreenState();
@@ -45,6 +47,16 @@ class _IndexScreenState extends State<IndexScreen> {
               child: Text(
                 loc.lookingForMat,
                 style: theme.textTheme.headlineMedium,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 100.0),
+              child: Text(
+                widget.connectionErrorMessage,
+                style: theme.textTheme.labelSmall,
               ),
             ),
           ),
