@@ -43,6 +43,7 @@ dependencies:
   flutter_reactive_ble: ^5.2.0
   fixnum: ^1.1.0
   audioplayers: ^5.1.0
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

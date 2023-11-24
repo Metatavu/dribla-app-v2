@@ -1,14 +1,9 @@
 import "dart:async";
-import "dart:developer";
-import "dart:io";
 
 import "package:dribla_app_v2/audio_players.dart";
-import "package:dribla_app_v2/bluetooth_ids.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
-import "package:dribla_app_v2/screens/index_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:flutter_reactive_ble/flutter_reactive_ble.dart";
 
 import "device_connection.dart";
 
@@ -73,118 +68,10 @@ class DriblaAppScreen extends StatefulWidget {
 }
 
 class _DriblaAppScreenState extends State<DriblaAppScreen> {
-  bool _connecting = false;
-  final String scanningError =
-      "Laitteiden haku epäonnistui, yritetään uudelleen 5 sekunnin kuluttua.";
-  final String connectionError =
-      "Mattoon yhdistäminen epäonnistui, yritetään uudelleen 5 sekunnin kuluttua.";
-  String _errorMessage = "";
-
   Future<void> _initApp() async {
     await AudioPlayers.init();
-    DeviceConnection.controller.statusStream.listen((status) => {
-          if (status == BleStatus.ready)
-            {_scanDevices()}
-          else
-            {
-              setState(() {
-                _errorMessage = "Bluetooth ei päällä tai valmiina.";
-              })
-            }
-        });
+    DeviceConnection.init();
   }
-
-  Future<void> _scanDevices() async {
-    setState(() {
-      _errorMessage = "";
-    });
-    log("Scanning for devices");
-    DeviceConnection.controller.scanForDevices(
-      withServices: [],
-      scanMode: ScanMode.lowLatency,
-    ).listen((device) async {
-      if (device.name == "Dribla" && !_connecting) {
-        if (Platform.isAndroid) {
-          await DeviceConnection.controller
-              .requestConnectionPriority(
-            deviceId: device.id,
-            priority: ConnectionPriority.highPerformance,
-          )
-              .onError((error, stackTrace) {
-            setState(() {
-              _errorMessage = scanningError;
-            });
-            log("Connection priority request failed");
-            Timer(const Duration(seconds: 5), () => _scanDevices());
-          });
-        }
-
-        await DeviceConnection.controller.discoverAllServices(device.id);
-        connectToDevice(device.id);
-      }
-    }, onError: (error) {
-      setState(() {
-        _errorMessage = scanningError;
-      });
-      log("Error while scanning for devices: $error");
-      Timer(const Duration(seconds: 5), () => _scanDevices());
-    });
-  }
-
-  Future<void> connectToDevice(String deviceId) async {
-    setState(() {
-      _errorMessage = "";
-    });
-    log("Connecting to device $deviceId");
-    _connecting = true;
-
-    DeviceConnection.controller
-        .connectToDevice(
-            id: deviceId, connectionTimeout: const Duration(seconds: 30))
-        .listen(
-          (connectionStateUpdate) =>
-              handleDeviceConnectionStateUpdate(connectionStateUpdate),
-        )
-        .onError((error) => {
-              setState(() {
-                _errorMessage = connectionError;
-              }),
-              _connecting = false,
-              log("Error connecting to device"),
-              Timer(const Duration(seconds: 5), () => connectToDevice(deviceId))
-            });
-  }
-
-  void handleDeviceConnectionStateUpdate(
-    ConnectionStateUpdate stateUpdate,
-  ) async {
-    log(stateUpdate.toString());
-    if (stateUpdate.connectionState != DeviceConnectionState.connected) return;
-
-    final services = await DeviceConnection.controller
-        .getDiscoveredServices(stateUpdate.deviceId);
-
-    final sensorService = services.firstWhere(
-      (service) => service.id == BluetoothIds.sensorServiceId,
-    );
-    DeviceConnection.initSensor(
-        sensorService.characteristics.first.subscribe());
-
-    final ledService = services.firstWhere(
-      (service) => service.id == BluetoothIds.ledServiceId,
-    );
-
-    DeviceConnection.ledCharacteristics = ledService.characteristics;
-    //await DeviceConnection.setAllLedColors(0x00);
-    if (context.mounted) {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const ChooseGameScreen(),
-      ));
-    }
-  }
-
-  void subscribeToDeviceCharacteristic(
-      QualifiedCharacteristic characteristic) {}
 
   @override
   void initState() {
@@ -195,14 +82,11 @@ class _DriblaAppScreenState extends State<DriblaAppScreen> {
   @override
   void dispose() {
     super.dispose();
-    _connecting = false;
     AudioPlayers.deinit();
   }
 
   @override
   Widget build(BuildContext context) {
-    return IndexScreen(
-      connectionErrorMessage: _errorMessage,
-    );
+    return const ChooseGameScreen();
   }
 }

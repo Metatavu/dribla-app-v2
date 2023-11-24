@@ -1,131 +1,76 @@
 import "package:dribla_app_v2/assets.dart";
-import "package:dribla_app_v2/audio_players.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/led_colors.dart";
-import "package:dribla_app_v2/screens/game_finished_screen.dart";
-import "package:dribla_app_v2/timer_formatters.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
-import "dart:async";
 
-class PlayZigZagGameScreen extends StatefulWidget {
-  const PlayZigZagGameScreen({super.key});
+import "../games/game.dart";
+import "game_finished_screen.dart";
+
+class PlayGameScreen extends StatefulWidget {
+  final Game selectedGame;
+
+  const PlayGameScreen({Key? key, required this.selectedGame})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _PlayZigZagGameScreen();
+  State<StatefulWidget> createState() => _PlayGameScreen();
 }
 
-class _PlayZigZagGameScreen extends State<PlayZigZagGameScreen> {
-  int _beginningTimerValue = 10; // Starting value for the timer
+class _PlayGameScreen extends State<PlayGameScreen> {
+  int _timeToStart = 10; // Starting value for the timer
+  String _score = "0";
   String _gameStatusText = "ALOITETAAN!"; // TODO: localize
-  Timer? _gameTimer;
-  Timer? _beginningTimer;
-  int maxGameTime = 60 * 1000;
-  int _gameTimerValue = 60 * 1000;
-  List<int> targets = [0, 4, 1, 6, 2, 7, 6, 3, 4, 5];
-  int currentTargetIdex = 0;
 
   @override
   void initState() {
     super.initState();
-    _startBeginningTimer();
+    _initializeGame();
+  }
+
+  _initializeGame() async {
+    await DeviceConnection.setAllLedColors(LedColors.OFF);
+    await DeviceConnection.resetLeds();
+    widget.selectedGame.onCountDownUpdate = (timeToStart) {
+      setState(() {
+        _timeToStart = timeToStart;
+      });
+    };
+    widget.selectedGame.onGameScoreUpdate = (score) {
+      setState(() {
+        _score = score;
+      });
+    };
+    widget.selectedGame.onStatusTextUpdate = (status) {
+      setState(() {
+        _gameStatusText = status;
+      });
+    };
+    widget.selectedGame.onFinish = (win) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => GameFinishedScreen(
+            finalScore: widget.selectedGame.getFinalScore(),
+            win: win,
+            skipEndingFanfare: widget.selectedGame.skipEndingFanfare(),
+            gameIndex: widget.selectedGame.getIndex(),
+          ),
+        ),
+      );
+    };
+    widget.selectedGame.run();
   }
 
   @override
   void dispose() {
-    _gameTimer?.cancel();
-    _beginningTimer?.cancel();
-    DeviceConnection.clearListeners();
+    widget.selectedGame.dispose();
     super.dispose();
   }
 
-  void _startBeginningTimer() {
-    const oneSec = Duration(seconds: 1);
-    var onoff = false;
-    var countDownStarted = false;
-    setState(() {
-      _gameStatusText = "ALOITETAAN!";
-    });
-    _beginningTimer = Timer.periodic(oneSec, (timer) {
-      setState(() {
-        _beginningTimerValue--;
-      });
-
-      if (_beginningTimerValue < 4 && !countDownStarted) {
-        countDownStarted = true;
-        AudioPlayers.playCountDown();
-      }
-
-      if (_beginningTimerValue > 0) {
-        DeviceConnection.setLedColor(
-            onoff ? LedColors.RED : LedColors.OFF, targets[currentTargetIdex]);
-        onoff = !onoff;
-      } else {
-        setState(() {
-          _gameStatusText = "AIKAA JÄLJELLÄ:";
-        });
-        _beginningTimer?.cancel(); // Stop the timer when it reaches 0
-        _listenToSensorCharacteristic();
-        _startGameTimer();
-        _startGame();
-      }
-    });
-  }
-
-  Future<void> _listenToSensorCharacteristic() async {
-    DeviceConnection.addSensorValueListerner((data) {
-      if (data.contains(targets[currentTargetIdex] + 1)) {
-        _progressGame();
-      }
-    });
-  }
-
-  void _startGame() {
-    _updateTargetLed(targets[currentTargetIdex]);
-  }
-
-  void _progressGame() {
-    AudioPlayers.playSuccess();
-    currentTargetIdex++;
-    if (currentTargetIdex >= targets.length) {
-      _navigateNextScreen(true);
-    } else {
-      _updateTargetLed(targets[currentTargetIdex]);
-    }
-  }
-
-  Future<void> _updateTargetLed(int index) async {
-    await DeviceConnection.setSingleLedActive(LedColors.BLUE, index);
-  }
-
-  void _startGameTimer() {
-    const millis100 = Duration(milliseconds: 100);
-    _gameTimer = Timer.periodic(
-      millis100,
-      (timer) => {
-        setState(() => _gameTimerValue -= 100),
-        if (_gameTimerValue <= 0) {_navigateNextScreen(false)}
-      },
-    );
-  }
-
-  void _navigateNextScreen(bool win) {
-    _gameTimer?.cancel();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => GameFinishedScreen(
-          gameTime: maxGameTime - _gameTimerValue,
-          win: win,
-          gameIndex: 0,
-        ),
-      ),
-    );
-  }
-
   void _navigateBack() {
-    _gameTimer?.cancel();
+    widget.selectedGame.dispose();
     Navigator.pop(context);
   }
 
@@ -177,16 +122,14 @@ class _PlayZigZagGameScreen extends State<PlayZigZagGameScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
-                    _beginningTimerValue > 0
-                        ? _beginningTimerValue.toString()
-                        : TimerFormatter.format(_gameTimerValue),
+                    _timeToStart > 0 ? _timeToStart.toString() : _score,
                     style: TextStyle(
                       color: Colors.white,
                       decoration: TextDecoration.none,
                       fontFamily: "Nunito",
                       fontWeight: FontWeight.w900,
                       fontStyle: FontStyle.italic,
-                      fontSize: _beginningTimerValue > 0 ? 160.0 : 84.0,
+                      fontSize: _timeToStart > 0 ? 160.0 : 84.0,
                     ),
                     textAlign: TextAlign.center,
                   ),

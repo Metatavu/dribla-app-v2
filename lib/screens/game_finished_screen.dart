@@ -1,22 +1,25 @@
 import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/audio_players.dart";
-import "package:dribla_app_v2/screens/play_minefield_game_screen.dart";
-import "package:dribla_app_v2/screens/play_ten_game_screen.dart";
-import "package:dribla_app_v2/screens/play_zigzag_game_screen.dart";
-import "package:dribla_app_v2/timer_formatters.dart";
+import "package:dribla_app_v2/device_connection.dart";
+import "package:dribla_app_v2/game_utils.dart";
+import "package:dribla_app_v2/led_colors.dart";
+import "package:dribla_app_v2/screens/play_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
-import "choose_game_screen.dart";
-
 class GameFinishedScreen extends StatefulWidget {
-  final int? gameTime;
+  final String? finalScore;
   final int gameIndex;
   final bool win;
+  final bool skipEndingFanfare;
 
   const GameFinishedScreen(
-      {Key? key, this.gameTime, required this.gameIndex, required this.win})
+      {Key? key,
+      this.finalScore,
+      required this.gameIndex,
+      required this.win,
+      required this.skipEndingFanfare})
       : super(key: key);
 
   @override
@@ -27,11 +30,14 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.win) {
-      AudioPlayers.playVictory();
-    } else {
-      AudioPlayers.playFailure();
+    if (!widget.skipEndingFanfare) {
+      if (widget.win) {
+        AudioPlayers.playVictory();
+      } else {
+        AudioPlayers.playFailure();
+      }
     }
+    DeviceConnection.setAllLedColors(LedColors.OFF);
   }
 
   @override
@@ -92,15 +98,13 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
                           children: [
                             Text(
                               widget.win
-                                  ? loc.gameTime
+                                  ? "Tulokset:"
                                   : "Parempi onni ensi kerralla :(",
                               style: theme.textTheme.headlineMedium,
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              widget.win
-                                  ? TimerFormatter.format(widget.gameTime ?? 0)
-                                  : "",
+                              widget.finalScore ?? "",
                               style: theme.textTheme.headlineLarge,
                               textAlign: TextAlign.center,
                             ),
@@ -123,13 +127,10 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => switch (widget.gameIndex) {
-                      0 => const PlayZigZagGameScreen(),
-                      1 => const PlayTenGameScreen(),
-                      2 => const PlayMinefieldGameScreen(),
-                      _ => const PlayTenGameScreen()
-                    },
-                  ),
+                      builder: (context) => PlayGameScreen(
+                              selectedGame: GameUtils.selectGame(
+                            widget.gameIndex,
+                          ))),
                 );
               },
               style: theme.elevatedButtonTheme.style?.copyWith(
@@ -155,12 +156,7 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ChooseGameScreen(),
-                    ),
-                  );
+                  Navigator.pop(context);
                 },
                 style: theme.elevatedButtonTheme.style?.copyWith(
                   fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
