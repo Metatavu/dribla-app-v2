@@ -11,5 +11,12 @@
     "tapsLeft": "Left",
     "gameEnded": "Game ended",
     "gameTime": "Game time: ",
-    "replay": "Replay"
+    "replay": "Replay",
+    "youNeedToEnableBluetoothPermissions": "In order to use this app you need to grant permissions for nearby devices from the settings of your mobile device.",
+    "settings": "App settings",
+    "location": "Location",
+    "nearbyDevices": "Nearby devices",
+    "granted": "Granted",
+    "notGranted": "Not granted",
+    "start": "Start"
 }

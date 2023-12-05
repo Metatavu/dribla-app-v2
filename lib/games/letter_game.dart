@@ -48,7 +48,7 @@ class LetterGame extends Game {
   @override
   void onBeginTimerTick(bool onoff) {
     DeviceConnection.setLedColor(
-        onoff ? LedColors.RED : LedColors.OFF, targets[currentTargetIndex]);
+        onoff ? LedColors.red : LedColors.off, targets[currentTargetIndex]);
   }
 
   @override
@@ -94,7 +94,7 @@ class LetterGame extends Game {
   }
 
   Future<void> _updateTargetLed(int index) async {
-    await DeviceConnection.setSingleLedActive(LedColors.BLUE, index);
+    await DeviceConnection.setSingleLedActive(LedColors.blue, index);
   }
 
   @override

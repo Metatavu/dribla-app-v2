@@ -4,9 +4,8 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class IndexScreen extends StatefulWidget {
-  String connectionErrorMessage;
-  IndexScreen({Key? key, required this.connectionErrorMessage})
-      : super(key: key);
+  final String connectionErrorMessage;
+  const IndexScreen({super.key, required this.connectionErrorMessage});
 
   @override
   State<IndexScreen> createState() => _IndexScreenState();

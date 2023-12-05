@@ -15,6 +15,7 @@ enum ConnectionStatus { bleDisabled, bleConnecting, bleConnected }
 
 class DeviceConnection {
   static FlutterReactiveBle controller = FlutterReactiveBle();
+  static StreamSubscription<BleStatus>? bleStatusSubscription;
   static List<Characteristic> ledCharacteristics = [];
   static Characteristic? resetCharacteristic;
   static Characteristic? shutdownCharacteristic;
@@ -37,7 +38,7 @@ class DeviceConnection {
   }
 
   static void init() {
-    controller.statusStream.listen((status) => {
+    bleStatusSubscription = controller.statusStream.listen((status) => {
           if (status == BleStatus.ready)
             {_scanDevices()}
           else
@@ -48,17 +49,34 @@ class DeviceConnection {
         });
   }
 
+  static void clearDeviceId() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove("dribla-device-id");
+  }
+
+  static void deinit() {
+    bleStatusSubscription?.cancel();
+    ledCharacteristics.clear();
+    resetCharacteristic = null;
+    shutdownCharacteristic = null;
+    sensorValueListeners.clear();
+    connectedDeviceId = "";
+    _connecting = false;
+    connectionStatus = ConnectionStatus.bleDisabled;
+    connectionStatusController.add(ConnectionStatus.bleDisabled);
+  }
+
   static Future<void> _scanDevices() async {
     final prefs = await SharedPreferences.getInstance();
-    final storedDeviceId = prefs.getString("dribla-device-id");
+    connectedDeviceId = prefs.getString("dribla-device-id") ?? "";
     developer.log("Scanning for devices");
     connectionStatus = ConnectionStatus.bleConnecting;
     connectionStatusController.add(ConnectionStatus.bleConnecting);
-    if (storedDeviceId != null) {
+    if (connectedDeviceId.isNotEmpty) {
       if (Platform.isAndroid) {
         await DeviceConnection.controller
             .requestConnectionPriority(
-          deviceId: storedDeviceId,
+          deviceId: connectedDeviceId,
           priority: ConnectionPriority.highPerformance,
         )
             .onError((error, stackTrace) {
@@ -67,8 +85,8 @@ class DeviceConnection {
         });
       }
 
-      await DeviceConnection.controller.discoverAllServices(storedDeviceId);
-      connectToDevice(storedDeviceId);
+      await DeviceConnection.controller.discoverAllServices(connectedDeviceId);
+      connectToDevice(connectedDeviceId);
     } else {
       DeviceConnection.controller.scanForDevices(
         withServices: [],
@@ -108,11 +126,13 @@ class DeviceConnection {
           (connectionStateUpdate) =>
               handleDeviceConnectionStateUpdate(connectionStateUpdate),
         )
-        .onError((error) => {
-              _connecting = false,
-              developer.log("Error connecting to device"),
-              Timer(const Duration(seconds: 5), () => connectToDevice(deviceId))
-            });
+        .onError(
+          (error) => {
+            _connecting = false,
+            developer.log("Error connecting to device"),
+            Timer(const Duration(seconds: 5), () => connectToDevice(deviceId))
+          },
+        );
   }
 
   static void handleDeviceConnectionStateUpdate(
@@ -128,7 +148,8 @@ class DeviceConnection {
       (service) => service.id == BluetoothIds.sensorServiceId,
     );
     DeviceConnection.initSensor(
-        sensorService.characteristics.first.subscribe());
+      sensorService.characteristics.first.subscribe(),
+    );
 
     final ledService = services.firstWhere(
       (service) => service.id == BluetoothIds.ledServiceId,
@@ -165,7 +186,7 @@ class DeviceConnection {
     });
   }
 
-  static void addSensorValueListerner(Function(List<int>) listener) {
+  static void addSensorValueListener(Function(List<int>) listener) {
     sensorValueListeners.add(listener);
   }
 
@@ -189,7 +210,7 @@ class DeviceConnection {
   static Future<void> setSingleLedActive(int color, int index) async {
     var charId = BluetoothIds.ledCharacteristicIds[index];
     for (var c in ledCharacteristics) {
-      Int32 color32 = Int32(c.id == charId ? color : LedColors.OFF);
+      Int32 color32 = Int32(c.id == charId ? color : LedColors.off);
       developer
           .log("Setting char ${c.id} value to: 0x${color32.toRadixString(16)}");
       await c.write(color32.toBytes()).onError(
@@ -202,7 +223,7 @@ class DeviceConnection {
         (BluetoothIds.ledCharacteristicIds[charIdIndex], color[index]));
     for (var c in ledCharacteristics) {
       var color = charColorPairs.firstWhereOrNull((pair) => pair.$1 == c.id);
-      Int32 color32 = Int32(color != null ? color.$2 : LedColors.OFF);
+      Int32 color32 = Int32(color != null ? color.$2 : LedColors.off);
       developer
           .log("Setting char ${c.id} value to: 0x${color32.toRadixString(16)}");
       await c.write(color32.toBytes()).onError(

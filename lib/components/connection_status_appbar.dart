@@ -1,14 +1,15 @@
 import "dart:async";
 
+import "package:dribla_app_v2/components/styled_dialog.dart";
+import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:flutter/material.dart";
 
 import "../device_connection.dart";
 
 class ConnectionStatusAppBar extends StatefulWidget
     implements PreferredSizeWidget {
-  const ConnectionStatusAppBar({Key? key})
-      : preferredSize = const Size.fromHeight(kToolbarHeight),
-        super(key: key);
+  const ConnectionStatusAppBar({super.key})
+      : preferredSize = const Size.fromHeight(kToolbarHeight);
 
   @override
   final Size preferredSize; // default is 56.0
@@ -22,61 +23,98 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
 
   @override
   void initState() {
+    super.initState();
     _connectionStatusStream =
         DeviceConnection.connectionStatusController.stream;
-    super.initState();
   }
 
-  Widget _getConnectionStatusIcon(ConnectionStatus? connectionStatus) {
-    ConnectionStatus status =
-        connectionStatus ?? DeviceConnection.connectionStatus;
-    return switch (status) {
+  Widget _getConnectionStatusIcon(ConnectionStatus connectionStatus) {
+    return switch (connectionStatus) {
       ConnectionStatus.bleDisabled => const Icon(Icons.bluetooth_disabled),
       ConnectionStatus.bleConnecting => const Icon(Icons.bluetooth_searching),
       ConnectionStatus.bleConnected => const Icon(Icons.bluetooth_connected)
     };
   }
 
-  Widget _buildDeviceInfoDialogContent() {
-    return switch (DeviceConnection.connectionStatus) {
-      ConnectionStatus.bleDisabled => const Text(
-          "Bluetooth ei käytössä\nVarmista että puhelimen bluetooth on kytketty päälle\nja että sovelluksella on tarvittavat oikeudet sen käyttöön."),
-      ConnectionStatus.bleConnecting =>
-        const Text("Yhdistetään laitteeseen..."),
-      ConnectionStatus.bleConnected => Container(
-          height: 70,
-          child: Column(
-            children: [
-              Text(
-                  "Yhdistetty, Dribla (${DeviceConnection.connectedDeviceId})"),
-              IconButton(
-                  onPressed: () {
-                    DeviceConnection.shutDownDevice();
-                  },
-                  icon: const Icon(Icons.power_off))
-            ],
-          ))
-    };
+  String _getDeviceConnectionStatusText(ConnectionStatus status) =>
+      switch (status) {
+        ConnectionStatus.bleDisabled =>
+          "Bluetooth ei käytössä. Varmista että puhelimen bluetooth on kytketty päälle ja että sovelluksella on tarvittavat oikeudet sen käyttöön.",
+        ConnectionStatus.bleConnecting => switch (
+              DeviceConnection.connectedDeviceId.isNotEmpty) {
+            true => "Etsitään laitetta...",
+            false => "Etsitään laitteita..."
+          },
+        ConnectionStatus.bleConnected => "Yhdistetty",
+      };
+
+  Widget _buildDeviceInfoDialogContent(ConnectionStatus status) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          _getDeviceConnectionStatusText(DeviceConnection.connectionStatus),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (DeviceConnection.connectedDeviceId.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Text(
+            "Laite: Dribla (${DeviceConnection.connectedDeviceId})",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ],
+    );
   }
 
-  Future<void> _dialogBuilder(BuildContext context) {
+  Future<void> _openConnectionStatusDialog(
+    BuildContext context,
+    ThemeData theme,
+  ) {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Laitteen tiedot"),
-          content: _buildDeviceInfoDialogContent(),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
+        return StreamBuilder<ConnectionStatus>(
+          stream: _connectionStatusStream,
+          builder: (context, state) => StyledDialog(
+            actionsDirection: DeviceConnection.connectionStatus !=
+                    ConnectionStatus.bleDisabled
+                ? Axis.vertical
+                : Axis.horizontal,
+            title: "Laitteen tiedot",
+            content: _buildDeviceInfoDialogContent(
+              state.data ?? DeviceConnection.connectionStatus,
+            ),
+            actions: [
+              if (DeviceConnection.connectionStatus ==
+                  ConnectionStatus.bleConnected)
+                const OutlinedButton(
+                  onPressed: DeviceConnection.shutDownDevice,
+                  child: Text("Sammuta laite"),
+                ),
+              if (DeviceConnection.connectedDeviceId.isNotEmpty)
+                OutlinedButton(
+                  onPressed: () => setState(() {
+                    DeviceConnection.clearDeviceId();
+                    DeviceConnection.deinit();
+                    DeviceConnection.init();
+                  }),
+                  child: const Text("Unohda laite"),
+                ),
+              StyledElevatedButton(
+                child: const Text("OK"),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          ),
         );
       },
     );
@@ -84,26 +122,24 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        foregroundColor: Colors.white,
-        title: StreamBuilder<ConnectionStatus>(
-          stream: _connectionStatusStream,
-          builder: (context, state) {
-            if (!state.hasData) {
-              return _getConnectionStatusIcon(
-                  DeviceConnection.connectionStatus);
-            }
-            return _getConnectionStatusIcon(state.data);
-          },
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      foregroundColor: Colors.white,
+      title: StreamBuilder<ConnectionStatus>(
+        stream: _connectionStatusStream,
+        builder: (context, state) => _getConnectionStatusIcon(
+          state.data ?? DeviceConnection.connectionStatus,
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                _dialogBuilder(context);
-              },
-              icon: const Icon(Icons.settings))
-        ]);
+      ),
+      actions: [
+        IconButton(
+          onPressed: () => _openConnectionStatusDialog(context, theme),
+          icon: const Icon(Icons.settings),
+        )
+      ],
+    );
   }
 }

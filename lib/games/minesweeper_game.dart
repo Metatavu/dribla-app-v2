@@ -56,7 +56,7 @@ class MineSweeperGame extends Game {
       for (var sensor in activeSensors) {
         if (targetsLeft.remove(sensor)) {
           AudioPlayers.playSuccess();
-          DeviceConnection.setLedColor(LedColors.OFF, sensor - 1);
+          DeviceConnection.setLedColor(LedColors.off, sensor - 1);
         }
       }
     }
@@ -70,7 +70,7 @@ class MineSweeperGame extends Game {
 
   @override
   Future<void> startGame() async {
-    await DeviceConnection.setAllLedColors(LedColors.RED);
+    await DeviceConnection.setAllLedColors(LedColors.red);
     await Future.delayed(const Duration(milliseconds: 100));
     await DeviceConnection.resetLeds();
     await Future.delayed(const Duration(milliseconds: 100));

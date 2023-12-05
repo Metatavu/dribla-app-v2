@@ -11,8 +11,7 @@ import "game_finished_screen.dart";
 class PlayGameScreen extends StatefulWidget {
   final Game selectedGame;
 
-  const PlayGameScreen({Key? key, required this.selectedGame})
-      : super(key: key);
+  const PlayGameScreen({super.key, required this.selectedGame});
 
   @override
   State<StatefulWidget> createState() => _PlayGameScreen();
@@ -30,7 +29,7 @@ class _PlayGameScreen extends State<PlayGameScreen> {
   }
 
   _initializeGame() async {
-    await DeviceConnection.setAllLedColors(LedColors.OFF);
+    await DeviceConnection.setAllLedColors(LedColors.off);
     await DeviceConnection.resetLeds();
     widget.selectedGame.onCountDownUpdate = (timeToStart) {
       setState(() {

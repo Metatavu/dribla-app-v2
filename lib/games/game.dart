@@ -93,7 +93,7 @@ abstract class Game {
   }
 
   Future<void> _listenToSensorCharacteristic() async {
-    DeviceConnection.addSensorValueListerner((data) {
+    DeviceConnection.addSensorValueListener((data) {
       if (_started) {
         onSensorValueUpdate(data);
       }

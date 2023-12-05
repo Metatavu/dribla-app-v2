@@ -53,9 +53,9 @@ class TenGameTwoPlayers extends Game {
   @override
   void onBeginTimerTick(bool onoff) {
     DeviceConnection.setLedColor(
-        onoff ? LedColors.BLUE : LedColors.OFF, currentTargetPlayer1 - 1);
+        onoff ? LedColors.blue : LedColors.off, currentTargetPlayer1 - 1);
     DeviceConnection.setLedColor(
-        onoff ? LedColors.RED : LedColors.OFF, currentTargetPlayer2 - 1);
+        onoff ? LedColors.red : LedColors.off, currentTargetPlayer2 - 1);
   }
 
   @override
@@ -121,7 +121,7 @@ class TenGameTwoPlayers extends Game {
   }
 
   Future<void> _updateTargetLeds(int currentTarget, int currentTarget2) async {
-    await DeviceConnection.setLedsActive([LedColors.BLUE, LedColors.RED],
+    await DeviceConnection.setLedsActive([LedColors.blue, LedColors.red],
         [currentTarget - 1, currentTarget2 - 1]);
   }
 

@@ -69,7 +69,7 @@ class MineFieldGame extends Game {
 
   @override
   Future<void> startGame() async {
-    await DeviceConnection.setAllLedColors(LedColors.RED);
+    await DeviceConnection.setAllLedColors(LedColors.red);
     await Future.delayed(const Duration(milliseconds: 100));
     await DeviceConnection.resetLeds();
     await Future.delayed(const Duration(milliseconds: 100));

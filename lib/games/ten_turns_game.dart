@@ -66,7 +66,7 @@ class TenTurnsGame extends Game {
 
   @override
   void onBeginTimerTick(bool onoff) {
-    DeviceConnection.setLedColor(onoff ? LedColors.RED : LedColors.OFF, 7);
+    DeviceConnection.setLedColor(onoff ? LedColors.red : LedColors.off, 7);
   }
 
   @override
@@ -118,9 +118,9 @@ class TenTurnsGame extends Game {
   }
 
   Future<void> _updateTargetLed(List<int> ledTargets, List<int> found) async {
-    var colors = found.map((_) => LedColors.GREEN).toList();
+    var colors = found.map((_) => LedColors.green).toList();
     var left = ledTargets.where((t) => !found.contains(t)).toList();
-    colors.addAll(left.map((_) => LedColors.BLUE));
+    colors.addAll(left.map((_) => LedColors.blue));
     await DeviceConnection.setLedsActive(colors, found + left);
   }
 

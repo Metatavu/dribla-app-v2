@@ -2,6 +2,7 @@ import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
 import "package:dribla_app_v2/components/game_icon.dart";
 import "package:dribla_app_v2/components/game_settings_dialog.dart";
+import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/game_utils.dart";
 import "package:dribla_app_v2/screens/play_game_screen.dart";
@@ -119,15 +120,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
             if (GameUtils.hasGameSettings(chosenGame))
               Container(
                 margin: const EdgeInsets.only(bottom: 15.0),
-                decoration: const BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white,
-                      offset: Offset(5, 5),
-                    ),
-                  ],
-                ),
-                child: ElevatedButton(
+                child: StyledElevatedButton(
                   onPressed: () async {
                     var data = await showDialog<Map<String, String?>>(
                       context: context,
@@ -139,8 +132,13 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                     }
                   },
                   style: theme.elevatedButtonTheme.style?.copyWith(
-                      fixedSize:
-                          const MaterialStatePropertyAll(Size(290.0, 65.0))),
+                    fixedSize: const MaterialStatePropertyAll(
+                      Size(290.0, 65.0),
+                    ),
+                    backgroundColor: const MaterialStatePropertyAll(
+                      Colors.blueAccent,
+                    ),
+                  ),
                   child: Text(
                     loc.settingsButtonText,
                     style: theme.textTheme.headlineMedium,
@@ -149,34 +147,31 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
               ),
             Container(
               margin: const EdgeInsets.only(bottom: 25.0),
-              decoration: const BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(5, 5),
-                  ),
-                ],
-              ),
-              child: ElevatedButton(
+              child: StyledElevatedButton(
                 onPressed: () {
                   if (DeviceConnection.connectionStatus ==
                       ConnectionStatus.bleConnected) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlayGameScreen(
-                              selectedGame: GameUtils.selectGame(chosenGame))),
+                        builder: (context) => PlayGameScreen(
+                          selectedGame: GameUtils.selectGame(chosenGame),
+                        ),
+                      ),
                     );
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text(
-                          "Ei yhteyttä mattoon, varmista että bluetooth sekä laite on kytketty päälle."),
-                    ));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Ei yhteyttä mattoon, varmista että bluetooth sekä laite on kytketty päälle.",
+                        ),
+                      ),
+                    );
                   }
                 },
                 style: theme.elevatedButtonTheme.style?.copyWith(
-                    fixedSize:
-                        const MaterialStatePropertyAll(Size(290.0, 65.0))),
+                  fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
+                ),
                 child: Text(
                   loc.playButtonText,
                   style: theme.textTheme.headlineMedium,

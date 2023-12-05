@@ -134,31 +134,31 @@ class MemoryGame extends Game {
     _readingActive = false;
     AudioPlayers.playFailure();
     for (var _ in List.generate(4, (index) => index)) {
-      await DeviceConnection.setAllLedColors(LedColors.OFF);
+      await DeviceConnection.setAllLedColors(LedColors.off);
       await DeviceConnection.setLedsActive(
-          [LedColors.RED, LedColors.BLUE], [wrongTarget, correctTarget]);
+          [LedColors.red, LedColors.blue], [wrongTarget, correctTarget]);
       await Future.delayed(const Duration(milliseconds: 50));
     }
-    await DeviceConnection.setAllLedColors(LedColors.OFF);
+    await DeviceConnection.setAllLedColors(LedColors.off);
     finish(false);
   }
 
   Future<void> _showTargets(List<int> ledTargets) async {
     _readingActive = false;
     for (var _ in List.generate(3, (index) => index)) {
-      await DeviceConnection.setAllLedColors(LedColors.OFF);
+      await DeviceConnection.setAllLedColors(LedColors.off);
       for (var target in ledTargets) {
-        await DeviceConnection.setLedColor(LedColors.BLUE, target);
+        await DeviceConnection.setLedColor(LedColors.blue, target);
         await Future.delayed(const Duration(milliseconds: 500));
       }
     }
-    await DeviceConnection.setAllLedColors(LedColors.OFF);
+    await DeviceConnection.setAllLedColors(LedColors.off);
     await DeviceConnection.resetLeds();
     _readingActive = true;
   }
 
   Future<void> _updateTargetLed(List<int> found) async {
-    var colors = found.map((_) => LedColors.GREEN).toList();
+    var colors = found.map((_) => LedColors.green).toList();
     await DeviceConnection.setLedsActive(colors, found);
     await DeviceConnection.resetLeds();
   }

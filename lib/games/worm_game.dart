@@ -87,7 +87,7 @@ class WormGame extends Game {
   @override
   void onBeginTimerTick(bool onoff) {
     DeviceConnection.setLedColor(
-        onoff ? LedColors.RED : LedColors.OFF, currentTarget);
+        onoff ? LedColors.red : LedColors.off, currentTarget);
   }
 
   @override
@@ -151,7 +151,7 @@ class WormGame extends Game {
 
   Future<void> _updateTargetLed(int currentTarget) async {
     await DeviceConnection.resetLeds();
-    await DeviceConnection.setSingleLedActive(LedColors.BLUE, currentTarget);
+    await DeviceConnection.setSingleLedActive(LedColors.blue, currentTarget);
   }
 
   @override

@@ -14,13 +14,13 @@ class GameFinishedScreen extends StatefulWidget {
   final bool win;
   final bool skipEndingFanfare;
 
-  const GameFinishedScreen(
-      {Key? key,
-      this.finalScore,
-      required this.gameIndex,
-      required this.win,
-      required this.skipEndingFanfare})
-      : super(key: key);
+  const GameFinishedScreen({
+    super.key,
+    this.finalScore,
+    required this.gameIndex,
+    required this.win,
+    required this.skipEndingFanfare,
+  });
 
   @override
   State<GameFinishedScreen> createState() => _GameFinishedScreen();
@@ -37,7 +37,7 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
         AudioPlayers.playFailure();
       }
     }
-    DeviceConnection.setAllLedColors(LedColors.OFF);
+    DeviceConnection.setAllLedColors(LedColors.off);
   }
 
   @override

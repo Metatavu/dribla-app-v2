@@ -32,5 +32,12 @@
     "tapsLeft": "Jäljellä",
     "gameEnded": "Peli päättyi",
     "gameTime": "Aikasi oli:",
-    "replay": "Uudelleen"
+    "replay": "Uudelleen",
+    "youNeedToEnableBluetoothPermissions": "Käyttääksesi sovellusta sinun tulee sallia käyttöoikeudet lähellä oleviin laitteisiin mobiililaitteesi asetuksista.",
+    "settings": "Sovellusasetukset",
+    "location": "Sijainti",
+    "nearbyDevices": "Lähellä olevat laitteet",
+    "granted": "Sallittu",
+    "notGranted": "Ei sallittu",
+    "start": "Aloita"
 }

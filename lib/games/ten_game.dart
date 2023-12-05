@@ -44,7 +44,7 @@ class TenGame extends Game {
   @override
   void onBeginTimerTick(bool onoff) {
     DeviceConnection.setLedColor(
-        onoff ? LedColors.RED : LedColors.OFF, currentTarget - 1);
+        onoff ? LedColors.red : LedColors.off, currentTarget - 1);
   }
 
   @override
@@ -86,7 +86,7 @@ class TenGame extends Game {
 
   Future<void> _updateTargetLed(int currentTarget) async {
     await DeviceConnection.setSingleLedActive(
-        LedColors.BLUE, currentTarget - 1);
+        LedColors.blue, currentTarget - 1);
   }
 
   @override
