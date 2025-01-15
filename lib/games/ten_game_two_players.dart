@@ -10,19 +10,18 @@ import "../led_colors.dart";
 import "../timer_formatters.dart";
 
 class TenGameTwoPlayers extends Game {
-  static const index = 6;
+  static const index = 5;
   static const title = "10 - Peli (2 Pelaajaa)";
-  static const description =
-      """• Harjoittele kuljettamista molemmilla jaloilla ja käytä erilaisia tapoja muuttaa suuntaa.
-      • Pidä hyvä peliasento koko ajan
-      • Pyri nostamaan katsetta pois pallosta, jotta voit havannoida paremmin""";
+  static const description = """Toinen pelaa punaisella ja toinen vihreällä.""";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
-    IconAnimationUtils.all(Colors.white),
+    IconAnimationUtils.all(Colors.red),
     ...List.generate(
         10,
-        (index) => IconAnimationUtils.single(
-            Colors.white, Colors.blue, Random().nextInt(8)))
+        (index) => IconAnimationUtils.multipleColors(Colors.red, {
+              Random(index).nextInt(8): Colors.lightGreenAccent,
+              Random(index + 1).nextInt(8): Colors.cyan,
+            }))
   ];
 
   static const String numberOfTargetsSettingKey =
@@ -41,8 +40,8 @@ class TenGameTwoPlayers extends Game {
 
   @override
   String getFinalScore() {
-    var winner = pointsPlayer1 >= maxPoints ? "Sininen" : "Punainen";
-    var loser = winner == "Sininen" ? "Punainen" : "Sininen";
+    var winner = pointsPlayer1 >= maxPoints ? "Vihreä" : "Sininen";
+    var loser = winner == "Vihreä" ? "Sininen" : "Vihreä";
     var winnerPoints =
         pointsPlayer1 > pointsPlayer2 ? pointsPlayer1 : pointsPlayer2;
     var loserPoints =
@@ -53,9 +52,9 @@ class TenGameTwoPlayers extends Game {
   @override
   void onBeginTimerTick(bool onoff) {
     DeviceConnection.setLedColor(
-        onoff ? LedColors.blue : LedColors.off, currentTargetPlayer1 - 1);
+        onoff ? LedColors.green : LedColors.red, currentTargetPlayer1 - 1);
     DeviceConnection.setLedColor(
-        onoff ? LedColors.red : LedColors.off, currentTargetPlayer2 - 1);
+        onoff ? LedColors.blue : LedColors.red, currentTargetPlayer2 - 1);
   }
 
   @override
@@ -70,16 +69,19 @@ class TenGameTwoPlayers extends Game {
 
   @override
   void setupGame() async {
+    await DeviceConnection.setAllLedColors(LedColors.red);
     var settings = await getGameSettings();
     maxPoints = hasSetting(settings, numberOfTargetsSettingKey)
         ? int.parse(settings[numberOfTargetsSettingKey]!)
         : 10;
+
+    currentTargetPlayer1 = sensorCount == 8 ? 8 : 5;
+    currentTargetPlayer2 = sensorCount == 8 ? 3 : 2;
   }
 
   @override
   Future<void> startGame() async {
     await _updateTargetLeds(currentTargetPlayer1, currentTargetPlayer2);
-    await DeviceConnection.resetLeds();
   }
 
   void _progressGamePlayer1() {
@@ -115,14 +117,15 @@ class TenGameTwoPlayers extends Game {
   int _getNextTarget(List<int> exclude) {
     int nextTarget;
     do {
-      nextTarget = Random().nextInt(8) + 1;
+      nextTarget = Random().nextInt(sensorCount) + 1;
     } while (exclude.contains(nextTarget));
     return nextTarget;
   }
 
   Future<void> _updateTargetLeds(int currentTarget, int currentTarget2) async {
-    await DeviceConnection.setLedsActive([LedColors.blue, LedColors.red],
-        [currentTarget - 1, currentTarget2 - 1]);
+    await DeviceConnection.setLedsActive([LedColors.green, LedColors.blue],
+        [currentTarget - 1, currentTarget2 - 1], LedColors.red);
+    await DeviceConnection.resetLeds();
   }
 
   @override
@@ -133,5 +136,10 @@ class TenGameTwoPlayers extends Game {
   @override
   List<String> getGameSettingKeys() {
     return [numberOfTargetsSettingKey];
+  }
+
+  @override
+  List<int> getAllowedNumberOfSensors() {
+    return [5, 8];
   }
 }

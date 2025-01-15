@@ -10,19 +10,86 @@ import "../led_colors.dart";
 import "../timer_formatters.dart";
 
 class TenTurnsGame extends Game {
-  static const index = 7;
+  static const index = 6;
   static const title = "10 - Käännöstä";
-  static const description =
-      """• Harjoittele kuljettamista molemmilla jaloilla ja käytä erilaisia tapoja muuttaa suuntaa.
-      • Pidä hyvä peliasento koko ajan
-      • Pyri nostamaan katsetta pois pallosta, jotta voit havannoida paremmin""";
+  static const description = "";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
-    IconAnimationUtils.all(Colors.white),
-    ...List.generate(
-        10,
-        (index) => IconAnimationUtils.single(
-            Colors.white, Colors.blue, Random().nextInt(8)))
+    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.multipleColors(
+        Colors.red, {7: Colors.cyan, 5: Colors.cyan, 1: Colors.cyan}),
+    IconAnimationUtils.multipleColors(Colors.red,
+        {7: Colors.lightGreenAccent, 5: Colors.cyan, 1: Colors.cyan}),
+    IconAnimationUtils.multipleColors(Colors.red, {
+      7: Colors.lightGreenAccent,
+      5: Colors.lightGreenAccent,
+      1: Colors.cyan
+    }),
+    IconAnimationUtils.multipleColors(Colors.red, {
+      7: Colors.lightGreenAccent,
+      5: Colors.lightGreenAccent,
+      1: Colors.lightGreenAccent
+    }),
+    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.multipleColors(
+        Colors.red, {0: Colors.cyan, 1: Colors.cyan, 5: Colors.cyan}),
+    IconAnimationUtils.multipleColors(Colors.red,
+        {0: Colors.lightGreenAccent, 1: Colors.cyan, 5: Colors.cyan}),
+    IconAnimationUtils.multipleColors(Colors.red, {
+      0: Colors.lightGreenAccent,
+      1: Colors.lightGreenAccent,
+      5: Colors.cyan
+    }),
+    IconAnimationUtils.multipleColors(Colors.red, {
+      0: Colors.lightGreenAccent,
+      1: Colors.lightGreenAccent,
+      5: Colors.lightGreenAccent
+    }),
+    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.multipleColors(
+        Colors.red, {1: Colors.cyan, 6: Colors.cyan, 5: Colors.cyan}),
+    IconAnimationUtils.multipleColors(Colors.red,
+        {1: Colors.lightGreenAccent, 6: Colors.cyan, 5: Colors.cyan}),
+    IconAnimationUtils.multipleColors(Colors.red, {
+      1: Colors.lightGreenAccent,
+      6: Colors.lightGreenAccent,
+      5: Colors.cyan
+    }),
+    IconAnimationUtils.multipleColors(Colors.red, {
+      1: Colors.lightGreenAccent,
+      6: Colors.lightGreenAccent,
+      5: Colors.lightGreenAccent
+    }),
+    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.multipleColors(
+        Colors.red, {1: Colors.cyan, 2: Colors.cyan, 4: Colors.cyan}),
+    IconAnimationUtils.multipleColors(Colors.red,
+        {1: Colors.lightGreenAccent, 2: Colors.cyan, 4: Colors.cyan}),
+    IconAnimationUtils.multipleColors(Colors.red, {
+      1: Colors.lightGreenAccent,
+      2: Colors.lightGreenAccent,
+      4: Colors.cyan
+    }),
+    IconAnimationUtils.multipleColors(Colors.red, {
+      1: Colors.lightGreenAccent,
+      2: Colors.lightGreenAccent,
+      4: Colors.lightGreenAccent
+    }),
+    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.multipleColors(
+        Colors.red, {6: Colors.cyan, 5: Colors.cyan, 3: Colors.cyan}),
+    IconAnimationUtils.multipleColors(Colors.red,
+        {6: Colors.lightGreenAccent, 5: Colors.cyan, 3: Colors.cyan}),
+    IconAnimationUtils.multipleColors(Colors.red, {
+      6: Colors.lightGreenAccent,
+      5: Colors.lightGreenAccent,
+      3: Colors.cyan
+    }),
+    IconAnimationUtils.multipleColors(Colors.red, {
+      6: Colors.lightGreenAccent,
+      5: Colors.lightGreenAccent,
+      3: Colors.lightGreenAccent
+    }),
   ];
 
   static const String numberOfTargetsSettingKey =
@@ -66,7 +133,7 @@ class TenTurnsGame extends Game {
 
   @override
   void onBeginTimerTick(bool onoff) {
-    DeviceConnection.setLedColor(onoff ? LedColors.red : LedColors.off, 7);
+    DeviceConnection.setLedColor(onoff ? LedColors.green : LedColors.red, 7);
   }
 
   @override
@@ -84,6 +151,7 @@ class TenTurnsGame extends Game {
 
   @override
   void setupGame() async {
+    await DeviceConnection.setAllLedColors(LedColors.red);
     var settings = await getGameSettings();
     maxPoints = hasSetting(settings, numberOfTargetsSettingKey)
         ? int.parse(settings[numberOfTargetsSettingKey]!)
@@ -94,7 +162,6 @@ class TenTurnsGame extends Game {
   Future<void> startGame() async {
     currentTargets = turns[0];
     await _updateTargetLed(currentTargets, foundTargets);
-    await DeviceConnection.resetLeds();
     _resetDone = true;
   }
 
@@ -121,7 +188,8 @@ class TenTurnsGame extends Game {
     var colors = found.map((_) => LedColors.green).toList();
     var left = ledTargets.where((t) => !found.contains(t)).toList();
     colors.addAll(left.map((_) => LedColors.blue));
-    await DeviceConnection.setLedsActive(colors, found + left);
+    await DeviceConnection.setLedsActive(colors, found + left, LedColors.red);
+    await DeviceConnection.resetLeds();
   }
 
   @override
@@ -132,5 +200,10 @@ class TenTurnsGame extends Game {
   @override
   List<String> getGameSettingKeys() {
     return [numberOfTargetsSettingKey];
+  }
+
+  @override
+  List<int> getAllowedNumberOfSensors() {
+    return [8];
   }
 }

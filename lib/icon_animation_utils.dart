@@ -12,4 +12,8 @@ class IconAnimationUtils {
   static List<Color> multiple(Color bg, Color color, List<int> indices) {
     return List.generate(8, (i) => indices.contains(i) ? color : bg);
   }
+
+  static List<Color> multipleColors(Color bg, Map<int, Color> colors) {
+    return List.generate(8, (i) => colors.containsKey(i) ? colors[i]! : bg);
+  }
 }

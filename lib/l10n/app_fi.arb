@@ -15,6 +15,10 @@
     "@settingsButtonText": {
         "description": "Settings button text"
     },
+    "instructionsButtonText": "Ohjeet",
+    "@instructionsButtonText": {
+        "description": "Instructions button text"
+    },
     "unableToConnectTitle": "Yhteyden muodostaminen Dribla-laitteeseen epäonnistui",
     "@unableToConnectTitle": {
         "description": "Unable to connect dialog title"

@@ -2,6 +2,7 @@ import "package:dribla_app_v2/games/letter_game.dart";
 import "package:dribla_app_v2/games/memory_game.dart";
 import "package:dribla_app_v2/games/minefield_game.dart";
 import "package:dribla_app_v2/games/minesweeper_game.dart";
+import "package:dribla_app_v2/games/star_game.dart";
 import "package:dribla_app_v2/games/ten_game.dart";
 import "package:dribla_app_v2/games/ten_game_two_players.dart";
 import "package:dribla_app_v2/games/ten_turns_game.dart";
@@ -13,6 +14,34 @@ import "package:flutter/material.dart";
 import "games/game.dart";
 
 class GameUtils {
+  static bool isAllowed(int index, int connectedSensors) {
+    return switch (index) {
+      TenGame.index =>
+        TenGame().getAllowedNumberOfSensors().contains(connectedSensors),
+      ZigZagGame.index =>
+        ZigZagGame().getAllowedNumberOfSensors().contains(connectedSensors),
+      MineFieldGame.index =>
+        MineFieldGame().getAllowedNumberOfSensors().contains(connectedSensors),
+      MineSweeperGame.index => MineSweeperGame()
+          .getAllowedNumberOfSensors()
+          .contains(connectedSensors),
+      LetterGame.index =>
+        LetterGame().getAllowedNumberOfSensors().contains(connectedSensors),
+      WormGame.index =>
+        WormGame().getAllowedNumberOfSensors().contains(connectedSensors),
+      TenGameTwoPlayers.index => TenGameTwoPlayers()
+          .getAllowedNumberOfSensors()
+          .contains(connectedSensors),
+      TenTurnsGame.index =>
+        TenTurnsGame().getAllowedNumberOfSensors().contains(connectedSensors),
+      MemoryGame.index =>
+        MemoryGame().getAllowedNumberOfSensors().contains(connectedSensors),
+      StarGame.index =>
+        StarGame().getAllowedNumberOfSensors().contains(connectedSensors),
+      _ => false
+    };
+  }
+
   static Game selectGame(int index) {
     return switch (index) {
       TenGame.index => TenGame(),
@@ -24,6 +53,7 @@ class GameUtils {
       TenGameTwoPlayers.index => TenGameTwoPlayers(),
       TenTurnsGame.index => TenTurnsGame(),
       MemoryGame.index => MemoryGame(),
+      StarGame.index => StarGame(),
       _ => TenGame()
     };
   }
@@ -39,6 +69,23 @@ class GameUtils {
       TenGameTwoPlayers.index => TenGameTwoPlayers.title,
       TenTurnsGame.index => TenTurnsGame.title,
       MemoryGame.index => MemoryGame.title,
+      StarGame.index => StarGame.title,
+      _ => ""
+    };
+  }
+
+  static String getInstructionsUrl(int index) {
+    return switch (index) {
+      TenGame.index => "https://www.dribla.fi/pelit/#10-peli",
+      ZigZagGame.index => "https://www.dribla.fi/pelit/#zig-zag",
+      MineFieldGame.index => "https://www.dribla.fi/pelit/#kuoppa",
+      MineSweeperGame.index => "https://www.dribla.fi/pelit/#mansikanpoiminta",
+      LetterGame.index => "https://www.dribla.fi/pelit/#kirjekuori",
+      WormGame.index => "https://www.dribla.fi/pelit/#matopeli",
+      TenGameTwoPlayers.index =>
+        "https://www.dribla.fi/pelit/#10-peli-kaksinpeli",
+      TenTurnsGame.index => "https://www.dribla.fi/pelit/#10-kaannosta",
+      MemoryGame.index => "https://www.dribla.fi/pelit/#muistipeli",
       _ => ""
     };
   }
@@ -66,9 +113,10 @@ class GameUtils {
       MineSweeperGame.index => MineSweeperGame.iconAnimation,
       LetterGame.index => LetterGame.iconAnimation,
       WormGame.index => WormGame.iconAnimation,
-      TenGameTwoPlayers.index => TenGame.iconAnimation,
+      TenGameTwoPlayers.index => TenGameTwoPlayers.iconAnimation,
       TenTurnsGame.index => TenTurnsGame.iconAnimation,
       MemoryGame.index => MemoryGame.iconAnimation,
+      StarGame.index => StarGame.iconAnimation,
       _ => [IconAnimationUtils.all(Colors.white)]
     };
   }
@@ -84,6 +132,7 @@ class GameUtils {
       TenGameTwoPlayers.index => TenGameTwoPlayers.iconAnimationSpeed,
       TenTurnsGame.index => TenTurnsGame.iconAnimationSpeed,
       MemoryGame.index => MemoryGame.iconAnimationSpeed,
+      StarGame.index => StarGame.iconAnimationSpeed,
       _ => 200
     };
   }
@@ -101,6 +150,7 @@ class GameUtils {
         TenGameTwoPlayers().getGameSettingKeys().isNotEmpty,
       TenTurnsGame.index => TenTurnsGame().getGameSettingKeys().isNotEmpty,
       MemoryGame.index => MemoryGame().getGameSettingKeys().isNotEmpty,
+      StarGame.index => StarGame().getGameSettingKeys().isNotEmpty,
       _ => false
     };
   }
@@ -116,6 +166,7 @@ class GameUtils {
       TenGameTwoPlayers.index => await TenGameTwoPlayers().getGameSettings(),
       TenTurnsGame.index => await TenTurnsGame().getGameSettings(),
       MemoryGame.index => await MemoryGame().getGameSettings(),
+      StarGame.index => await StarGame().getGameSettings(),
       _ => <String, String?>{}
     };
   }
@@ -134,6 +185,7 @@ class GameUtils {
         await TenGameTwoPlayers().setGameSettings(settings),
       TenTurnsGame.index => await TenTurnsGame().setGameSettings(settings),
       MemoryGame.index => await MemoryGame().setGameSettings(settings),
+      StarGame.index => await StarGame().setGameSettings(settings),
       _ => <String, String?>{}
     };
   }

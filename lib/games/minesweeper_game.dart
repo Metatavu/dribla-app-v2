@@ -9,25 +9,25 @@ import "../timer_formatters.dart";
 
 class MineSweeperGame extends Game {
   static const index = 3;
-  static const title = "Miinaharava";
-  static const description =
-      """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
-      eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce
-      cubilia, pretium sagittis non feugiat hendrerit.""";
+  static const title = "Mansikanpoiminta";
+  static const description = "";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
     IconAnimationUtils.all(Colors.white),
     IconAnimationUtils.all(Colors.red),
-    IconAnimationUtils.multiple(Colors.red, Colors.white, [0]),
-    IconAnimationUtils.multiple(Colors.red, Colors.white, [0, 1]),
-    IconAnimationUtils.multiple(Colors.red, Colors.white, [0, 1, 2]),
-    IconAnimationUtils.multiple(Colors.red, Colors.white, [0, 1, 2, 3]),
-    IconAnimationUtils.multiple(Colors.red, Colors.white, [0, 1, 2, 3, 4]),
-    IconAnimationUtils.multiple(Colors.red, Colors.white, [0, 1, 2, 3, 4, 5]),
+    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [0]),
+    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [0, 1]),
+    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [0, 1, 2]),
     IconAnimationUtils.multiple(
-        Colors.red, Colors.white, [0, 1, 2, 3, 4, 5, 6]),
+        Colors.red, Colors.lightGreenAccent, [0, 1, 2, 3]),
     IconAnimationUtils.multiple(
-        Colors.red, Colors.white, [0, 1, 2, 3, 4, 5, 6, 7]),
+        Colors.red, Colors.lightGreenAccent, [0, 1, 2, 3, 4]),
+    IconAnimationUtils.multiple(
+        Colors.red, Colors.lightGreenAccent, [0, 1, 2, 3, 4, 5]),
+    IconAnimationUtils.multiple(
+        Colors.red, Colors.lightGreenAccent, [0, 1, 2, 3, 4, 5, 6]),
+    IconAnimationUtils.multiple(
+        Colors.red, Colors.lightGreenAccent, [0, 1, 2, 3, 4, 5, 6, 7]),
   ];
   bool started = false;
   List<int> targetsLeft = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -43,7 +43,9 @@ class MineSweeperGame extends Game {
   }
 
   @override
-  void onBeginTimerTick(bool onoff) {}
+  void onBeginTimerTick(bool onoff) {
+    DeviceConnection.setAllLedColors(onoff ? LedColors.red : LedColors.off);
+  }
 
   @override
   void onGameTimerUpdate(int timeElapsed) {
@@ -56,7 +58,7 @@ class MineSweeperGame extends Game {
       for (var sensor in activeSensors) {
         if (targetsLeft.remove(sensor)) {
           AudioPlayers.playSuccess();
-          DeviceConnection.setLedColor(LedColors.off, sensor - 1);
+          DeviceConnection.setLedColor(LedColors.green, sensor - 1);
         }
       }
     }
@@ -66,7 +68,9 @@ class MineSweeperGame extends Game {
   }
 
   @override
-  void setupGame() {}
+  void setupGame() {
+    targetsLeft = List.generate(sensorCount, (index) => index + 1);
+  }
 
   @override
   Future<void> startGame() async {
@@ -80,5 +84,10 @@ class MineSweeperGame extends Game {
   @override
   List<String> getGameSettingKeys() {
     return [];
+  }
+
+  @override
+  List<int> getAllowedNumberOfSensors() {
+    return [5, 8];
   }
 }

@@ -28,4 +28,7 @@ class BluetoothIds {
 
   static Uuid resetLedsCharacteristicsId =
       Uuid.parse("A3CD1E7F-AE7C-44F0-A18A-BE40D5ADD352");
+
+  static Uuid sensorCountharacteristicsId =
+      Uuid.parse("21EF9772-812E-423D-BD4D-C7F2C7819FED");
 }

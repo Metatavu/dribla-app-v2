@@ -9,12 +9,9 @@ import "../icon_animation_utils.dart";
 import "../led_colors.dart";
 
 class MineFieldGame extends Game {
-  static const index = 2;
-  static const title = "Miinakenttä";
-  static const description =
-      """Interdum accumsan pharetra sociosqu, vehicula class fames, suspendisse
-      eleifend dui nulla mollis semper feugiat risus. Congue auctor fusce
-      cubilia, pretium sagittis non feugiat hendrerit.""";
+  static const index = 0;
+  static const title = "Kuoppa";
+  static const description = "";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
     IconAnimationUtils.all(Colors.white),
@@ -36,6 +33,7 @@ class MineFieldGame extends Game {
   ];
   bool failed = false;
   bool started = false;
+  int lastBonusSoundMinutes = 0;
 
   @override
   int getIndex() {
@@ -48,24 +46,41 @@ class MineFieldGame extends Game {
   }
 
   @override
-  void onBeginTimerTick(bool onoff) {}
+  void onBeginTimerTick(bool onoff) {
+    DeviceConnection.setAllLedColors(onoff ? LedColors.red : LedColors.off);
+  }
+
+  @override
+  String getPointsUnit() {
+    return "Peli käynnissä";
+  }
 
   @override
   void onGameTimerUpdate(int timeElapsed) {
-    onGameScoreUpdate("Peli käynnissä");
+    if (!failed && started) {
+      onGameScoreUpdate("");
+    }
+    if (timeElapsed > 1000 * 60 * 10) {
+      finish(true);
+    } else if (timeElapsed > 1000 * 60 * (lastBonusSoundMinutes + 1)) {
+      lastBonusSoundMinutes += 1;
+      AudioPlayers.playBonus();
+    }
   }
 
   @override
   void onSensorValueUpdate(List<int> activeSensors) {
     if (started && activeSensors.isNotEmpty && !failed) {
       failed = true;
-      AudioPlayers.playExplosion();
-      Timer(const Duration(seconds: 5), () => finish(false));
+      AudioPlayers.playBeep();
+      Timer(const Duration(seconds: 2), () => finish(false));
     }
   }
 
   @override
-  void setupGame() {}
+  void setupGame() {
+    lastBonusSoundMinutes = 0;
+  }
 
   @override
   Future<void> startGame() async {
@@ -79,5 +94,10 @@ class MineFieldGame extends Game {
   @override
   List<String> getGameSettingKeys() {
     return [];
+  }
+
+  @override
+  List<int> getAllowedNumberOfSensors() {
+    return [5, 8];
   }
 }

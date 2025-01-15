@@ -6,11 +6,12 @@ import "../audio_players.dart";
 import "../device_connection.dart";
 
 abstract class Game {
-  Timer? _gameTimer;
+  Timer? _gameTick;
   Timer? _beginningTimer;
+  Stopwatch _gameTime = Stopwatch();
   int _beginningTimerValue = 10;
-  int _gameTimerValue = 0;
   bool _started = false;
+  int sensorCount = 8;
 
   Function(String) onStatusTextUpdate = (String status) {};
   Function(int) onCountDownUpdate = (int countdown) {};
@@ -25,6 +26,11 @@ abstract class Game {
   void setupGame();
   void startGame();
   List<String> getGameSettingKeys();
+  List<int> getAllowedNumberOfSensors();
+
+  String getPointsUnit() {
+    return "AIKAA KULUNUT:";
+  }
 
   void finish(bool win) {
     _stopGame();
@@ -32,7 +38,11 @@ abstract class Game {
   }
 
   int getElapsedTime() {
-    return _gameTimerValue;
+    return _gameTime.elapsedMilliseconds;
+  }
+
+  int getGameTimerProgressMs() {
+    return 100;
   }
 
   void run() {
@@ -52,7 +62,7 @@ abstract class Game {
         onoff = !onoff;
         onBeginTimerTick(onoff);
       } else {
-        onStatusTextUpdate("AIKAA KULUNUT:");
+        onStatusTextUpdate(getPointsUnit());
         _beginningTimer?.cancel(); // Stop the timer when it reaches 0
         _listenToSensorCharacteristic();
         _startGameTimer();
@@ -85,10 +95,13 @@ abstract class Game {
   }
 
   void _startGameTimer() {
-    const millis100 = Duration(milliseconds: 100);
-    _gameTimer = Timer.periodic(
+    var progress = getGameTimerProgressMs();
+    var millis100 = Duration(milliseconds: progress);
+    _gameTime.reset();
+    _gameTime.start();
+    _gameTick = Timer.periodic(
       millis100,
-      (timer) => {_gameTimerValue += 100, onGameTimerUpdate(_gameTimerValue)},
+      (timer) => onGameTimerUpdate(_gameTime.elapsedMilliseconds),
     );
   }
 
@@ -108,6 +121,16 @@ abstract class Game {
     return false;
   }
 
+  void pauseGame() {
+    _started = false;
+    _gameTime.stop();
+  }
+
+  void resumeGame() {
+    _started = true;
+    _gameTime.start();
+  }
+
   void _startGame() {
     _started = true;
     startGame();
@@ -115,7 +138,8 @@ abstract class Game {
 
   void _stopGame() {
     _started = false;
-    _gameTimer?.cancel();
+    _gameTick?.cancel();
+    _gameTime.stop();
     _beginningTimer?.cancel();
   }
 

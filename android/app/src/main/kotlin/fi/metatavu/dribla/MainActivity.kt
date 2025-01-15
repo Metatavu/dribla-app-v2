@@ -1,4 +1,4 @@
-package com.example.dribla_app_v2
+package fi.metatavu.dribla
 
 import io.flutter.embedding.android.FlutterActivity
 

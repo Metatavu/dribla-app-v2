@@ -9,29 +9,26 @@ import "../led_colors.dart";
 import "../timer_formatters.dart";
 
 class ZigZagGame extends Game {
-  static const index = 1;
+  static const index = 2;
   static const title = "Zig-Zag";
-  static const description = """• Harjoittele sisä-ja ulkosyrjäkäännöksiä
-      • Pidä hyvä peliasento
-      • Pyri nostamaan katsetta pois pallosta, jotta voit havannoida paremmin""";
+  static const description = "";
 
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.single(Colors.white, Colors.blue, 7),
-    IconAnimationUtils.single(Colors.white, Colors.blue, 5),
-    IconAnimationUtils.single(Colors.white, Colors.blue, 4),
-    IconAnimationUtils.single(Colors.white, Colors.blue, 2),
-    IconAnimationUtils.single(Colors.white, Colors.blue, 1),
-    IconAnimationUtils.single(Colors.white, Colors.blue, 0),
-    IconAnimationUtils.single(Colors.white, Colors.blue, 2),
-    IconAnimationUtils.single(Colors.white, Colors.blue, 3),
-    IconAnimationUtils.single(Colors.white, Colors.blue, 5),
-    IconAnimationUtils.single(Colors.white, Colors.blue, 6),
+    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 7),
+    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 5),
+    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 4),
+    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 2),
+    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 1),
+    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 0),
+    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 2),
+    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 3),
+    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 5),
+    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 6),
   ];
   static const String numberOfRoundsSettingKey = "ZIGZAG_NUMBER_OF_ROUNDS";
 
-  int maxGameTime = 60 * 1000;
   List<int> targets = [7, 6, 5, 3, 4, 2, 3, 1, 6, 0];
   int currentTargetIndex = 0;
 
@@ -48,15 +45,12 @@ class ZigZagGame extends Game {
   @override
   void onBeginTimerTick(bool onoff) {
     DeviceConnection.setLedColor(
-        onoff ? LedColors.red : LedColors.off, targets[currentTargetIndex]);
+        onoff ? LedColors.green : LedColors.red, targets[currentTargetIndex]);
   }
 
   @override
   void onGameTimerUpdate(int timeElapsed) {
-    if (timeElapsed >= maxGameTime) {
-      finish(false);
-    }
-    onGameScoreUpdate(TimerFormatter.format(maxGameTime - timeElapsed));
+    onGameScoreUpdate(TimerFormatter.format(timeElapsed));
   }
 
   @override
@@ -69,15 +63,16 @@ class ZigZagGame extends Game {
 
   @override
   void setupGame() async {
+    await DeviceConnection.setAllLedColors(LedColors.red);
     var settings = await getGameSettings();
     int numberOfRounds = hasSetting(settings, numberOfRoundsSettingKey)
         ? int.parse(settings[numberOfRoundsSettingKey]!)
         : 1;
 
+    List<int> targetSeq =
+        sensorCount == 8 ? [7, 6, 5, 3, 4, 2, 3, 1, 6, 0] : [4, 2, 1, 0, 2, 3];
     targets =
-        List.generate(numberOfRounds, (index) => [7, 6, 5, 3, 4, 2, 3, 1, 6, 0])
-            .flattened
-            .toList();
+        List.generate(numberOfRounds, (index) => targetSeq).flattened.toList();
   }
 
   @override
@@ -96,11 +91,18 @@ class ZigZagGame extends Game {
   }
 
   Future<void> _updateTargetLed(int index) async {
-    await DeviceConnection.setSingleLedActive(LedColors.blue, index);
+    await DeviceConnection.setSingleLedActive(
+        LedColors.green, index, LedColors.red);
+    await DeviceConnection.resetLeds();
   }
 
   @override
   List<String> getGameSettingKeys() {
     return [numberOfRoundsSettingKey];
+  }
+
+  @override
+  List<int> getAllowedNumberOfSensors() {
+    return [5, 8];
   }
 }

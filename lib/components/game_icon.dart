@@ -1,6 +1,7 @@
 import "dart:async";
 
 import "package:flutter/material.dart";
+import "package:sizer/sizer.dart";
 
 class GameIcon extends StatefulWidget {
   final List<List<Color>> colorSequency;
@@ -50,9 +51,11 @@ class _GameIcon extends State<GameIcon> {
 
   @override
   Widget build(BuildContext context) {
+    var height = Adaptive.h(30);
+    var ratio = height / 200;
     return Container(
       alignment: Alignment.center,
-      height: 200,
+      height: height,
       child: AspectRatio(
         aspectRatio: 0.832,
         child: Container(
@@ -62,36 +65,36 @@ class _GameIcon extends State<GameIcon> {
           child: Stack(
             children: [
               Positioned(
-                  top: 32.0,
-                  left: 26.0,
+                  top: 32.0 * ratio,
+                  left: 26.0 * ratio,
                   child: Circle(color: colors.elementAt(0))),
               Positioned(
-                  top: 32.0,
-                  left: 116.0,
+                  top: 32.0 * ratio,
+                  left: 116.0 * ratio,
                   child: Circle(color: colors.elementAt(1))),
               Positioned(
-                  top: 58.0,
-                  left: 71.0,
+                  top: 58.0 * ratio,
+                  left: 71.0 * ratio,
                   child: Circle(color: colors.elementAt(2))),
               Positioned(
-                  top: 86.0,
-                  left: 26.0,
+                  top: 86.0 * ratio,
+                  left: 26.0 * ratio,
                   child: Circle(color: colors.elementAt(3))),
               Positioned(
-                  top: 86.0,
-                  left: 116.0,
+                  top: 86.0 * ratio,
+                  left: 116.0 * ratio,
                   child: Circle(color: colors.elementAt(4))),
               Positioned(
-                  top: 113.0,
-                  left: 71.0,
+                  top: 113.0 * ratio,
+                  left: 71.0 * ratio,
                   child: Circle(color: colors.elementAt(5))),
               Positioned(
-                  top: 140.0,
-                  left: 26.0,
+                  top: 140.0 * ratio,
+                  left: 26.0 * ratio,
                   child: Circle(color: colors.elementAt(6))),
               Positioned(
-                  top: 140.0,
-                  left: 116.0,
+                  top: 140.0 * ratio,
+                  left: 116.0 * ratio,
                   child: Circle(color: colors.elementAt(7))),
             ],
           ),
@@ -108,7 +111,7 @@ class Circle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double size = 15.0;
+    double size = 18.0.sp;
     return Container(
       width: size,
       height: size,

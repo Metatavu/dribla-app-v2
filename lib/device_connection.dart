@@ -8,21 +8,46 @@ import "dart:math";
 import "dart:developer" as developer;
 
 import "package:dribla_app_v2/bluetooth_ids.dart";
+import "package:flutter/material.dart";
 import "package:flutter_reactive_ble/flutter_reactive_ble.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
-enum ConnectionStatus { bleDisabled, bleConnecting, bleConnected }
+enum ConnectionStatus {
+  bleDisabled,
+  bleConnecting,
+  bleConnected,
+  bleDisconnected
+}
 
 class DeviceConnection {
   static FlutterReactiveBle controller = FlutterReactiveBle();
   static StreamSubscription<BleStatus>? bleStatusSubscription;
+  static StreamSubscription<ConnectionStateUpdate>? _bleConnectionStream;
+  static StreamSubscription<DiscoveredDevice>? _bleScanStream;
   static List<Characteristic> ledCharacteristics = [];
   static Characteristic? resetCharacteristic;
   static Characteristic? shutdownCharacteristic;
   static List<Function(List<int>)> sensorValueListeners = [];
   static bool _connecting = false;
+  static bool _resetting = false;
+  static bool _reconnecting = false;
   static String connectedDeviceId = "";
   static ConnectionStatus connectionStatus = ConnectionStatus.bleDisabled;
+  static int currentIdleAnimationColor = LedColors.blue;
+  static Random idleAnimRandom = Random();
+  static int idleAnimationLoop = 0;
+  static Timer? idleAnimationTimer;
+  static int connectedSensorsCount = 8;
+  static List<int> ledValues = [
+    LedColors.off,
+    LedColors.off,
+    LedColors.off,
+    LedColors.off,
+    LedColors.off,
+    LedColors.off,
+    LedColors.off,
+    LedColors.off
+  ];
   static StreamController<ConnectionStatus> connectionStatusController =
       StreamController.broadcast();
 
@@ -55,6 +80,7 @@ class DeviceConnection {
   }
 
   static void deinit() {
+    controller.deinitialize();
     bleStatusSubscription?.cancel();
     ledCharacteristics.clear();
     resetCharacteristic = null;
@@ -67,121 +93,170 @@ class DeviceConnection {
   }
 
   static Future<void> _scanDevices() async {
-    final prefs = await SharedPreferences.getInstance();
-    connectedDeviceId = prefs.getString("dribla-device-id") ?? "";
-    developer.log("Scanning for devices");
-    connectionStatus = ConnectionStatus.bleConnecting;
-    connectionStatusController.add(ConnectionStatus.bleConnecting);
-    if (connectedDeviceId.isNotEmpty) {
-      if (Platform.isAndroid) {
-        await DeviceConnection.controller
-            .requestConnectionPriority(
-          deviceId: connectedDeviceId,
-          priority: ConnectionPriority.highPerformance,
-        )
-            .onError((error, stackTrace) {
-          developer.log("Connection priority request failed");
+    try {
+      _bleScanStream?.cancel();
+      final prefs = await SharedPreferences.getInstance();
+      connectedDeviceId = prefs.getString("dribla-device-id") ?? "";
+      developer.log("Scanning for devices");
+      connectionStatus = ConnectionStatus.bleConnecting;
+      connectionStatusController.add(ConnectionStatus.bleConnecting);
+      if (connectedDeviceId.isNotEmpty && Platform.isAndroid) {
+        if (Platform.isAndroid) {
+          await DeviceConnection.controller
+              .requestConnectionPriority(
+            deviceId: connectedDeviceId,
+            priority: ConnectionPriority.highPerformance,
+          )
+              .onError((error, stackTrace) {
+            developer.log("Connection priority request failed");
+            Timer(const Duration(seconds: 5), () => _scanDevices());
+          });
+          await DeviceConnection.controller
+              .discoverAllServices(connectedDeviceId);
+        }
+        connectToDevice(connectedDeviceId);
+      } else {
+        _bleScanStream = DeviceConnection.controller.scanForDevices(
+          withServices: [],
+          scanMode: ScanMode.lowLatency,
+        ).listen((device) async {
+          if (((connectedDeviceId.isNotEmpty &&
+                      device.id == connectedDeviceId) ||
+                  (connectedDeviceId.isEmpty && device.name == "Dribla")) &&
+              !_connecting) {
+            if (Platform.isAndroid) {
+              await DeviceConnection.controller
+                  .requestConnectionPriority(
+                deviceId: device.id,
+                priority: ConnectionPriority.highPerformance,
+              )
+                  .onError((error, stackTrace) {
+                developer.log("Connection priority request failed");
+                Timer(const Duration(seconds: 5), () => _scanDevices());
+              });
+              await DeviceConnection.controller.discoverAllServices(device.id);
+            }
+            connectToDevice(device.id);
+          }
+        }, onError: (error) {
+          developer.log("Error while scanning for devices: $error");
           Timer(const Duration(seconds: 5), () => _scanDevices());
         });
       }
-
-      await DeviceConnection.controller.discoverAllServices(connectedDeviceId);
-      connectToDevice(connectedDeviceId);
-    } else {
-      DeviceConnection.controller.scanForDevices(
-        withServices: [],
-        scanMode: ScanMode.lowLatency,
-      ).listen((device) async {
-        if (device.name == "Dribla" && !_connecting) {
-          if (Platform.isAndroid) {
-            await DeviceConnection.controller
-                .requestConnectionPriority(
-              deviceId: device.id,
-              priority: ConnectionPriority.highPerformance,
-            )
-                .onError((error, stackTrace) {
-              developer.log("Connection priority request failed");
-              Timer(const Duration(seconds: 5), () => _scanDevices());
-            });
-          }
-
-          await DeviceConnection.controller.discoverAllServices(device.id);
-          connectToDevice(device.id);
-        }
-      }, onError: (error) {
-        developer.log("Error while scanning for devices: $error");
-        Timer(const Duration(seconds: 5), () => _scanDevices());
-      });
+    } catch (e) {
+      developer.log("Error while starting scanning for devices: $e");
     }
   }
 
   static Future<void> connectToDevice(String deviceId) async {
-    developer.log("Connecting to device $deviceId");
-    _connecting = true;
+    try {
+      developer.log("Connecting to device $deviceId");
+      _connecting = true;
 
-    DeviceConnection.controller
-        .connectToDevice(
-            id: deviceId, connectionTimeout: const Duration(seconds: 30))
-        .listen(
-          (connectionStateUpdate) =>
-              handleDeviceConnectionStateUpdate(connectionStateUpdate),
-        )
-        .onError(
-          (error) => {
-            _connecting = false,
-            developer.log("Error connecting to device"),
-            Timer(const Duration(seconds: 5), () => connectToDevice(deviceId))
-          },
-        );
+      await _bleConnectionStream?.cancel();
+      _bleConnectionStream = DeviceConnection.controller
+          .connectToDevice(
+              id: deviceId, connectionTimeout: const Duration(seconds: 30))
+          .listen(
+            (connectionStateUpdate) =>
+                handleDeviceConnectionStateUpdate(connectionStateUpdate),
+          );
+
+      _bleConnectionStream?.onError(
+        (error) => {
+          _connecting = false,
+          developer.log("Error connecting to device"),
+          Timer(const Duration(seconds: 5), () => connectToDevice(deviceId))
+        },
+      );
+    } catch (e) {
+      developer.log("Error while connecting to device: $e");
+    }
   }
 
   static void handleDeviceConnectionStateUpdate(
     ConnectionStateUpdate stateUpdate,
   ) async {
-    developer.log(stateUpdate.toString());
-    if (stateUpdate.connectionState != DeviceConnectionState.connected) return;
+    try {
+      developer.log(stateUpdate.toString());
+      if (_reconnecting &&
+          stateUpdate.connectionState == DeviceConnectionState.disconnected) {
+        connectToDevice(connectedDeviceId);
+        return;
+      }
 
-    final services = await DeviceConnection.controller
-        .getDiscoveredServices(stateUpdate.deviceId);
+      if (connectionStatus == ConnectionStatus.bleConnected &&
+          stateUpdate.connectionState == DeviceConnectionState.disconnected &&
+          connectedDeviceId.isNotEmpty) {
+        _reconnecting = true;
+        connectionStatus = ConnectionStatus.bleDisconnected;
+        connectionStatusController.add(ConnectionStatus.bleDisconnected);
+        Timer(const Duration(milliseconds: 1000),
+            () => connectToDevice(connectedDeviceId));
+      }
 
-    final sensorService = services.firstWhere(
-      (service) => service.id == BluetoothIds.sensorServiceId,
-    );
-    DeviceConnection.initSensor(
-      sensorService.characteristics.first.subscribe(),
-    );
+      if (stateUpdate.connectionState != DeviceConnectionState.connected) {
+        return;
+      }
 
-    final ledService = services.firstWhere(
-      (service) => service.id == BluetoothIds.ledServiceId,
-    );
+      _reconnecting = false;
+      final services = await DeviceConnection.controller
+          .getDiscoveredServices(stateUpdate.deviceId);
 
-    DeviceConnection.ledCharacteristics = ledService.characteristics
-        .where((c) => c.id != BluetoothIds.resetLedsCharacteristicsId)
-        .toList();
+      final sensorService = services.firstWhere(
+        (service) => service.id == BluetoothIds.sensorServiceId,
+      );
+      DeviceConnection.initSensor(
+        sensorService.characteristics.first.subscribe(),
+      );
 
-    DeviceConnection.resetCharacteristic = ledService.characteristics
-        .firstWhere((c) => c.id == BluetoothIds.resetLedsCharacteristicsId);
+      final ledService = services.firstWhere(
+        (service) => service.id == BluetoothIds.ledServiceId,
+      );
 
-    final systemService = services.firstWhere(
-      (service) => service.id == BluetoothIds.systemServiceId,
-    );
+      DeviceConnection.ledCharacteristics = ledService.characteristics
+          .where((c) => c.id != BluetoothIds.resetLedsCharacteristicsId)
+          .toList();
 
-    DeviceConnection.shutdownCharacteristic = systemService.characteristics
-        .firstWhere((c) => c.id == BluetoothIds.shutdownSystemCharastericsId);
+      DeviceConnection.resetCharacteristic = ledService.characteristics
+          .firstWhere((c) => c.id == BluetoothIds.resetLedsCharacteristicsId);
 
-    connectionStatus = ConnectionStatus.bleConnected;
-    connectionStatusController.add(ConnectionStatus.bleConnected);
-    connectedDeviceId = stateUpdate.deviceId;
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString("dribla-device-id", stateUpdate.deviceId);
+      final systemService = services.firstWhere(
+        (service) => service.id == BluetoothIds.systemServiceId,
+      );
+
+      var sensorCountCharasteristic = systemService.characteristics
+          .firstWhereOrNull(
+              (c) => c.id == BluetoothIds.sensorCountharacteristicsId);
+
+      if (sensorCountCharasteristic != null) {
+        connectedSensorsCount = (await sensorCountCharasteristic.read()).first;
+      } else {
+        connectedSensorsCount = 8;
+      }
+
+      DeviceConnection.shutdownCharacteristic = systemService.characteristics
+          .firstWhere((c) => c.id == BluetoothIds.shutdownSystemCharastericsId);
+
+      connectionStatus = ConnectionStatus.bleConnected;
+      connectionStatusController.add(ConnectionStatus.bleConnected);
+      connectedDeviceId = stateUpdate.deviceId;
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString("dribla-device-id", stateUpdate.deviceId);
+      await initLedStatus();
+    } catch (e) {
+      developer.log("Error during connection state update: $e");
+    }
   }
 
   static void initSensor(Stream<List<int>> sensorSubscription) {
     sensorSubscription.listen((data) {
-      developer.log("Received sensor value update $data");
+      developer.log("${DateTime.now()}: Received sensor value update $data");
       var parsed = parseSensorData(data.first);
-      for (var listener in sensorValueListeners) {
-        listener(parsed);
+      if (!_resetting) {
+        for (var listener in sensorValueListeners) {
+          listener(parsed);
+        }
       }
     });
   }
@@ -194,7 +269,16 @@ class DeviceConnection {
     sensorValueListeners.clear();
   }
 
+  static Future<void> initLedStatus() async {
+    for (var (index, color) in ledValues.indexed) {
+      await setLedColor(color, index);
+    }
+
+    await resetLeds();
+  }
+
   static Future<void> setLedColor(int color, int index) async {
+    ledValues[index] = color;
     var charId = BluetoothIds.ledCharacteristicIds[index];
     for (var c in ledCharacteristics) {
       if (c.id == charId) {
@@ -207,10 +291,22 @@ class DeviceConnection {
     }
   }
 
-  static Future<void> setSingleLedActive(int color, int index) async {
+  static Future<void> setSingleLedActive(int color, int index,
+      [int bgColor = LedColors.off]) async {
+    ledValues = [
+      bgColor,
+      bgColor,
+      bgColor,
+      bgColor,
+      bgColor,
+      bgColor,
+      bgColor,
+      bgColor
+    ];
+    ledValues[index] = color;
     var charId = BluetoothIds.ledCharacteristicIds[index];
     for (var c in ledCharacteristics) {
-      Int32 color32 = Int32(c.id == charId ? color : LedColors.off);
+      Int32 color32 = Int32(c.id == charId ? color : bgColor);
       developer
           .log("Setting char ${c.id} value to: 0x${color32.toRadixString(16)}");
       await c.write(color32.toBytes()).onError(
@@ -218,34 +314,75 @@ class DeviceConnection {
     }
   }
 
-  static Future<void> setLedsActive(List<int> color, List<int> indices) async {
+  static Future<void> setLedsActive(List<int> color, List<int> indices,
+      [int bgColor = LedColors.off]) async {
+    ledValues = [
+      bgColor,
+      bgColor,
+      bgColor,
+      bgColor,
+      bgColor,
+      bgColor,
+      bgColor,
+      bgColor
+    ];
+    indices.forEachIndexed((index, charIdIndex) {
+      ledValues[charIdIndex] = color[index];
+    });
     var charColorPairs = indices.mapIndexed((index, charIdIndex) =>
         (BluetoothIds.ledCharacteristicIds[charIdIndex], color[index]));
     for (var c in ledCharacteristics) {
       var color = charColorPairs.firstWhereOrNull((pair) => pair.$1 == c.id);
-      Int32 color32 = Int32(color != null ? color.$2 : LedColors.off);
+      Int32 color32 = Int32(color != null ? color.$2 : bgColor);
       developer
           .log("Setting char ${c.id} value to: 0x${color32.toRadixString(16)}");
       await c.write(color32.toBytes()).onError(
           (error, stackTrace) => developer.log("Error setting led color"));
+      await Future.delayed(const Duration(milliseconds: 10));
     }
   }
 
   static Future<void> setAllLedColors(int color) async {
+    ledValues = [color, color, color, color, color, color, color, color];
     Int32 color32 = Int32(color);
     for (var c in ledCharacteristics) {
       await c.write(color32.toBytes()).onError((error, stackTrace) =>
           developer.log("Error writing led value $error"));
+      await Future.delayed(const Duration(milliseconds: 10));
     }
   }
 
   static Future<void> resetLeds() async {
+    _resetting = true;
     await resetCharacteristic?.write([0x01]).onError(
         (error, stackTrace) => developer.log("Error resetting leds"));
+    await Future.delayed(const Duration(milliseconds: 100));
+    _resetting = false;
   }
 
   static Future<void> shutDownDevice() async {
     await shutdownCharacteristic?.write([0x01]).onError(
         (error, stackTrace) => developer.log("Error shutting down device"));
+  }
+
+  static void stopIdleAnimation() {
+    idleAnimationTimer?.cancel();
+  }
+
+  static void startIdleAnimation() {
+    idleAnimationTimer?.cancel();
+    idleAnimationTimer =
+        Timer.periodic(const Duration(milliseconds: 400), (timer) {
+      if (connectionStatus == ConnectionStatus.bleConnected) {
+        idleAnimationLoop++;
+        if (idleAnimationLoop > 7) {
+          idleAnimationLoop = 0;
+        }
+        Color? color = Color.lerp(const Color.fromARGB(0, 0, 0, 255),
+            const Color.fromARGB(0, 0, 255, 0), idleAnimRandom.nextDouble());
+        setLedColor(LedColors.fromColor(color!), idleAnimationLoop);
+        resetLeds();
+      }
+    });
   }
 }

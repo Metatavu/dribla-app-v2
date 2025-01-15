@@ -1,9 +1,12 @@
+import "dart:async";
+
 import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/led_colors.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "package:sizer/sizer.dart";
 
 import "../games/game.dart";
 import "game_finished_screen.dart";
@@ -21,6 +24,8 @@ class _PlayGameScreen extends State<PlayGameScreen> {
   int _timeToStart = 10; // Starting value for the timer
   String _score = "0";
   String _gameStatusText = "ALOITETAAN!"; // TODO: localize
+  bool _disconnected = false;
+  StreamSubscription<ConnectionStatus>? _connectionStatusStreamSubscription;
 
   @override
   void initState() {
@@ -29,8 +34,26 @@ class _PlayGameScreen extends State<PlayGameScreen> {
   }
 
   _initializeGame() async {
+    DeviceConnection.stopIdleAnimation();
+    await Future.delayed(const Duration(milliseconds: 200));
     await DeviceConnection.setAllLedColors(LedColors.off);
     await DeviceConnection.resetLeds();
+    _connectionStatusStreamSubscription = DeviceConnection
+        .connectionStatusController.stream
+        .listen((connectionStatus) {
+      if (connectionStatus == ConnectionStatus.bleDisconnected) {
+        widget.selectedGame.pauseGame();
+        setState(() {
+          _disconnected = true;
+        });
+      } else if (connectionStatus == ConnectionStatus.bleConnected) {
+        setState(() {
+          _disconnected = false;
+        });
+        Timer(const Duration(milliseconds: 1000),
+            () => widget.selectedGame.resumeGame());
+      }
+    });
     widget.selectedGame.onCountDownUpdate = (timeToStart) {
       setState(() {
         _timeToStart = timeToStart;
@@ -59,17 +82,20 @@ class _PlayGameScreen extends State<PlayGameScreen> {
         ),
       );
     };
+    widget.selectedGame.sensorCount = DeviceConnection.connectedSensorsCount;
     widget.selectedGame.run();
   }
 
   @override
   void dispose() {
     widget.selectedGame.dispose();
+    _connectionStatusStreamSubscription?.cancel();
     super.dispose();
   }
 
   void _navigateBack() {
     widget.selectedGame.dispose();
+    DeviceConnection.startIdleAnimation();
     Navigator.pop(context);
   }
 
@@ -121,14 +147,22 @@ class _PlayGameScreen extends State<PlayGameScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
-                    _timeToStart > 0 ? _timeToStart.toString() : _score,
+                    _disconnected
+                        ? "Yhteys katkennut, yhdistetään uudelleen..."
+                        : _timeToStart > 0
+                            ? _timeToStart.toString()
+                            : _score,
                     style: TextStyle(
                       color: Colors.white,
                       decoration: TextDecoration.none,
                       fontFamily: "Nunito",
                       fontWeight: FontWeight.w900,
                       fontStyle: FontStyle.italic,
-                      fontSize: _timeToStart > 0 ? 160.0 : 84.0,
+                      fontSize: _disconnected
+                          ? 20.0
+                          : _timeToStart > 0
+                              ? 160.0
+                              : 84.0,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -149,7 +183,7 @@ class _PlayGameScreen extends State<PlayGameScreen> {
             child: ElevatedButton(
               onPressed: _navigateBack,
               style: theme.elevatedButtonTheme.style!.copyWith(
-                fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
+                fixedSize: MaterialStatePropertyAll(Size(80.w, 7.h)),
                 backgroundColor: const MaterialStatePropertyAll(Colors.blue),
               ),
               child: Text(

@@ -1,6 +1,8 @@
 import "package:dribla_app_v2/components/styled_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/game_utils.dart";
+import "package:dribla_app_v2/games/memory_game.dart";
+import "package:dribla_app_v2/games/star_game.dart";
 import "package:dribla_app_v2/games/ten_game_two_players.dart";
 import "package:dribla_app_v2/games/ten_turns_game.dart";
 import "package:flutter/material.dart";
@@ -48,6 +50,8 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
       WormGame.index => _buildWormGameSettingsDialog(context),
       TenGameTwoPlayers.index => _buildTenGame2PlayersSettingsDialog(context),
       TenTurnsGame.index => _buildTenTurnsGameSettingsDialog(context),
+      MemoryGame.index => _buildMemoryGameSettingsDialog(context),
+      StarGame.index => _buildStarSettingsDialog(context),
       _ => _buildNoSettingsDialog(context)
     };
   }
@@ -128,6 +132,26 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
     );
   }
 
+  Widget _buildStarSettingsDialog(BuildContext context) {
+    var key = StarGame.numberOfRoundsSettingKey;
+    return StyledDialog(
+      title: "Kierrosten määrä: ${_getIntSetting(key, 1)}",
+      content: Slider(
+        value: _getIntSetting(key, 1).toDouble(),
+        min: 1,
+        max: 5,
+        onChanged: (value) =>
+            setState(() => settings[key] = value.round().toString()),
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () => Navigator.pop(context, settings),
+          child: const Text("Tallenna"),
+        ),
+      ],
+    );
+  }
+
   Widget _buildLetterGameSettingsDialog(BuildContext context) {
     var key = LetterGame.numberOfRoundsSettingKey;
     return StyledDialog(
@@ -150,6 +174,31 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
 
   Widget _buildWormGameSettingsDialog(BuildContext context) {
     var key = WormGame.difficultySettingKey;
+    return StyledDialog(
+      title: "Vaikeustaso",
+      content: DropdownMenu<String>(
+        enableSearch: false,
+        initialSelection: _getStringSetting(key, "NORMAL"),
+        onSelected: (value) => setState(() {
+          if (value != null) settings[key] = value;
+        }),
+        dropdownMenuEntries: const [
+          DropdownMenuEntry(value: "EASY", label: "Helppo"),
+          DropdownMenuEntry(value: "NORMAL", label: "Normaali"),
+          DropdownMenuEntry(value: "HARD", label: "Vaikea"),
+        ],
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () => Navigator.pop(context, settings),
+          child: const Text("Tallenna"),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMemoryGameSettingsDialog(BuildContext context) {
+    var key = MemoryGame.difficultySettingKey;
     return StyledDialog(
       title: "Vaikeustaso",
       content: DropdownMenu<String>(

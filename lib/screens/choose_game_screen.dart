@@ -8,8 +8,9 @@ import "package:dribla_app_v2/game_utils.dart";
 import "package:dribla_app_v2/screens/play_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:flutter_svg/flutter_svg.dart";
 import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
+import "package:sizer/sizer.dart";
+import "package:url_launcher/url_launcher_string.dart";
 
 class ChooseGameScreen extends StatefulWidget {
   const ChooseGameScreen({super.key});
@@ -24,6 +25,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
   @override
   void initState() {
     super.initState();
+    DeviceConnection.startIdleAnimation();
   }
 
   @override
@@ -42,143 +44,155 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
             fit: BoxFit.fill,
           ),
         ),
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 50.0),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color.fromRGBO(255, 255, 255, 0),
-                  ),
-                  child: SvgPicture.asset(
-                    Assets.logoAsset,
-                    width: 138,
-                  ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 3.0.h),
+                      child: Text(
+                        loc.chooseGame,
+                        style: theme.textTheme.headlineMedium,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20.0, bottom: 40.0),
-                child: Text(
-                  loc.chooseGame,
-                  style: theme.textTheme.headlineMedium,
-                ),
-              ),
-            ),
-            Expanded(
-              //  width: 200,
-              //height: 400,
-              child: SizedBox(
-                width: 300,
-                child: Swiper(
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        GameIcon(
-                            animationSpeedMs:
-                                GameUtils.getIconAnimationSpeed(index),
-                            colorSequency: GameUtils.getIconAnimation(index)),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: Text(
-                            GameUtils.getTitle(index),
-                            style: theme.textTheme.headlineMedium,
-                            textAlign: TextAlign.center,
+              Expanded(
+                flex: 7,
+                //  width: 200,
+                //height: 400,
+                child: SizedBox(
+                  child: Swiper(
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          GameIcon(
+                              animationSpeedMs:
+                                  GameUtils.getIconAnimationSpeed(index),
+                              colorSequency: GameUtils.getIconAnimation(index)),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Text(
+                              GameUtils.getTitle(index),
+                              style: theme.textTheme.headlineMedium,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Text(
-                            GameUtils.getDescription(index),
-                            style: theme.textTheme.bodySmall,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                  itemCount: 9,
-                  loop: false,
-                  onIndexChanged: (index) => {
-                    setState(() {
-                      chosenGame = index;
-                    })
-                  },
-                  pagination: const SwiperPagination(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 415.0),
-                    builder:
-                        DotSwiperPaginationBuilder(activeColor: Colors.red),
+                        ],
+                      );
+                    },
+                    itemCount: 10,
+                    loop: false,
+                    onIndexChanged: (index) => {
+                      setState(() {
+                        chosenGame = index;
+                      })
+                    },
+                    pagination: SwiperPagination(
+                      alignment: Alignment.bottomCenter,
+                      margin: const EdgeInsets.only(bottom: 22.0),
+                      builder: DotSwiperPaginationBuilder(
+                          activeColor: Colors.red,
+                          size: 15.0.sp,
+                          activeSize: 15.0.sp,
+                          space: 7.sp),
+                    ),
                   ),
                 ),
               ),
-            ),
-            if (GameUtils.hasGameSettings(chosenGame))
               Container(
                 margin: const EdgeInsets.only(bottom: 15.0),
                 child: StyledElevatedButton(
                   onPressed: () async {
-                    var data = await showDialog<Map<String, String?>>(
-                      context: context,
-                      builder: (context) =>
-                          GameSettingsDialog(gameIndex: chosenGame),
-                    );
-                    if (data != null) {
-                      GameUtils.setGameSettings(chosenGame, data);
-                    }
+                    launchUrlString(GameUtils.getInstructionsUrl(chosenGame));
                   },
                   style: theme.elevatedButtonTheme.style?.copyWith(
-                    fixedSize: const MaterialStatePropertyAll(
-                      Size(290.0, 65.0),
+                    fixedSize: MaterialStatePropertyAll(
+                      Size(80.w, 7.h),
                     ),
                     backgroundColor: const MaterialStatePropertyAll(
                       Colors.blueAccent,
                     ),
                   ),
                   child: Text(
-                    loc.settingsButtonText,
+                    loc.instructionsButtonText,
                     style: theme.textTheme.headlineMedium,
                   ),
                 ),
               ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 25.0),
-              child: StyledElevatedButton(
-                onPressed: () {
-                  if (DeviceConnection.connectionStatus ==
-                      ConnectionStatus.bleConnected) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PlayGameScreen(
-                          selectedGame: GameUtils.selectGame(chosenGame),
-                        ),
+              if (GameUtils.hasGameSettings(chosenGame))
+                Container(
+                  margin: const EdgeInsets.only(bottom: 15.0),
+                  child: StyledElevatedButton(
+                    onPressed: () async {
+                      var data = await showDialog<Map<String, String?>>(
+                        context: context,
+                        builder: (context) =>
+                            GameSettingsDialog(gameIndex: chosenGame),
+                      );
+                      if (data != null) {
+                        GameUtils.setGameSettings(chosenGame, data);
+                      }
+                    },
+                    style: theme.elevatedButtonTheme.style?.copyWith(
+                      fixedSize: MaterialStatePropertyAll(
+                        Size(80.w, 7.h),
                       ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          "Ei yhteyttä mattoon, varmista että bluetooth sekä laite on kytketty päälle.",
-                        ),
+                      backgroundColor: const MaterialStatePropertyAll(
+                        Colors.blueAccent,
                       ),
-                    );
-                  }
-                },
-                style: theme.elevatedButtonTheme.style?.copyWith(
-                  fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
+                    ),
+                    child: Text(
+                      loc.settingsButtonText,
+                      style: theme.textTheme.headlineMedium,
+                    ),
+                  ),
                 ),
-                child: Text(
-                  loc.playButtonText,
-                  style: theme.textTheme.headlineMedium,
+              Container(
+                margin: const EdgeInsets.only(bottom: 15.0),
+                child: StyledElevatedButton(
+                  onPressed: () {
+                    if (DeviceConnection.connectionStatus ==
+                            ConnectionStatus.bleConnected &&
+                        GameUtils.isAllowed(chosenGame,
+                            DeviceConnection.connectedSensorsCount)) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PlayGameScreen(
+                            selectedGame: GameUtils.selectGame(chosenGame),
+                          ),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            GameUtils.isAllowed(chosenGame,
+                                    DeviceConnection.connectedSensorsCount)
+                                ? "Ei yhteyttä mattoon, varmista että bluetooth sekä laite on kytketty päälle."
+                                : "Peli ei ole käytettävissä yhdistetyllä laitteella.",
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  style: theme.elevatedButtonTheme.style?.copyWith(
+                    fixedSize: MaterialStatePropertyAll(Size(80.w, 10.0.h)),
+                  ),
+                  child: Text(
+                    loc.playButtonText,
+                    style: theme.textTheme.headlineMedium,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

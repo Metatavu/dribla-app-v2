@@ -7,6 +7,7 @@ import "package:dribla_app_v2/screens/play_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "package:sizer/sizer.dart";
 
 class GameFinishedScreen extends StatefulWidget {
   final String? finalScore;
@@ -105,7 +106,7 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
                             ),
                             Text(
                               widget.finalScore ?? "",
-                              style: theme.textTheme.headlineLarge,
+                              style: theme.textTheme.headlineMedium,
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -134,8 +135,7 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
                 );
               },
               style: theme.elevatedButtonTheme.style?.copyWith(
-                fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
-                backgroundColor: const MaterialStatePropertyAll(Colors.blue),
+                fixedSize: MaterialStatePropertyAll(Size(80.w, 10.0.h)),
               ),
               child: Text(
                 loc.replay,
@@ -156,10 +156,11 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () {
+                  DeviceConnection.startIdleAnimation();
                   Navigator.pop(context);
                 },
                 style: theme.elevatedButtonTheme.style?.copyWith(
-                  fixedSize: const MaterialStatePropertyAll(Size(290.0, 65.0)),
+                  fixedSize: MaterialStatePropertyAll(Size(80.w, 7.h)),
                   backgroundColor: const MaterialStatePropertyAll(Colors.blue),
                 ),
                 child: Text(

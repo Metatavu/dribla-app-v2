@@ -1,8 +1,10 @@
 import "dart:async";
 
+import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/components/styled_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:flutter/material.dart";
+import "package:flutter_svg/svg.dart";
 
 import "../device_connection.dart";
 
@@ -31,6 +33,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
   Widget _getConnectionStatusIcon(ConnectionStatus connectionStatus) {
     return switch (connectionStatus) {
       ConnectionStatus.bleDisabled => const Icon(Icons.bluetooth_disabled),
+      ConnectionStatus.bleDisconnected => const Icon(Icons.bluetooth_disabled),
       ConnectionStatus.bleConnecting => const Icon(Icons.bluetooth_searching),
       ConnectionStatus.bleConnected => const Icon(Icons.bluetooth_connected)
     };
@@ -46,6 +49,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
             false => "Etsitään laitteita..."
           },
         ConnectionStatus.bleConnected => "Yhdistetty",
+        ConnectionStatus.bleDisconnected => "Yhteys katkennut, odota...",
       };
 
   Widget _buildDeviceInfoDialogContent(ConnectionStatus status) {
@@ -98,7 +102,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
                   ConnectionStatus.bleConnected)
                 const OutlinedButton(
                   onPressed: DeviceConnection.shutDownDevice,
-                  child: Text("Sammuta laite"),
+                  child: Text("Sammuta"),
                 ),
               if (DeviceConnection.connectedDeviceId.isNotEmpty)
                 OutlinedButton(
@@ -107,7 +111,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
                     DeviceConnection.deinit();
                     DeviceConnection.init();
                   }),
-                  child: const Text("Unohda laite"),
+                  child: const Text("Unohda"),
                 ),
               StyledElevatedButton(
                 child: const Text("OK"),
@@ -128,10 +132,20 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
       backgroundColor: Colors.transparent,
       elevation: 0.0,
       foregroundColor: Colors.white,
-      title: StreamBuilder<ConnectionStatus>(
+      leading: StreamBuilder<ConnectionStatus>(
         stream: _connectionStatusStream,
         builder: (context, state) => _getConnectionStatusIcon(
           state.data ?? DeviceConnection.connectionStatus,
+        ),
+      ),
+      title: Container(
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+          color: Color.fromRGBO(255, 255, 255, 0),
+        ),
+        child: SvgPicture.asset(
+          Assets.logoAsset,
+          width: 150,
         ),
       ),
       actions: [
