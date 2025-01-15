@@ -45,3 +45,4 @@ app.*.map.json
 
 # flutter SDK
 .fvm/flutter_sdk
+secrets/upload-keystore.jks
