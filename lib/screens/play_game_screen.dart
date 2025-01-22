@@ -23,7 +23,7 @@ class PlayGameScreen extends StatefulWidget {
 class _PlayGameScreen extends State<PlayGameScreen> {
   int _timeToStart = 10; // Starting value for the timer
   String _score = "0";
-  String _gameStatusText = "ALOITETAAN!"; // TODO: localize
+  String _gameStatusText = "";
   bool _disconnected = false;
   StreamSubscription<ConnectionStatus>? _connectionStatusStreamSubscription;
 
@@ -148,7 +148,7 @@ class _PlayGameScreen extends State<PlayGameScreen> {
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
                     _disconnected
-                        ? "Yhteys katkennut, yhdistetään uudelleen..."
+                        ? locale.retryingConnection
                         : _timeToStart > 0
                             ? _timeToStart.toString()
                             : _score,

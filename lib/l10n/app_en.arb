@@ -1,7 +1,7 @@
 {
     "lookingForMat": "Looking for mat...",
     "chooseGame": "Choose game",
-    "playButtonText": "START GAME",
+    "playButtonText": "Play",
     "instructionsButtonText": "Instructions",
     "settingsButtonText": "Settings",
     "unableToConnectTitle": "Unable to connect to Dribla device.",
@@ -19,5 +19,21 @@
     "nearbyDevices": "Nearby devices",
     "granted": "Granted",
     "notGranted": "Not granted",
-    "start": "Start"
+    "start": "Start",
+    "numberOfLaps": "Number of laps",
+    "save": "Save",
+    "pit": "Pit",
+    "envelope": "Envelope",
+    "zigzag": "Zig Zag",
+    "pickBerries": "Pick the berries",
+    "tengame": "10-Game",
+    "tengameMultiplayer": "10-Game multiplayer",
+    "tenturns": "10-Turns",
+    "snake": "Snake",
+    "memoryGame": "Memory Game",
+    "noConnection": "No connection with the mat, ensure that Bluetooth is enabled and the device is turned on.",
+    "gameNotAvailable": "The game is not available on the connected device",
+    "results": "Results",
+    "betterLuckNextTime": "Better luck next time :(",
+    "retryingConnection": "Connection lost, attempting to reconnect..."
 }

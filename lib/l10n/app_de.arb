@@ -1,0 +1,18 @@
+{
+    "chooseGame": "Ein Spiel wählen",
+    "instructionsButtonText": "Anweisungen",
+    "settingsButtonText": "Einstellungen",
+    "settings": "Einstellungen",
+    "numberOfLaps": "Anzahl der Runden",
+    "save": "Speichern",
+    "playButtonText": "Spielen",
+    "pit": "Loch",
+    "envelope": "Umschlag",
+    "zigzag": "Zickzack",
+    "pickBerries": "Erdbeerpflücken",
+    "tengame": "10-Spiel",
+    "tengameMultiplayer": "10-Spiele (2 spieler)",
+    "tenturns": "10-Wendung",
+    "snake": "Snake",
+    "memoryGame": "Memory-Spiel"
+}

@@ -32,7 +32,7 @@
         "description": "Retry button text"
     },
     "backButtonText": "Takaisin",
-    "startGameText": "ALOITETAAN",
+    "startGameText": "ALOITETAAN!",
     "tapsLeft": "Jäljellä",
     "gameEnded": "Peli päättyi",
     "gameTime": "Aikasi oli:",
@@ -43,5 +43,21 @@
     "nearbyDevices": "Lähellä olevat laitteet",
     "granted": "Sallittu",
     "notGranted": "Ei sallittu",
-    "start": "Aloita"
+    "start": "Aloita",
+    "numberOfLaps": "Kierrosten määrä",
+    "save": "Tallenna",
+    "pit": "Kuoppa",
+    "envelope": "Kirjekuori",
+    "zigzag": "Zig-Zag",
+    "pickBerries": "Mansikanpoiminta",
+    "tengame": "10-Peli",
+    "tengameMultiplayer": "10-Peli kaksinpeli",
+    "tenturns": "10-Käännöstä",
+    "snake": "Matopeli",
+    "memoryGame": "Muistipeli",
+    "noConnection": "Ei yhteyttä mattoon, varmista että bluetooth sekä laite on kytketty päälle.",
+    "gameNotAvailable": "Peli ei ole käytettävissä yhdistetyllä laitteella.",
+    "results": "Tulokset",
+    "betterLuckNextTime": "Parempi onni ensi kerralla :(",
+    "retryingConnection": "Yhteys katkennut, yhdistetään uudelleen..."
 }
