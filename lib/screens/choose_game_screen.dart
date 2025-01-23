@@ -175,8 +175,8 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                           content: Text(
                             GameUtils.isAllowed(chosenGame,
                                     DeviceConnection.connectedSensorsCount)
-                                ? "Ei yhteyttä mattoon, varmista että bluetooth sekä laite on kytketty päälle."
-                                : "Peli ei ole käytettävissä yhdistetyllä laitteella.",
+                                ? loc.noConnection
+                                : loc.gameNotAvailable,
                           ),
                         ),
                       );
