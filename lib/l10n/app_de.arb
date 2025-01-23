@@ -15,5 +15,14 @@
     "tenturns": "10-Wendung",
     "snake": "Snake",
     "memoryGame": "Memory-Spiel",
-    "ok": "OK"
+    "ok": "OK",
+    "tengameUrl": "https://www.dribla.fi/de/spiele-bei/#10-peli",
+    "zigzagUrl": "https://www.dribla.fi/de/spiele-bei/#zig-zag",
+    "minefieldUrl": "https://www.dribla.fi/de/spiele-bei/#kuoppa",
+    "pickBerriesUrl": "https://www.dribla.fi/de/spiele-bei/#mansikanpoiminta",
+    "envelopeUrl": "https://www.dribla.fi/de/spiele-bei/#kirjekuori",
+    "snakeUrl": "https://www.dribla.fi/de/spiele-bei/#matopeli",
+    "tengameMultiplayerUrl": "https://www.dribla.fi/de/spiele-bei/#10-peli-kaksinpeli",
+    "tenturnsUrl": "https://www.dribla.fi/de/spiele-bei/#10-kaannosta",
+    "memoryGameUrl": "https://www.dribla.fi/de/spiele-bei/#muistipeli"
 }

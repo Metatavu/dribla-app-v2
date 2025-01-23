@@ -81,5 +81,14 @@
     "points": "PISTEET:",
     "gameRunning": "Peli käynnissä",
     "green": "Vihreä",
-    "blue": "Sininen"
+    "blue": "Sininen",
+    "tengameUrl": "https://www.dribla.fi/pelit/#10-peli",
+    "zigzagUrl": "https://www.dribla.fi/pelit/#zig-zag",
+    "minefieldUrl": "https://www.dribla.fi/pelit/#kuoppa",
+    "pickBerriesUrl": "https://www.dribla.fi/pelit/#mansikanpoiminta",
+    "envelopeUrl": "https://www.dribla.fi/pelit/#kirjekuori",
+    "snakeUrl": "https://www.dribla.fi/pelit/#matopeli",
+    "tengameMultiplayerUrl": "https://www.dribla.fi/pelit/#10-peli-kaksinpeli",
+    "tenturnsUrl": "https://www.dribla.fi/pelit/#10-kaannosta",
+    "memoryGameUrl": "https://www.dribla.fi/pelit/#muistipeli"
 }

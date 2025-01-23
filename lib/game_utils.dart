@@ -57,22 +57,6 @@ class GameUtils {
     };
   }
 
-  static String getInstructionsUrl(int index) {
-    return switch (index) {
-      TenGame.index => "https://www.dribla.fi/pelit/#10-peli",
-      ZigZagGame.index => "https://www.dribla.fi/pelit/#zig-zag",
-      MineFieldGame.index => "https://www.dribla.fi/pelit/#kuoppa",
-      MineSweeperGame.index => "https://www.dribla.fi/pelit/#mansikanpoiminta",
-      LetterGame.index => "https://www.dribla.fi/pelit/#kirjekuori",
-      WormGame.index => "https://www.dribla.fi/pelit/#matopeli",
-      TenGameTwoPlayers.index =>
-        "https://www.dribla.fi/pelit/#10-peli-kaksinpeli",
-      TenTurnsGame.index => "https://www.dribla.fi/pelit/#10-kaannosta",
-      MemoryGame.index => "https://www.dribla.fi/pelit/#muistipeli",
-      _ => ""
-    };
-  }
-
   static String getDescription(int index) {
     return switch (index) {
       TenGame.index => TenGame.description,

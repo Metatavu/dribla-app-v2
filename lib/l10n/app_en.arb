@@ -22,7 +22,7 @@
     "start": "Start",
     "numberOfLaps": "Number of laps",
     "save": "Save",
-    "minefield": "Minefield",
+    "minefield": "Pit",
     "envelope": "Envelope",
     "zigzag": "Zig Zag",
     "pickBerries": "Pick the berries",
@@ -57,5 +57,14 @@
     "points": "POINTS:",
     "gameRunning": "Game running",
     "green": "Green",
-    "blue": "Blue"
+    "blue": "Blue",
+    "tengameUrl": "https://www.dribla.fi/en/game/#10-peli",
+    "zigzagUrl": "https://www.dribla.fi/en/game/#zig-zag",
+    "minefieldUrl": "https://www.dribla.fi/en/game/#kuoppa",
+    "pickBerriesUrl": "https://www.dribla.fi/en/game/#mansikanpoiminta",
+    "envelopeUrl": "https://www.dribla.fi/en/game/#kirjekuori",
+    "snakeUrl": "https://www.dribla.fi/en/game/#matopeli",
+    "tengameMultiplayerUrl": "https://www.dribla.fi/en/game/#10-peli-kaksinpeli",
+    "tenturnsUrl": "https://www.dribla.fi/en/game/#10-kaannosta",
+    "memoryGameUrl": "https://www.dribla.fi/en/game/#muistipeli"
 }

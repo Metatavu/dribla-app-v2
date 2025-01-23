@@ -54,6 +54,21 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
     };
   }
 
+  String getLocalizedInstructionUrl(int index, AppLocalizations localizations) {
+    return switch (index) {
+      TenGame.index => localizations.tengameUrl,
+      ZigZagGame.index => localizations.zigzagUrl,
+      MineFieldGame.index => localizations.minefieldUrl,
+      MineSweeperGame.index => localizations.pickBerriesUrl,
+      LetterGame.index => localizations.envelopeUrl,
+      WormGame.index => localizations.snakeUrl,
+      TenGameTwoPlayers.index => localizations.tengameMultiplayerUrl,
+      TenTurnsGame.index => localizations.tenturnsUrl,
+      MemoryGame.index => localizations.memoryGameUrl,
+      _ => ""
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -135,7 +150,8 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 margin: const EdgeInsets.only(bottom: 15.0),
                 child: StyledElevatedButton(
                   onPressed: () async {
-                    launchUrlString(GameUtils.getInstructionsUrl(chosenGame));
+                    launchUrlString(
+                        getLocalizedInstructionUrl(chosenGame, loc));
                   },
                   style: theme.elevatedButtonTheme.style?.copyWith(
                     fixedSize: MaterialStatePropertyAll(
