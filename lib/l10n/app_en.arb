@@ -46,5 +46,11 @@
     "shutdown": "Shutdown",
     "forget": "Forget",
     "ok": "OK",
-    "amountOfTargets": "Amount of targets"
+    "amountOfTargets": "Amount of targets",
+    "amountOfTurns": "Amount of turns",
+    "difficulty": "Difficulty",
+    "normal": "Normal",
+    "easy": "Easy",
+    "hard": "Hard",
+    "noSettings": "No settings"
 }

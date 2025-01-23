@@ -70,5 +70,11 @@
     "shutdown": "Sammuta",
     "forget": "Unohda",
     "ok": "OK",
-    "amountOfTargets": "Kohteiden määrä"
+    "amountOfTargets": "Kohteiden määrä",
+    "amountOfTurns": "Kierrosten määrä",
+    "difficulty": "Vaikeustaso",
+    "normal": "Normaali",
+    "easy": "Helppo",
+    "hard": "Vaikea",
+    "noSettings": "Ei asetuksia"
 }
