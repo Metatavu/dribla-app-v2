@@ -30,7 +30,7 @@ class _PlayGameScreen extends State<PlayGameScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeGame(super.context);
+    _initializeGame();
   }
 
   String getLocalizedGameStatusText(
@@ -54,8 +54,7 @@ class _PlayGameScreen extends State<PlayGameScreen> {
     return "";
   }
 
-  _initializeGame(BuildContext context) async {
-    final localizations = AppLocalizations.of(context)!;
+  _initializeGame() async {
     DeviceConnection.stopIdleAnimation();
     await Future.delayed(const Duration(milliseconds: 200));
     await DeviceConnection.setAllLedColors(LedColors.off);
@@ -86,11 +85,7 @@ class _PlayGameScreen extends State<PlayGameScreen> {
         _score = score;
       });
     };
-    widget.selectedGame.onStatusUpdate = (status) {
-      setState(() {
-        _gameStatusText = getLocalizedGameStatusText(localizations, status);
-      });
-    };
+
     widget.selectedGame.onFinish = (win) {
       Navigator.pushReplacement(
         context,
@@ -125,7 +120,11 @@ class _PlayGameScreen extends State<PlayGameScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final locale = AppLocalizations.of(context)!;
-
+    widget.selectedGame.onStatusUpdate = (status) {
+      setState(() {
+        _gameStatusText = getLocalizedGameStatusText(locale, status);
+      });
+    };
     return Container(
       decoration: const BoxDecoration(
         color: Colors.transparent,
