@@ -10,7 +10,7 @@ import "package:dribla_app_v2/games/worm_game.dart";
 import "package:dribla_app_v2/games/zigzag_game.dart";
 import "package:dribla_app_v2/icon_animation_utils.dart";
 import "package:flutter/material.dart";
-
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "games/game.dart";
 
 class GameUtils {
@@ -55,22 +55,6 @@ class GameUtils {
       MemoryGame.index => MemoryGame(),
       StarGame.index => StarGame(),
       _ => TenGame()
-    };
-  }
-
-  static String getTitle(int index) {
-    return switch (index) {
-      TenGame.index => TenGame.title,
-      ZigZagGame.index => ZigZagGame.title,
-      MineFieldGame.index => MineFieldGame.title,
-      MineSweeperGame.index => MineSweeperGame.title,
-      LetterGame.index => LetterGame.title,
-      WormGame.index => WormGame.title,
-      TenGameTwoPlayers.index => TenGameTwoPlayers.title,
-      TenTurnsGame.index => TenTurnsGame.title,
-      MemoryGame.index => MemoryGame.title,
-      StarGame.index => StarGame.title,
-      _ => ""
     };
   }
 

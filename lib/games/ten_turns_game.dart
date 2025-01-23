@@ -11,7 +11,6 @@ import "../timer_formatters.dart";
 
 class TenTurnsGame extends Game {
   static const index = 6;
-  static const title = "10 - Käännöstä";
   static const description = "";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [

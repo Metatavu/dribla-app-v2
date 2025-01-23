@@ -10,7 +10,6 @@ import "../timer_formatters.dart";
 
 class ZigZagGame extends Game {
   static const index = 2;
-  static const title = "Zig-Zag";
   static const description = "";
 
   static const int iconAnimationSpeed = 200;

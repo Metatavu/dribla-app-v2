@@ -9,7 +9,6 @@ import "../timer_formatters.dart";
 
 class MineSweeperGame extends Game {
   static const index = 3;
-  static const title = "Mansikanpoiminta";
   static const description = "";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [

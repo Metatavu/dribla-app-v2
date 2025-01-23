@@ -11,7 +11,6 @@ import "../timer_formatters.dart";
 
 class TenGameTwoPlayers extends Game {
   static const index = 5;
-  static const title = "10 - Peli (2 Pelaajaa)";
   static const description = """Toinen pelaa punaisella ja toinen vihreällä.""";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [

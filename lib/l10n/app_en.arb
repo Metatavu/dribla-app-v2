@@ -22,7 +22,7 @@
     "start": "Start",
     "numberOfLaps": "Number of laps",
     "save": "Save",
-    "pit": "Pit",
+    "minefield": "Minefield",
     "envelope": "Envelope",
     "zigzag": "Zig Zag",
     "pickBerries": "Pick the berries",
@@ -52,5 +52,6 @@
     "normal": "Normal",
     "easy": "Easy",
     "hard": "Hard",
-    "noSettings": "No settings"
+    "noSettings": "No settings",
+    "timeRunning": "TIME:"
 }

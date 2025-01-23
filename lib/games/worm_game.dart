@@ -10,7 +10,6 @@ import "../led_colors.dart";
 
 class WormGame extends Game {
   static const index = 7;
-  static const title = "Matopeli";
   static const description =
       """Yritä ehtiä koskettamaan valoa ennen kuin se muuttuu punaiseksi.""";
 

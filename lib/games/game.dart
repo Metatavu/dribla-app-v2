@@ -13,7 +13,7 @@ abstract class Game {
   bool _started = false;
   int sensorCount = 8;
 
-  Function(String) onStatusTextUpdate = (String status) {};
+  Function(String) onStatusUpdate = (String status) {};
   Function(int) onCountDownUpdate = (int countdown) {};
   Function(String) onGameScoreUpdate = (String score) {};
   Function(bool) onFinish = (bool win) {};
@@ -29,7 +29,7 @@ abstract class Game {
   List<int> getAllowedNumberOfSensors();
 
   String getPointsUnit() {
-    return "AIKAA KULUNUT:";
+    return "timeRunning";
   }
 
   void finish(bool win) {
@@ -50,7 +50,7 @@ abstract class Game {
     const oneSec = Duration(seconds: 1);
     var countDownStarted = false;
     bool onoff = false;
-    onStatusTextUpdate("ALOITETAAN!");
+    onStatusUpdate("startGame");
     _beginningTimer = Timer.periodic(oneSec, (timer) {
       _beginningTimerValue--;
       onCountDownUpdate(_beginningTimerValue);
@@ -62,7 +62,7 @@ abstract class Game {
         onoff = !onoff;
         onBeginTimerTick(onoff);
       } else {
-        onStatusTextUpdate(getPointsUnit());
+        onStatusUpdate(getPointsUnit());
         _beginningTimer?.cancel(); // Stop the timer when it reaches 0
         _listenToSensorCharacteristic();
         _startGameTimer();

@@ -46,7 +46,7 @@
     "start": "Aloita",
     "numberOfLaps": "Kierrosten määrä",
     "save": "Tallenna",
-    "pit": "Kuoppa",
+    "minefield": "Kuoppa",
     "envelope": "Kirjekuori",
     "zigzag": "Zig-Zag",
     "pickBerries": "Mansikanpoiminta",
@@ -76,5 +76,6 @@
     "normal": "Normaali",
     "easy": "Helppo",
     "hard": "Vaikea",
-    "noSettings": "Ei asetuksia"
+    "noSettings": "Ei asetuksia",
+    "timeRunning": "AIKAA KULUNUT:"
 }
