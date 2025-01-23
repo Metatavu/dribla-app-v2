@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:flutter/material.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
 import "../audio_players.dart";
@@ -19,7 +20,7 @@ abstract class Game {
   Function(bool) onFinish = (bool win) {};
 
   int getIndex();
-  String getFinalScore();
+  String getFinalScore(BuildContext context);
   void onBeginTimerTick(bool onoff);
   void onSensorValueUpdate(List<int> activeSensors);
   void onGameTimerUpdate(int timeElapsed);

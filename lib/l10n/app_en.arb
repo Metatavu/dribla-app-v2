@@ -53,5 +53,9 @@
     "easy": "Easy",
     "hard": "Hard",
     "noSettings": "No settings",
-    "timeRunning": "TIME:"
+    "timeRunning": "TIME:",
+    "points": "POINTS:",
+    "gameRunning": "Game running",
+    "green": "Green",
+    "blue": "Blue"
 }

@@ -43,6 +43,14 @@ class _PlayGameScreen extends State<PlayGameScreen> {
       return localizations.timeRunning;
     }
 
+    if (status == "points") {
+      return localizations.points;
+    }
+
+    if (status == "gameRunning") {
+      return localizations.gameRunning;
+    }
+
     return "";
   }
 
@@ -88,7 +96,7 @@ class _PlayGameScreen extends State<PlayGameScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => GameFinishedScreen(
-            finalScore: widget.selectedGame.getFinalScore(),
+            finalScore: widget.selectedGame.getFinalScore(context),
             win: win,
             skipEndingFanfare: widget.selectedGame.skipEndingFanfare(),
             gameIndex: widget.selectedGame.getIndex(),

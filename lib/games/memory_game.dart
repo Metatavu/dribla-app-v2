@@ -101,11 +101,11 @@ class MemoryGame extends Game {
 
   @override
   String getPointsUnit() {
-    return "PISTEET:";
+    return "points";
   }
 
   @override
-  String getFinalScore() {
+  String getFinalScore(BuildContext context) {
     return points.toString();
   }
 

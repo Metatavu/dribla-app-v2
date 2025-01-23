@@ -10,7 +10,6 @@ import "package:dribla_app_v2/games/worm_game.dart";
 import "package:dribla_app_v2/games/zigzag_game.dart";
 import "package:dribla_app_v2/icon_animation_utils.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "games/game.dart";
 
 class GameUtils {

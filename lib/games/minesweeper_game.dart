@@ -37,7 +37,7 @@ class MineSweeperGame extends Game {
   }
 
   @override
-  String getFinalScore() {
+  String getFinalScore(BuildContext context) {
     return TimerFormatter.format(getElapsedTime());
   }
 

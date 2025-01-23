@@ -2,7 +2,7 @@ import "dart:math";
 
 import "package:dribla_app_v2/games/game.dart";
 import "package:flutter/material.dart";
-
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "../audio_players.dart";
 import "../device_connection.dart";
 import "../icon_animation_utils.dart";
@@ -38,9 +38,13 @@ class TenGameTwoPlayers extends Game {
   }
 
   @override
-  String getFinalScore() {
-    var winner = pointsPlayer1 >= maxPoints ? "Vihreä" : "Sininen";
-    var loser = winner == "Vihreä" ? "Sininen" : "Vihreä";
+  String getFinalScore(context) {
+    var localizations = AppLocalizations.of(context)!;
+    var winner =
+        pointsPlayer1 >= maxPoints ? localizations.green : localizations.blue;
+    var loser = winner == localizations.green
+        ? localizations.blue
+        : localizations.green;
     var winnerPoints =
         pointsPlayer1 > pointsPlayer2 ? pointsPlayer1 : pointsPlayer2;
     var loserPoints =

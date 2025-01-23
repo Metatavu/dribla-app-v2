@@ -40,7 +40,7 @@ class MineFieldGame extends Game {
   }
 
   @override
-  String getFinalScore() {
+  String getFinalScore(BuildContext context) {
     return "";
   }
 
@@ -51,7 +51,7 @@ class MineFieldGame extends Game {
 
   @override
   String getPointsUnit() {
-    return "Peli käynnissä";
+    return "gameRunning";
   }
 
   @override
