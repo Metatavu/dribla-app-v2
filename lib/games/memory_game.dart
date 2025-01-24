@@ -12,7 +12,6 @@ enum GameMode { easy, normal, hard }
 
 class MemoryGame extends Game {
   static const index = 8;
-  static const title = "Muistipeli";
   static const description =
       """Helppo: Kirjaimet. Muista kirjain ja kosketa kaikkia valoja omassa järjestyksessä.
       Normaali: Kuviot. Kosketa kuvion valoja omassa järjestyksessä
@@ -102,11 +101,11 @@ class MemoryGame extends Game {
 
   @override
   String getPointsUnit() {
-    return "PISTEET:";
+    return "points";
   }
 
   @override
-  String getFinalScore() {
+  String getFinalScore(BuildContext context) {
     return points.toString();
   }
 

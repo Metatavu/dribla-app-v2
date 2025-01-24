@@ -23,7 +23,7 @@ class PlayGameScreen extends StatefulWidget {
 class _PlayGameScreen extends State<PlayGameScreen> {
   int _timeToStart = 10; // Starting value for the timer
   String _score = "0";
-  String _gameStatusText = "ALOITETAAN!"; // TODO: localize
+  String _gameStatusText = "";
   bool _disconnected = false;
   StreamSubscription<ConnectionStatus>? _connectionStatusStreamSubscription;
 
@@ -31,6 +31,27 @@ class _PlayGameScreen extends State<PlayGameScreen> {
   void initState() {
     super.initState();
     _initializeGame();
+  }
+
+  String getLocalizedGameStatusText(
+      AppLocalizations localizations, String status) {
+    if (status == "startGame") {
+      return localizations.startGameText;
+    }
+
+    if (status == "timeRunning") {
+      return localizations.timeRunning;
+    }
+
+    if (status == "points") {
+      return localizations.points;
+    }
+
+    if (status == "gameRunning") {
+      return localizations.gameRunning;
+    }
+
+    return "";
   }
 
   _initializeGame() async {
@@ -64,17 +85,13 @@ class _PlayGameScreen extends State<PlayGameScreen> {
         _score = score;
       });
     };
-    widget.selectedGame.onStatusTextUpdate = (status) {
-      setState(() {
-        _gameStatusText = status;
-      });
-    };
+
     widget.selectedGame.onFinish = (win) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => GameFinishedScreen(
-            finalScore: widget.selectedGame.getFinalScore(),
+            finalScore: widget.selectedGame.getFinalScore(context),
             win: win,
             skipEndingFanfare: widget.selectedGame.skipEndingFanfare(),
             gameIndex: widget.selectedGame.getIndex(),
@@ -103,7 +120,11 @@ class _PlayGameScreen extends State<PlayGameScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final locale = AppLocalizations.of(context)!;
-
+    widget.selectedGame.onStatusUpdate = (status) {
+      setState(() {
+        _gameStatusText = getLocalizedGameStatusText(locale, status);
+      });
+    };
     return Container(
       decoration: const BoxDecoration(
         color: Colors.transparent,
@@ -148,7 +169,7 @@ class _PlayGameScreen extends State<PlayGameScreen> {
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
                     _disconnected
-                        ? "Yhteys katkennut, yhdistetään uudelleen..."
+                        ? locale.retryingConnection
                         : _timeToStart > 0
                             ? _timeToStart.toString()
                             : _score,

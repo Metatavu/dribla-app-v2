@@ -5,6 +5,16 @@ import "package:dribla_app_v2/components/game_settings_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/game_utils.dart";
+import "package:dribla_app_v2/games/letter_game.dart";
+import "package:dribla_app_v2/games/memory_game.dart";
+import "package:dribla_app_v2/games/minefield_game.dart";
+import "package:dribla_app_v2/games/minesweeper_game.dart";
+import "package:dribla_app_v2/games/star_game.dart";
+import "package:dribla_app_v2/games/ten_game.dart";
+import "package:dribla_app_v2/games/ten_game_two_players.dart";
+import "package:dribla_app_v2/games/ten_turns_game.dart";
+import "package:dribla_app_v2/games/worm_game.dart";
+import "package:dribla_app_v2/games/zigzag_game.dart";
 import "package:dribla_app_v2/screens/play_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -26,6 +36,37 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
   void initState() {
     super.initState();
     DeviceConnection.startIdleAnimation();
+  }
+
+  String getLocalizedTitle(int index, AppLocalizations localizations) {
+    return switch (index) {
+      TenGame.index => localizations.tengame,
+      ZigZagGame.index => localizations.zigzag,
+      MineFieldGame.index => localizations.minefield,
+      MineSweeperGame.index => localizations.pickBerries,
+      LetterGame.index => localizations.envelope,
+      WormGame.index => localizations.snake,
+      TenGameTwoPlayers.index => localizations.tengameMultiplayer,
+      TenTurnsGame.index => localizations.tenturns,
+      MemoryGame.index => localizations.memoryGame,
+      StarGame.index => localizations.startGameText,
+      _ => ""
+    };
+  }
+
+  String getLocalizedInstructionUrl(int index, AppLocalizations localizations) {
+    return switch (index) {
+      TenGame.index => localizations.tengameUrl,
+      ZigZagGame.index => localizations.zigzagUrl,
+      MineFieldGame.index => localizations.minefieldUrl,
+      MineSweeperGame.index => localizations.pickBerriesUrl,
+      LetterGame.index => localizations.envelopeUrl,
+      WormGame.index => localizations.snakeUrl,
+      TenGameTwoPlayers.index => localizations.tengameMultiplayerUrl,
+      TenTurnsGame.index => localizations.tenturnsUrl,
+      MemoryGame.index => localizations.memoryGameUrl,
+      _ => ""
+    };
   }
 
   @override
@@ -78,7 +119,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10.0),
                             child: Text(
-                              GameUtils.getTitle(index),
+                              getLocalizedTitle(index, loc),
                               style: theme.textTheme.headlineMedium,
                               textAlign: TextAlign.center,
                             ),
@@ -109,7 +150,8 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 margin: const EdgeInsets.only(bottom: 15.0),
                 child: StyledElevatedButton(
                   onPressed: () async {
-                    launchUrlString(GameUtils.getInstructionsUrl(chosenGame));
+                    launchUrlString(
+                        getLocalizedInstructionUrl(chosenGame, loc));
                   },
                   style: theme.elevatedButtonTheme.style?.copyWith(
                     fixedSize: MaterialStatePropertyAll(
@@ -175,8 +217,8 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                           content: Text(
                             GameUtils.isAllowed(chosenGame,
                                     DeviceConnection.connectedSensorsCount)
-                                ? "Ei yhteyttä mattoon, varmista että bluetooth sekä laite on kytketty päälle."
-                                : "Peli ei ole käytettävissä yhdistetyllä laitteella.",
+                                ? loc.noConnection
+                                : loc.gameNotAvailable,
                           ),
                         ),
                       );

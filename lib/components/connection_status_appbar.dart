@@ -1,4 +1,5 @@
 import "dart:async";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/components/styled_dialog.dart";
@@ -39,25 +40,27 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
     };
   }
 
-  String _getDeviceConnectionStatusText(ConnectionStatus status) =>
+  String _getDeviceConnectionStatusText(
+          ConnectionStatus status, AppLocalizations localizations) =>
       switch (status) {
-        ConnectionStatus.bleDisabled =>
-          "Bluetooth ei käytössä. Varmista että puhelimen bluetooth on kytketty päälle ja että sovelluksella on tarvittavat oikeudet sen käyttöön.",
+        ConnectionStatus.bleDisabled => localizations.bluetoothDisabled,
         ConnectionStatus.bleConnecting => switch (
               DeviceConnection.connectedDeviceId.isNotEmpty) {
-            true => "Etsitään laitetta...",
-            false => "Etsitään laitteita..."
+            true => localizations.lookingForDevice,
+            false => localizations.lookingForDevices
           },
-        ConnectionStatus.bleConnected => "Yhdistetty",
-        ConnectionStatus.bleDisconnected => "Yhteys katkennut, odota...",
+        ConnectionStatus.bleConnected => localizations.connected,
+        ConnectionStatus.bleDisconnected => localizations.disconnected,
       };
 
-  Widget _buildDeviceInfoDialogContent(ConnectionStatus status) {
+  Widget _buildDeviceInfoDialogContent(
+      ConnectionStatus status, AppLocalizations localizations) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          _getDeviceConnectionStatusText(DeviceConnection.connectionStatus),
+          _getDeviceConnectionStatusText(
+              DeviceConnection.connectionStatus, localizations),
           style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -67,7 +70,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
         if (DeviceConnection.connectedDeviceId.isNotEmpty) ...[
           const SizedBox(height: 8),
           Text(
-            "Laite: Dribla (${DeviceConnection.connectedDeviceId})",
+            "${localizations.device}: Dribla (${DeviceConnection.connectedDeviceId})",
             style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -83,6 +86,8 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
     BuildContext context,
     ThemeData theme,
   ) {
+    final localizations = AppLocalizations.of(context)!;
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -93,16 +98,15 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
                     ConnectionStatus.bleDisabled
                 ? Axis.vertical
                 : Axis.horizontal,
-            title: "Laitteen tiedot",
+            title: localizations.deviceInfo,
             content: _buildDeviceInfoDialogContent(
-              state.data ?? DeviceConnection.connectionStatus,
-            ),
+                state.data ?? DeviceConnection.connectionStatus, localizations),
             actions: [
               if (DeviceConnection.connectionStatus ==
                   ConnectionStatus.bleConnected)
-                const OutlinedButton(
+                OutlinedButton(
                   onPressed: DeviceConnection.shutDownDevice,
-                  child: Text("Sammuta"),
+                  child: Text(localizations.shutdown),
                 ),
               if (DeviceConnection.connectedDeviceId.isNotEmpty)
                 OutlinedButton(
@@ -111,10 +115,10 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
                     DeviceConnection.deinit();
                     DeviceConnection.init();
                   }),
-                  child: const Text("Unohda"),
+                  child: Text(localizations.forget),
                 ),
               StyledElevatedButton(
-                child: const Text("OK"),
+                child: Text(localizations.ok),
                 onPressed: () => Navigator.pop(context),
               )
             ],
