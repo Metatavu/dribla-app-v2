@@ -10,7 +10,6 @@ import "package:dribla_app_v2/games/worm_game.dart";
 import "package:dribla_app_v2/games/zigzag_game.dart";
 import "package:dribla_app_v2/icon_animation_utils.dart";
 import "package:flutter/material.dart";
-
 import "games/game.dart";
 
 class GameUtils {
@@ -55,38 +54,6 @@ class GameUtils {
       MemoryGame.index => MemoryGame(),
       StarGame.index => StarGame(),
       _ => TenGame()
-    };
-  }
-
-  static String getTitle(int index) {
-    return switch (index) {
-      TenGame.index => TenGame.title,
-      ZigZagGame.index => ZigZagGame.title,
-      MineFieldGame.index => MineFieldGame.title,
-      MineSweeperGame.index => MineSweeperGame.title,
-      LetterGame.index => LetterGame.title,
-      WormGame.index => WormGame.title,
-      TenGameTwoPlayers.index => TenGameTwoPlayers.title,
-      TenTurnsGame.index => TenTurnsGame.title,
-      MemoryGame.index => MemoryGame.title,
-      StarGame.index => StarGame.title,
-      _ => ""
-    };
-  }
-
-  static String getInstructionsUrl(int index) {
-    return switch (index) {
-      TenGame.index => "https://www.dribla.fi/pelit/#10-peli",
-      ZigZagGame.index => "https://www.dribla.fi/pelit/#zig-zag",
-      MineFieldGame.index => "https://www.dribla.fi/pelit/#kuoppa",
-      MineSweeperGame.index => "https://www.dribla.fi/pelit/#mansikanpoiminta",
-      LetterGame.index => "https://www.dribla.fi/pelit/#kirjekuori",
-      WormGame.index => "https://www.dribla.fi/pelit/#matopeli",
-      TenGameTwoPlayers.index =>
-        "https://www.dribla.fi/pelit/#10-peli-kaksinpeli",
-      TenTurnsGame.index => "https://www.dribla.fi/pelit/#10-kaannosta",
-      MemoryGame.index => "https://www.dribla.fi/pelit/#muistipeli",
-      _ => ""
     };
   }
 

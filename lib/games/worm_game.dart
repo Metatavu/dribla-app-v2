@@ -10,7 +10,6 @@ import "../led_colors.dart";
 
 class WormGame extends Game {
   static const index = 7;
-  static const title = "Matopeli";
   static const description =
       """Yritä ehtiä koskettamaan valoa ennen kuin se muuttuu punaiseksi.""";
 
@@ -91,11 +90,11 @@ class WormGame extends Game {
 
   @override
   String getPointsUnit() {
-    return "PISTEET:";
+    return "points";
   }
 
   @override
-  String getFinalScore() {
+  String getFinalScore(BuildContext context) {
     return points.toString();
   }
 

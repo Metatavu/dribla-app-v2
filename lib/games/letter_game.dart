@@ -10,7 +10,6 @@ import "../timer_formatters.dart";
 
 class LetterGame extends Game {
   static const index = 1;
-  static const title = "Kirjekuori";
   static const description = "";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
@@ -38,7 +37,7 @@ class LetterGame extends Game {
   }
 
   @override
-  String getFinalScore() {
+  String getFinalScore(BuildContext context) {
     return TimerFormatter.format(getElapsedTime());
   }
 

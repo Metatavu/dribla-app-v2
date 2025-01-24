@@ -10,7 +10,6 @@ import "../led_colors.dart";
 
 class MineFieldGame extends Game {
   static const index = 0;
-  static const title = "Kuoppa";
   static const description = "";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
@@ -41,7 +40,7 @@ class MineFieldGame extends Game {
   }
 
   @override
-  String getFinalScore() {
+  String getFinalScore(BuildContext context) {
     return "";
   }
 
@@ -52,7 +51,7 @@ class MineFieldGame extends Game {
 
   @override
   String getPointsUnit() {
-    return "Peli käynnissä";
+    return "gameRunning";
   }
 
   @override

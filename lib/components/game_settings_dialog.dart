@@ -6,7 +6,7 @@ import "package:dribla_app_v2/games/star_game.dart";
 import "package:dribla_app_v2/games/ten_game_two_players.dart";
 import "package:dribla_app_v2/games/ten_turns_game.dart";
 import "package:flutter/material.dart";
-
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "../games/letter_game.dart";
 import "../games/ten_game.dart";
 import "../games/worm_game.dart";
@@ -72,8 +72,9 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
 
   Widget _buildTenGameSettingsDialog(BuildContext context) {
     var key = TenGame.numberOfTargetsSettingKey;
+    final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
-      title: "Kohteiden määrä: ${_getIntSetting(key, 10)}",
+      title: "${localizations.amountOfTargets}: ${_getIntSetting(key, 10)}",
       content: Slider(
         value: _getIntSetting(key, 10).toDouble(),
         min: 10,
@@ -85,7 +86,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
       actions: [
         StyledElevatedButton(
           onPressed: () => Navigator.pop(context, settings),
-          child: const Text("Tallenna"),
+          child: Text(localizations.save),
         ),
       ],
     );
@@ -93,8 +94,9 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
 
   Widget _buildTenGame2PlayersSettingsDialog(BuildContext context) {
     var key = TenGameTwoPlayers.numberOfTargetsSettingKey;
+    final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
-      title: "Kohteiden määrä: ${_getIntSetting(key, 10)}",
+      title: "${localizations.amountOfTargets}: ${_getIntSetting(key, 10)}",
       content: Slider(
         value: _getIntSetting(key, 10).toDouble(),
         min: 10,
@@ -106,7 +108,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
       actions: [
         StyledElevatedButton(
           onPressed: () => Navigator.pop(context, settings),
-          child: const Text("Tallenna"),
+          child: Text(localizations.save),
         ),
       ],
     );
@@ -114,8 +116,9 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
 
   Widget _buildZigZagSettingsDialog(BuildContext context) {
     var key = ZigZagGame.numberOfRoundsSettingKey;
+    final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
-      title: "Kierrosten määrä: ${_getIntSetting(key, 1)}",
+      title: "${localizations.amountOfTurns}: ${_getIntSetting(key, 1)}",
       content: Slider(
         value: _getIntSetting(key, 1).toDouble(),
         min: 1,
@@ -126,7 +129,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
       actions: [
         ElevatedButton(
           onPressed: () => Navigator.pop(context, settings),
-          child: const Text("Tallenna"),
+          child: Text(localizations.save),
         ),
       ],
     );
@@ -134,8 +137,9 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
 
   Widget _buildStarSettingsDialog(BuildContext context) {
     var key = StarGame.numberOfRoundsSettingKey;
+    final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
-      title: "Kierrosten määrä: ${_getIntSetting(key, 1)}",
+      title: "${localizations.amountOfTurns}: ${_getIntSetting(key, 1)}",
       content: Slider(
         value: _getIntSetting(key, 1).toDouble(),
         min: 1,
@@ -146,7 +150,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
       actions: [
         ElevatedButton(
           onPressed: () => Navigator.pop(context, settings),
-          child: const Text("Tallenna"),
+          child: Text(localizations.save),
         ),
       ],
     );
@@ -154,8 +158,9 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
 
   Widget _buildLetterGameSettingsDialog(BuildContext context) {
     var key = LetterGame.numberOfRoundsSettingKey;
+    final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
-      title: "Kierrosten määrä: ${_getIntSetting(key, 4)}",
+      title: "${localizations.amountOfTurns}: ${_getIntSetting(key, 4)}",
       content: Slider(
         value: _getIntSetting(key, 4).toDouble(),
         min: 1,
@@ -166,7 +171,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
       actions: [
         ElevatedButton(
           onPressed: () => Navigator.pop(context, settings),
-          child: const Text("Tallenna"),
+          child: Text(localizations.save),
         ),
       ],
     );
@@ -174,24 +179,25 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
 
   Widget _buildWormGameSettingsDialog(BuildContext context) {
     var key = WormGame.difficultySettingKey;
+    final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
-      title: "Vaikeustaso",
+      title: localizations.difficulty,
       content: DropdownMenu<String>(
         enableSearch: false,
         initialSelection: _getStringSetting(key, "NORMAL"),
         onSelected: (value) => setState(() {
           if (value != null) settings[key] = value;
         }),
-        dropdownMenuEntries: const [
-          DropdownMenuEntry(value: "EASY", label: "Helppo"),
-          DropdownMenuEntry(value: "NORMAL", label: "Normaali"),
-          DropdownMenuEntry(value: "HARD", label: "Vaikea"),
+        dropdownMenuEntries: [
+          DropdownMenuEntry(value: "EASY", label: localizations.easy),
+          DropdownMenuEntry(value: "NORMAL", label: localizations.normal),
+          DropdownMenuEntry(value: "HARD", label: localizations.hard),
         ],
       ),
       actions: [
         ElevatedButton(
           onPressed: () => Navigator.pop(context, settings),
-          child: const Text("Tallenna"),
+          child: Text(localizations.save),
         ),
       ],
     );
@@ -199,24 +205,25 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
 
   Widget _buildMemoryGameSettingsDialog(BuildContext context) {
     var key = MemoryGame.difficultySettingKey;
+    final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
-      title: "Vaikeustaso",
+      title: localizations.difficulty,
       content: DropdownMenu<String>(
         enableSearch: false,
         initialSelection: _getStringSetting(key, "NORMAL"),
         onSelected: (value) => setState(() {
           if (value != null) settings[key] = value;
         }),
-        dropdownMenuEntries: const [
-          DropdownMenuEntry(value: "EASY", label: "Helppo"),
-          DropdownMenuEntry(value: "NORMAL", label: "Normaali"),
-          DropdownMenuEntry(value: "HARD", label: "Vaikea"),
+        dropdownMenuEntries: [
+          DropdownMenuEntry(value: "EASY", label: localizations.easy),
+          DropdownMenuEntry(value: "NORMAL", label: localizations.normal),
+          DropdownMenuEntry(value: "HARD", label: localizations.hard),
         ],
       ),
       actions: [
         ElevatedButton(
           onPressed: () => Navigator.pop(context, settings),
-          child: const Text("Tallenna"),
+          child: Text(localizations.save),
         ),
       ],
     );
@@ -224,8 +231,9 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
 
   Widget _buildTenTurnsGameSettingsDialog(BuildContext context) {
     var key = TenTurnsGame.numberOfTargetsSettingKey;
+    final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
-      title: "Kohteiden määrä: ${_getIntSetting(key, 10)}",
+      title: "${localizations.amountOfTurns}: ${_getIntSetting(key, 10)}",
       content: Slider(
         value: _getIntSetting(key, 10).toDouble(),
         min: 10,
@@ -237,19 +245,20 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
       actions: [
         ElevatedButton(
           onPressed: () => Navigator.pop(context, settings),
-          child: const Text("Tallenna"),
+          child: Text(localizations.save),
         ),
       ],
     );
   }
 
   Widget _buildNoSettingsDialog(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
-      title: "Ei asetuksia",
+      title: localizations.noSettings,
       actions: [
         ElevatedButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text("OK"),
+          child: Text(localizations.ok),
         )
       ],
     );

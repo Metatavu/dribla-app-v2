@@ -10,7 +10,6 @@ import "../timer_formatters.dart";
 
 class StarGame extends Game {
   static const index = 9;
-  static const title = "Tähti";
   static const description = "";
 
   static const int iconAnimationSpeed = 200;
@@ -36,7 +35,7 @@ class StarGame extends Game {
   }
 
   @override
-  String getFinalScore() {
+  String getFinalScore(BuildContext context) {
     return TimerFormatter.format(getElapsedTime());
   }
 

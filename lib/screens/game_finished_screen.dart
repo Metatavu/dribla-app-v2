@@ -98,9 +98,7 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              widget.win
-                                  ? "Tulokset:"
-                                  : "Parempi onni ensi kerralla :(",
+                              widget.win ? loc.results : loc.betterLuckNextTime,
                               style: theme.textTheme.headlineMedium,
                               textAlign: TextAlign.center,
                             ),
