@@ -5,6 +5,7 @@ import "package:dribla_app_v2/components/styled_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
+import "package:kiosk_mode/kiosk_mode.dart";
 
 import "../device_connection.dart";
 
@@ -21,6 +22,8 @@ class ConnectionStatusAppBar extends StatefulWidget
 }
 
 class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
+  Timer? tapResetTimer;
+  int lockDeviceTapCount = 0;
   Stream<ConnectionStatus> _connectionStatusStream = const Stream.empty();
 
   @override
@@ -77,6 +80,15 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
         ],
       ],
     );
+  }
+
+  _toggleDeviceLockMode() async {
+    final mode = await getKioskMode();
+    if (mode == KioskMode.enabled) {
+      await stopKioskMode();
+    } else {
+      await startKioskMode();
+    }
   }
 
   Future<void> _openConnectionStatusDialog(
@@ -143,9 +155,21 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
         decoration: const BoxDecoration(
           color: Color.fromRGBO(255, 255, 255, 0),
         ),
-        child: SvgPicture.asset(
-          Assets.logoAsset,
-          width: 150,
+        child: GestureDetector(
+          onTap: () {
+            if (lockDeviceTapCount == 10) {
+              _toggleDeviceLockMode();
+            }
+            tapResetTimer?.cancel();
+            lockDeviceTapCount++;
+            tapResetTimer = Timer(const Duration(seconds: 1), () {
+              lockDeviceTapCount = 0;
+            });
+          },
+          child: SvgPicture.asset(
+            Assets.logoAsset,
+            width: 150,
+          ),
         ),
       ),
       actions: [
