@@ -54,6 +54,7 @@ class _DriblaAppState extends State<DriblaApp> {
           title: "Dribla App V2",
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
+            scaffoldBackgroundColor: Colors.black,
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
             textTheme: TextTheme(

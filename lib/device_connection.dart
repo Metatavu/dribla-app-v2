@@ -101,19 +101,6 @@ class DeviceConnection {
       connectionStatus = ConnectionStatus.bleConnecting;
       connectionStatusController.add(ConnectionStatus.bleConnecting);
       if (connectedDeviceId.isNotEmpty && Platform.isAndroid) {
-        if (Platform.isAndroid) {
-          await DeviceConnection.controller
-              .requestConnectionPriority(
-            deviceId: connectedDeviceId,
-            priority: ConnectionPriority.highPerformance,
-          )
-              .onError((error, stackTrace) {
-            developer.log("Connection priority request failed");
-            Timer(const Duration(seconds: 5), () => _scanDevices());
-          });
-          await DeviceConnection.controller
-              .discoverAllServices(connectedDeviceId);
-        }
         connectToDevice(connectedDeviceId);
       } else {
         _bleScanStream = DeviceConnection.controller.scanForDevices(
@@ -124,18 +111,6 @@ class DeviceConnection {
                       device.id == connectedDeviceId) ||
                   (connectedDeviceId.isEmpty && device.name == "Dribla")) &&
               !_connecting) {
-            if (Platform.isAndroid) {
-              await DeviceConnection.controller
-                  .requestConnectionPriority(
-                deviceId: device.id,
-                priority: ConnectionPriority.highPerformance,
-              )
-                  .onError((error, stackTrace) {
-                developer.log("Connection priority request failed");
-                Timer(const Duration(seconds: 5), () => _scanDevices());
-              });
-              await DeviceConnection.controller.discoverAllServices(device.id);
-            }
             connectToDevice(device.id);
           }
         }, onError: (error) {
@@ -152,8 +127,23 @@ class DeviceConnection {
     try {
       developer.log("Connecting to device $deviceId");
       _connecting = true;
-
       await _bleConnectionStream?.cancel();
+      if (Platform.isAndroid) {
+        try {
+          await DeviceConnection.controller
+              .requestConnectionPriority(
+            deviceId: deviceId,
+            priority: ConnectionPriority.highPerformance,
+          )
+              .onError((error, stackTrace) {
+            developer.log("Connection priority request failed");
+            Timer(const Duration(seconds: 5), () => _scanDevices());
+          });
+          await DeviceConnection.controller.discoverAllServices(deviceId);
+        } catch (e) {
+          developer.log("Error discovering services: $e");
+        }
+      }
       _bleConnectionStream = DeviceConnection.controller
           .connectToDevice(
               id: deviceId, connectionTimeout: const Duration(seconds: 30))

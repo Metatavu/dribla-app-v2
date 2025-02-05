@@ -31,6 +31,7 @@
     "tenturns": "10-Turns",
     "snake": "Snake",
     "memoryGame": "Memory Game",
+    "starGameText": "Star",
     "noConnection": "No connection with the mat, ensure that Bluetooth is enabled and the device is turned on.",
     "gameNotAvailable": "The game is not available on the connected device",
     "results": "Results",
@@ -66,5 +67,11 @@
     "snakeUrl": "https://www.dribla.fi/en/game/#matopeli",
     "tengameMultiplayerUrl": "https://www.dribla.fi/en/game/#10-peli-kaksinpeli",
     "tenturnsUrl": "https://www.dribla.fi/en/game/#10-kaannosta",
-    "memoryGameUrl": "https://www.dribla.fi/en/game/#muistipeli"
+    "memoryGameUrl": "https://www.dribla.fi/en/game/#muistipeli",
+    "appUnlocked": "App unlocked",
+    "appLocked": "App locked",
+    "updateAvailable": "New version available",
+    "updateToVersion": "Update app to version: ",
+    "updateButtonText": "Update",
+    "closeButtonText": "Close"
 }

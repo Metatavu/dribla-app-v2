@@ -125,96 +125,87 @@ class _PlayGameScreen extends State<PlayGameScreen> {
         _gameStatusText = getLocalizedGameStatusText(locale, status);
       });
     };
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
-        image: DecorationImage(
-          image: AssetImage(Assets.chooseGameBackgroundImageAsset),
-          fit: BoxFit.fill,
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Color.fromRGBO(255, 255, 255, 0),
+              ),
+              child: SvgPicture.asset(
+                Assets.logoAsset,
+                width: 138,
+              ),
+            ),
+          ),
         ),
-      ),
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Color.fromRGBO(255, 255, 255, 0),
-                ),
-                child: SvgPicture.asset(
-                  Assets.logoAsset,
-                  width: 138,
-                ),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-                padding: const EdgeInsets.only(top: 25.0),
-                child: Text(
-                  _gameStatusText,
-                  style: theme.textTheme.headlineMedium,
-                  textAlign: TextAlign.center,
-                )),
-          ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: Text(
-                    _disconnected
-                        ? locale.retryingConnection
-                        : _timeToStart > 0
-                            ? _timeToStart.toString()
-                            : _score,
-                    style: TextStyle(
-                      color: Colors.white,
-                      decoration: TextDecoration.none,
-                      fontFamily: "Nunito",
-                      fontWeight: FontWeight.w900,
-                      fontStyle: FontStyle.italic,
-                      fontSize: _disconnected
-                          ? 20.0
-                          : _timeToStart > 0
-                              ? 160.0
-                              : 84.0,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 25.0),
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white,
-                  offset: Offset(5, 5),
-                ),
-              ],
-            ),
-            child: ElevatedButton(
-              onPressed: _navigateBack,
-              style: theme.elevatedButtonTheme.style!.copyWith(
-                fixedSize: MaterialStatePropertyAll(Size(80.w, 7.h)),
-                backgroundColor: const MaterialStatePropertyAll(Colors.blue),
-              ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+              padding: const EdgeInsets.only(top: 25.0),
               child: Text(
-                locale.backButtonText,
+                _gameStatusText,
                 style: theme.textTheme.headlineMedium,
+                textAlign: TextAlign.center,
+              )),
+        ),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Text(
+                  _disconnected
+                      ? locale.retryingConnection
+                      : _timeToStart > 0
+                          ? _timeToStart.toString()
+                          : _score,
+                  style: TextStyle(
+                    color: Colors.white,
+                    decoration: TextDecoration.none,
+                    fontFamily: "Nunito",
+                    fontWeight: FontWeight.w900,
+                    fontStyle: FontStyle.italic,
+                    fontSize: _disconnected
+                        ? 20.0
+                        : _timeToStart > 0
+                            ? 160.0
+                            : 84.0,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
+            ],
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(bottom: 25.0),
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white,
+                offset: Offset(5, 5),
+              ),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: _navigateBack,
+            style: theme.elevatedButtonTheme.style!.copyWith(
+              fixedSize: MaterialStatePropertyAll(Size(80.w, 7.h)),
+              backgroundColor: const MaterialStatePropertyAll(Colors.blue),
+            ),
+            child: Text(
+              locale.backButtonText,
+              style: theme.textTheme.headlineMedium,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

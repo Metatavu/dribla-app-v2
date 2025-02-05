@@ -6,14 +6,16 @@ import "package:dribla_app_v2/components/styled_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:kiosk_mode/kiosk_mode.dart";
+import "package:device_policy_controller/device_policy_controller.dart";
+import "package:package_info_plus/package_info_plus.dart";
 
 import "../device_connection.dart";
 
 class ConnectionStatusAppBar extends StatefulWidget
     implements PreferredSizeWidget {
-  const ConnectionStatusAppBar({super.key})
-      : preferredSize = const Size.fromHeight(kToolbarHeight);
+  const ConnectionStatusAppBar({
+    super.key,
+  }) : preferredSize = const Size.fromHeight(kToolbarHeight);
 
   @override
   final Size preferredSize; // default is 56.0
@@ -26,12 +28,28 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
   Timer? tapResetTimer;
   int lockDeviceTapCount = 0;
   Stream<ConnectionStatus> _connectionStatusStream = const Stream.empty();
+  PackageInfo _packageInfo = PackageInfo(
+    appName: "Unknown",
+    packageName: "Unknown",
+    version: "Unknown",
+    buildNumber: "Unknown",
+    buildSignature: "Unknown",
+    installerStore: "Unknown",
+  );
 
   @override
   void initState() {
     super.initState();
     _connectionStatusStream =
         DeviceConnection.connectionStatusController.stream;
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
   }
 
   Widget _getConnectionStatusIcon(ConnectionStatus connectionStatus) {
@@ -81,16 +99,37 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
             ),
           ),
         ],
+        ...[
+          const SizedBox(height: 8),
+          Text(
+            "v${_packageInfo.version}",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+          )
+        ]
       ],
     );
   }
 
-  _toggleDeviceLockMode() async {
-    final mode = await getKioskMode();
-    if (mode == KioskMode.enabled) {
-      await stopKioskMode();
+  _toggleDeviceLockMode(
+      BuildContext context, AppLocalizations localizations) async {
+    final dpc = DevicePolicyController.instance;
+    final isLocked = await dpc.isAppLocked();
+    if (isLocked) {
+      final bool success = await dpc.unlockApp();
+      if (success && context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(localizations.appUnlocked)));
+      }
     } else {
-      await startKioskMode();
+      final bool success = await dpc.lockApp(home: true);
+      if (success && context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(localizations.appLocked)));
+      }
     }
   }
 
@@ -143,6 +182,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context)!;
 
     return AppBar(
       backgroundColor: Colors.transparent,
@@ -162,7 +202,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
         child: GestureDetector(
           onTap: () {
             if (lockDeviceTapCount == 10) {
-              _toggleDeviceLockMode();
+              _toggleDeviceLockMode(context, localizations);
             }
             tapResetTimer?.cancel();
             lockDeviceTapCount++;

@@ -55,6 +55,7 @@
     "tenturns": "10-Käännöstä",
     "snake": "Matopeli",
     "memoryGame": "Muistipeli",
+    "starGameText": "Tähtipeli",
     "noConnection": "Ei yhteyttä mattoon, varmista että bluetooth sekä laite on kytketty päälle.",
     "gameNotAvailable": "Peli ei ole käytettävissä yhdistetyllä laitteella.",
     "results": "Tulokset",
@@ -90,5 +91,11 @@
     "snakeUrl": "https://www.dribla.fi/pelit/#matopeli",
     "tengameMultiplayerUrl": "https://www.dribla.fi/pelit/#10-peli-kaksinpeli",
     "tenturnsUrl": "https://www.dribla.fi/pelit/#10-kaannosta",
-    "memoryGameUrl": "https://www.dribla.fi/pelit/#muistipeli"
+    "memoryGameUrl": "https://www.dribla.fi/pelit/#muistipeli",
+    "appUnlocked": "Lukitus avattu",
+    "appLocked": "Sovellus lukittu",
+    "updateAvailable": "Uusi versio saatavilla",
+    "updateToVersion": "Päivitä sovellus versioon: ",
+    "updateButtonText": "Päivitä",
+    "closeButtonText": "Sulje"
 }

@@ -52,67 +52,90 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
     gameTitle = loc.gameEnded;
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
-        image: DecorationImage(
-          image: AssetImage(Assets.chooseGameBackgroundImageAsset),
-          fit: BoxFit.fill,
-        ),
-      ),
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Color.fromRGBO(255, 255, 255, 0),
-                ),
-                child: SvgPicture.asset(
-                  Assets.logoAsset,
-                  width: 138,
-                ),
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Color.fromRGBO(255, 255, 255, 0),
+              ),
+              child: SvgPicture.asset(
+                Assets.logoAsset,
+                width: 138,
               ),
             ),
           ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: Text(
-                    gameTitle,
-                    style: theme.textTheme.headlineMedium,
-                    textAlign: TextAlign.center,
-                  ),
+        ),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Text(
+                  gameTitle,
+                  style: theme.textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
                 ),
-                Expanded(
-                    child: Align(
-                        alignment: Alignment.center,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              widget.win ? loc.results : loc.betterLuckNextTime,
-                              style: theme.textTheme.headlineMedium,
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              widget.finalScore ?? "",
-                              style: theme.textTheme.headlineMedium,
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+              ),
+              Expanded(
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.win ? loc.results : loc.betterLuckNextTime,
+                            style: theme.textTheme.headlineMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            widget.finalScore ?? "",
+                            style: theme.textTheme.headlineMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ))),
+            ],
+          ),
+        ),
+        Container(
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white,
+                offset: Offset(5, 5),
+              ),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PlayGameScreen(
+                            selectedGame: GameUtils.selectGame(
+                          widget.gameIndex,
                         ))),
-              ],
+              );
+            },
+            style: theme.elevatedButtonTheme.style?.copyWith(
+              fixedSize: MaterialStatePropertyAll(Size(80.w, 10.0.h)),
+            ),
+            child: Text(
+              loc.replay,
+              style: theme.textTheme.headlineMedium,
             ),
           ),
-          Container(
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
+          child: Container(
             decoration: const BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -123,53 +146,21 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
             ),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PlayGameScreen(
-                              selectedGame: GameUtils.selectGame(
-                            widget.gameIndex,
-                          ))),
-                );
+                DeviceConnection.startIdleAnimation();
+                Navigator.pop(context);
               },
               style: theme.elevatedButtonTheme.style?.copyWith(
-                fixedSize: MaterialStatePropertyAll(Size(80.w, 10.0.h)),
+                fixedSize: MaterialStatePropertyAll(Size(80.w, 7.h)),
+                backgroundColor: const MaterialStatePropertyAll(Colors.blue),
               ),
               child: Text(
-                loc.replay,
+                loc.backButtonText,
                 style: theme.textTheme.headlineMedium,
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(5, 5),
-                  ),
-                ],
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  DeviceConnection.startIdleAnimation();
-                  Navigator.pop(context);
-                },
-                style: theme.elevatedButtonTheme.style?.copyWith(
-                  fixedSize: MaterialStatePropertyAll(Size(80.w, 7.h)),
-                  backgroundColor: const MaterialStatePropertyAll(Colors.blue),
-                ),
-                child: Text(
-                  loc.backButtonText,
-                  style: theme.textTheme.headlineMedium,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
