@@ -20,17 +20,25 @@ class PlayGameScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _PlayGameScreen();
 }
 
-class _PlayGameScreen extends State<PlayGameScreen> {
+class _PlayGameScreen extends State<PlayGameScreen>
+    with SingleTickerProviderStateMixin {
   int _timeToStart = 10; // Starting value for the timer
   String _score = "0";
   String _gameStatusText = "";
   bool _disconnected = false;
   StreamSubscription<ConnectionStatus>? _connectionStatusStreamSubscription;
+  late AnimationController _disconnectedAnimationController;
 
   @override
   void initState() {
     super.initState();
     _initializeGame();
+    _disconnectedAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 47),
+    )..addListener(() {
+        setState(() {});
+      });
   }
 
   String getLocalizedGameStatusText(
@@ -55,19 +63,21 @@ class _PlayGameScreen extends State<PlayGameScreen> {
   }
 
   _initializeGame() async {
-    DeviceConnection.stopIdleAnimation();
     await Future.delayed(const Duration(milliseconds: 200));
-    await DeviceConnection.setAllLedColors(LedColors.off);
+    await DeviceConnection.setAllLedColors(LedColors.red);
     await DeviceConnection.resetLeds();
     _connectionStatusStreamSubscription = DeviceConnection
         .connectionStatusController.stream
         .listen((connectionStatus) {
       if (connectionStatus == ConnectionStatus.bleDisconnected) {
         widget.selectedGame.pauseGame();
+        _disconnectedAnimationController.reset();
+        _disconnectedAnimationController.forward();
         setState(() {
           _disconnected = true;
         });
       } else if (connectionStatus == ConnectionStatus.bleConnected) {
+        _disconnectedAnimationController.stop();
         setState(() {
           _disconnected = false;
         });
@@ -76,14 +86,18 @@ class _PlayGameScreen extends State<PlayGameScreen> {
       }
     });
     widget.selectedGame.onCountDownUpdate = (timeToStart) {
-      setState(() {
-        _timeToStart = timeToStart;
-      });
+      if (mounted) {
+        setState(() {
+          _timeToStart = timeToStart;
+        });
+      }
     };
     widget.selectedGame.onGameScoreUpdate = (score) {
-      setState(() {
-        _score = score;
-      });
+      if (mounted) {
+        setState(() {
+          _score = score;
+        });
+      }
     };
 
     widget.selectedGame.onFinish = (win) {
@@ -180,6 +194,17 @@ class _PlayGameScreen extends State<PlayGameScreen> {
                   textAlign: TextAlign.center,
                 ),
               ),
+              if (_disconnected) ...[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: LinearProgressIndicator(
+                    value: _disconnectedAnimationController.value,
+                    minHeight: 16.0,
+                    color: const Color.fromARGB(0xff, 0x3f, 0xa5, 0x35),
+                    semanticsLabel: "Reconnect indicator",
+                  ),
+                )
+              ]
             ],
           ),
         ),

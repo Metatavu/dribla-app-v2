@@ -124,7 +124,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                       ],
                     );
                   },
-                  itemCount: 10,
+                  itemCount: 9,
                   loop: false,
                   onIndexChanged: (index) => {
                     setState(() {

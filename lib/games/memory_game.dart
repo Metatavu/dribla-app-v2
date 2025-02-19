@@ -11,7 +11,7 @@ import "../led_colors.dart";
 enum GameMode { easy, normal, hard }
 
 class MemoryGame extends Game {
-  static const index = 8;
+  static const index = 9;
   static const description =
       """Helppo: Kirjaimet. Muista kirjain ja kosketa kaikkia valoja omassa järjestyksessä.
       Normaali: Kuviot. Kosketa kuvion valoja omassa järjestyksessä
@@ -216,14 +216,14 @@ class MemoryGame extends Game {
     _readingActive = false;
 
     AudioPlayers.playFailure();
-    for (var _ in List.generate(4, (index) => index)) {
+    /*for (var _ in List.generate(4, (index) => index)) {
       await DeviceConnection.setAllLedColors(LedColors.off);
       await DeviceConnection.setLedsActive(
           [LedColors.red, ...correctTargets.map((_) => LedColors.green)],
           [wrongTarget, ...correctTargets]);
       await Future.delayed(const Duration(milliseconds: 50));
-    }
-    await DeviceConnection.setAllLedColors(LedColors.off);
+    }*/
+    await DeviceConnection.setAllLedColors(LedColors.red);
     finish(false);
   }
 
@@ -248,6 +248,7 @@ class MemoryGame extends Game {
 
     await DeviceConnection.setAllLedColors(LedColors.red);
     await DeviceConnection.resetLeds();
+    await Future.delayed(const Duration(milliseconds: 1000));
     _readingActive = true;
   }
 
