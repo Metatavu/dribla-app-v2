@@ -38,7 +38,7 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
         AudioPlayers.playFailure();
       }
     }
-    DeviceConnection.setAllLedColors(LedColors.off);
+    DeviceConnection.setAllLedColors(LedColors.red);
   }
 
   @override

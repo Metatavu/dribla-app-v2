@@ -46,7 +46,7 @@ class MineFieldGame extends Game {
 
   @override
   void onBeginTimerTick(bool onoff) {
-    DeviceConnection.setAllLedColors(onoff ? LedColors.red : LedColors.off);
+    //DeviceConnection.setAllLedColors(onoff ? LedColors.red : LedColors.off);
   }
 
   @override

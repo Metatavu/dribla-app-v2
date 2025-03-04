@@ -9,7 +9,7 @@ import "../led_colors.dart";
 import "../timer_formatters.dart";
 
 class StarGame extends Game {
-  static const index = 9;
+  static const index = 8;
   static const description = "";
 
   static const int iconAnimationSpeed = 200;
