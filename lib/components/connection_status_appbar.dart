@@ -28,6 +28,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
   Timer? tapResetTimer;
   int lockDeviceTapCount = 0;
   Stream<ConnectionStatus> _connectionStatusStream = const Stream.empty();
+  Stream<bool> _lockdownStatusStream = const Stream.empty();
   PackageInfo _packageInfo = PackageInfo(
     appName: "Unknown",
     packageName: "Unknown",
@@ -42,6 +43,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
     super.initState();
     _connectionStatusStream =
         DeviceConnection.connectionStatusController.stream;
+    _lockdownStatusStream = DeviceConnection.deviceLockdownController.stream;
     _initPackageInfo();
   }
 
@@ -102,7 +104,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
         ...[
           const SizedBox(height: 8),
           Text(
-            "v${_packageInfo.version}",
+            "v${_packageInfo.version} - showroom",
             style: const TextStyle(
               color: Colors.white,
               fontSize: 14,
@@ -120,12 +122,18 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
     final isLocked = await dpc.isAppLocked();
     if (isLocked) {
       final bool success = await dpc.unlockApp();
+      if (success) {
+        DeviceConnection.deviceLockdownController.add(false);
+      }
       if (success && context.mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(localizations.appUnlocked)));
       }
     } else {
       final bool success = await dpc.lockApp(home: true);
+      if (success) {
+        DeviceConnection.deviceLockdownController.add(true);
+      }
       if (success && context.mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(localizations.appLocked)));
@@ -184,44 +192,49 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
 
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0.0,
-      foregroundColor: Colors.white,
-      leading: StreamBuilder<ConnectionStatus>(
-        stream: _connectionStatusStream,
-        builder: (context, state) => _getConnectionStatusIcon(
-          state.data ?? DeviceConnection.connectionStatus,
-        ),
-      ),
-      title: Container(
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          color: Color.fromRGBO(255, 255, 255, 0),
-        ),
-        child: GestureDetector(
-          onTap: () {
-            if (lockDeviceTapCount == 10) {
-              _toggleDeviceLockMode(context, localizations);
-            }
-            tapResetTimer?.cancel();
-            lockDeviceTapCount++;
-            tapResetTimer = Timer(const Duration(seconds: 1), () {
-              lockDeviceTapCount = 0;
-            });
-          },
-          child: SvgPicture.asset(
-            Assets.logoAsset,
-            width: 150,
+    return StreamBuilder<bool>(
+      stream: _lockdownStatusStream,
+      initialData: DeviceConnection.isLocked,
+      builder: (context, locked) => AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        foregroundColor: Colors.white,
+        leading: StreamBuilder<ConnectionStatus>(
+          stream: _connectionStatusStream,
+          builder: (context, state) => _getConnectionStatusIcon(
+            state.data ?? DeviceConnection.connectionStatus,
           ),
         ),
+        title: Container(
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+            color: Color.fromRGBO(255, 255, 255, 0),
+          ),
+          child: GestureDetector(
+            onTap: () {
+              if (lockDeviceTapCount == 10) {
+                _toggleDeviceLockMode(context, localizations);
+              }
+              tapResetTimer?.cancel();
+              lockDeviceTapCount++;
+              tapResetTimer = Timer(const Duration(seconds: 1), () {
+                lockDeviceTapCount = 0;
+              });
+            },
+            child: SvgPicture.asset(
+              Assets.logoAsset,
+              width: 150,
+            ),
+          ),
+        ),
+        actions: [
+          if (locked.hasData && locked.data == false)
+            IconButton(
+              onPressed: () => _openConnectionStatusDialog(context, theme),
+              icon: const Icon(Icons.settings),
+            ),
+        ],
       ),
-      actions: [
-        IconButton(
-          onPressed: () => _openConnectionStatusDialog(context, theme),
-          icon: const Icon(Icons.settings),
-        )
-      ],
     );
   }
 }

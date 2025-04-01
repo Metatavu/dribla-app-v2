@@ -1,0 +1,1 @@
+adb shell dpm set-device-owner fi.metatavu.dribla/com.itisnajim.device_policy_controller.AppDeviceAdminReceiver

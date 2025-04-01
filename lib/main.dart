@@ -32,6 +32,7 @@ class _DriblaAppState extends State<DriblaApp> {
     super.initState();
     AudioPlayers.init();
     DeviceConnection.init();
+    DeviceConnection.initLockStatus();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
 

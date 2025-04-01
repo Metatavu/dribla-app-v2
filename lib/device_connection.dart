@@ -2,6 +2,7 @@ import "dart:async";
 import "dart:io";
 
 import "package:collection/collection.dart";
+import "package:device_policy_controller/device_policy_controller.dart";
 import "package:dribla_app_v2/led_colors.dart";
 import "package:fixnum/fixnum.dart";
 import "dart:math";
@@ -29,6 +30,7 @@ class DeviceConnection {
   static List<Function(List<int>)> sensorValueListeners = [];
   static bool _connecting = false;
   static bool _resetting = false;
+  static bool isLocked = false;
   static String connectedDeviceId = "";
   static ConnectionStatus connectionStatus = ConnectionStatus.bleDisabled;
   static int currentIdleAnimationColor = LedColors.blue;
@@ -47,6 +49,9 @@ class DeviceConnection {
     LedColors.off
   ];
   static StreamController<ConnectionStatus> connectionStatusController =
+      StreamController.broadcast();
+
+  static StreamController<bool> deviceLockdownController =
       StreamController.broadcast();
 
   static List<int> parseSensorData(int rawValue) {
@@ -70,6 +75,18 @@ class DeviceConnection {
         connectionStatusController.add(ConnectionStatus.bleDisabled);
       }
     });
+  }
+
+  static void initLockStatus() async {
+    final dpc = DevicePolicyController.instance;
+    isLocked = await dpc.isAppLocked();
+    if (!isLocked) {
+      final success = await dpc.lockApp(home: true);
+      if (success) {
+        isLocked = true;
+      }
+    }
+    deviceLockdownController.add(isLocked);
   }
 
   static void clearDeviceId() async {
