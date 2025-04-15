@@ -34,6 +34,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
   @override
   void initState() {
     super.initState();
+    chosenGame = getIndexToGameMapping(0);
     DeviceConnection.startIdleAnimation();
     _lockdownStatusStream = DeviceConnection.deviceLockdownController.stream;
   }

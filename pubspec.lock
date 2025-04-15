@@ -188,10 +188,9 @@ packages:
   device_policy_controller:
     dependency: "direct main"
     description:
-      name: device_policy_controller
-      sha256: "9310744921d71b6d52e3899d26eef2797c07e5ac13ce924b269dad4583f4246d"
-      url: "https://pub.dev"
-    source: hosted
+      path: "device_policy_controller-0.0.3+1"
+      relative: true
+    source: path
     version: "0.0.3+1"
   fake_async:
     dependency: transitive

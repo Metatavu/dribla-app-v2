@@ -56,16 +56,16 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/wakelock_plus/ios"
 
 SPEC CHECKSUMS:
-  audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
-  device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
+  audioplayers_darwin: ccf9c770ee768abb07e26d90af093f7bab1c12ab
+  device_info_plus: 335f3ce08d2e174b9fdc3db3db0f4e3b1f66bd89
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_blue_plus: 4837da7d00cf5d441fdd6635b3a57f936778ea96
-  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
-  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
-  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
-  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
-  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
-  wakelock_plus: 8b09852c8876491e4b6d179e17dfe2a0b5f60d47
+  flutter_blue_plus: e5808fc4e5ebc58bb911635f8fdaf5e2b4da2754
+  package_info_plus: 566e1b7a2f3900e4b0020914ad3fc051dcc95596
+  path_provider_foundation: 2a68637f8a62df7f6e790a428d1bdf72cb4e2d59
+  permission_handler_apple: 3787117e48f80715ff04a3830ca039283d6a4f29
+  shared_preferences_foundation: 4e65c567e7877037d328829a522222c938bf308c
+  url_launcher_ios: a1c1f2bf89969cb13cce46d0333c7257d346e169
+  wakelock_plus: 8c239121a007daa1d6759c6acdc507860273dd2f
 
 PODFILE CHECKSUM: b473173b2fc12c4b7408fe0b0eab3bd1f5e14fff
 

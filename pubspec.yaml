@@ -49,7 +49,8 @@ dependencies:
   wakelock_plus: ^1.1.4
   url_launcher: ^6.2.6
   sizer: ^3.0.3
-  device_policy_controller: ^0.0.3+1
+  device_policy_controller:
+    path: ./device_policy_controller-0.0.3+1
   version_check: ^0.7.1
   package_info_plus: ^5.0.1
   flutter_blue_plus: ^1.34.5
