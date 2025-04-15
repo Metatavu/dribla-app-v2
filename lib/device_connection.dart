@@ -116,6 +116,9 @@ class DeviceConnection {
       connectionStatus = ConnectionStatus.bleConnecting;
       connectionStatusController.add(ConnectionStatus.bleConnecting);
       if (connectedDeviceId.isNotEmpty) {
+        await FlutterBluePlus.startScan(
+            withNames: ["Dribla"], // *or* any of the specified names
+            timeout: const Duration(seconds: 15));
         connectToDevice(BluetoothDevice.fromId(connectedDeviceId));
       } else {
         _bleScanStream = FlutterBluePlus.onScanResults.listen((results) {
@@ -125,7 +128,7 @@ class DeviceConnection {
           }
         }, onError: (error) {
           developer.log("Error while scanning for devices: $error");
-          Timer(const Duration(seconds: 5), () => _scanDevices());
+          Timer(const Duration(seconds: 10), () => _scanDevices());
         });
         await FlutterBluePlus.startScan(
             withNames: ["Dribla"], // *or* any of the specified names
@@ -140,20 +143,22 @@ class DeviceConnection {
       }
     } catch (e) {
       developer.log("Error while starting scanning for devices: $e");
+      Timer(const Duration(seconds: 15), () => _scanDevices());
     }
   }
 
   static Future<void> connectToDevice(BluetoothDevice device) async {
     try {
-      _bleConnectionStream?.cancel();
-      developer.log("Connecting to device ${device.remoteId}");
       _connecting = true;
+      await _bleScanStream?.cancel();
+      developer.log("Connecting to device ${device.remoteId}");
       await _bleConnectionStream?.cancel();
       await device.connect(autoConnect: true, mtu: null);
       _bleConnectionStream = device.connectionState
           .listen((event) => handleDeviceConnectionStateUpdate(device, event));
     } catch (e) {
       developer.log("Error while connecting to device: $e");
+      Timer(const Duration(seconds: 15), () => connectToDevice(device));
     }
   }
 
