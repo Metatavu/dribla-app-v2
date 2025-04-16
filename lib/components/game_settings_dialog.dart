@@ -7,6 +7,7 @@ import "package:dribla_app_v2/games/ten_game_two_players.dart";
 import "package:dribla_app_v2/games/ten_turns_game.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:sizer/sizer.dart";
 import "../games/letter_game.dart";
 import "../games/ten_game.dart";
 import "../games/worm_game.dart";
@@ -52,7 +53,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
       TenTurnsGame.index => _buildTenTurnsGameSettingsDialog(context),
       MemoryGame.index => _buildMemoryGameSettingsDialog(context),
       StarGame.index => _buildStarSettingsDialog(context),
-      _ => _buildNoSettingsDialog(context)
+      _ => _buildDefaultSettingsDialog(context)
     };
   }
 
@@ -70,10 +71,43 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
     return defaultValue;
   }
 
+  Widget _buildSettingsDialogActions(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        DropdownMenu<int>(
+          width: 80.w,
+          enableSearch: false,
+          initialSelection: _getIntSetting("start_delay", 10),
+          onSelected: (value) => setState(() {
+            if (value != null) settings["start_delay"] = value.toString();
+          }),
+          dropdownMenuEntries: [
+            DropdownMenuEntry(value: 10, label: localizations.startDelay10s),
+            DropdownMenuEntry(value: 5, label: localizations.startDelay5s),
+          ],
+        ),
+        const SizedBox(
+          height: 25,
+        ),
+        StyledElevatedButton(
+          style: theme.elevatedButtonTheme.style?.copyWith(
+            fixedSize: WidgetStatePropertyAll(Size(80.w, 5.h)),
+          ),
+          onPressed: () => Navigator.pop(context, settings),
+          child: Text(localizations.save),
+        ),
+      ],
+    );
+  }
+
   Widget _buildTenGameSettingsDialog(BuildContext context) {
     var key = TenGame.numberOfTargetsSettingKey;
     final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
+      smallTitle: true,
       title: "${localizations.amountOfTargets}: ${_getIntSetting(key, 10)}",
       content: Slider(
         value: _getIntSetting(key, 10).toDouble(),
@@ -83,12 +117,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
         onChanged: (value) =>
             setState(() => settings[key] = value.round().toString()),
       ),
-      actions: [
-        StyledElevatedButton(
-          onPressed: () => Navigator.pop(context, settings),
-          child: Text(localizations.save),
-        ),
-      ],
+      actions: [_buildSettingsDialogActions(context)],
     );
   }
 
@@ -96,6 +125,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
     var key = TenGameTwoPlayers.numberOfTargetsSettingKey;
     final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
+      smallTitle: true,
       title: "${localizations.amountOfTargets}: ${_getIntSetting(key, 10)}",
       content: Slider(
         value: _getIntSetting(key, 10).toDouble(),
@@ -105,12 +135,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
         onChanged: (value) =>
             setState(() => settings[key] = value.round().toString()),
       ),
-      actions: [
-        StyledElevatedButton(
-          onPressed: () => Navigator.pop(context, settings),
-          child: Text(localizations.save),
-        ),
-      ],
+      actions: [_buildSettingsDialogActions(context)],
     );
   }
 
@@ -118,6 +143,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
     var key = ZigZagGame.numberOfRoundsSettingKey;
     final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
+      smallTitle: true,
       title: "${localizations.amountOfTurns}: ${_getIntSetting(key, 1)}",
       content: Slider(
         value: _getIntSetting(key, 1).toDouble(),
@@ -126,12 +152,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
         onChanged: (value) =>
             setState(() => settings[key] = value.round().toString()),
       ),
-      actions: [
-        ElevatedButton(
-          onPressed: () => Navigator.pop(context, settings),
-          child: Text(localizations.save),
-        ),
-      ],
+      actions: [_buildSettingsDialogActions(context)],
     );
   }
 
@@ -139,6 +160,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
     var key = StarGame.numberOfRoundsSettingKey;
     final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
+      smallTitle: true,
       title: "${localizations.amountOfTurns}: ${_getIntSetting(key, 1)}",
       content: Slider(
         value: _getIntSetting(key, 1).toDouble(),
@@ -147,12 +169,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
         onChanged: (value) =>
             setState(() => settings[key] = value.round().toString()),
       ),
-      actions: [
-        ElevatedButton(
-          onPressed: () => Navigator.pop(context, settings),
-          child: Text(localizations.save),
-        ),
-      ],
+      actions: [_buildSettingsDialogActions(context)],
     );
   }
 
@@ -160,6 +177,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
     var key = LetterGame.numberOfRoundsSettingKey;
     final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
+      smallTitle: true,
       title: "${localizations.amountOfTurns}: ${_getIntSetting(key, 4)}",
       content: Slider(
         value: _getIntSetting(key, 4).toDouble(),
@@ -168,12 +186,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
         onChanged: (value) =>
             setState(() => settings[key] = value.round().toString()),
       ),
-      actions: [
-        ElevatedButton(
-          onPressed: () => Navigator.pop(context, settings),
-          child: Text(localizations.save),
-        ),
-      ],
+      actions: [_buildSettingsDialogActions(context)],
     );
   }
 
@@ -181,6 +194,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
     var key = WormGame.difficultySettingKey;
     final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
+      smallTitle: true,
       title: localizations.difficulty,
       content: DropdownMenu<String>(
         enableSearch: false,
@@ -194,12 +208,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
           DropdownMenuEntry(value: "HARD", label: localizations.hard),
         ],
       ),
-      actions: [
-        ElevatedButton(
-          onPressed: () => Navigator.pop(context, settings),
-          child: Text(localizations.save),
-        ),
-      ],
+      actions: [_buildSettingsDialogActions(context)],
     );
   }
 
@@ -207,6 +216,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
     var key = MemoryGame.difficultySettingKey;
     final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
+      smallTitle: true,
       title: localizations.difficulty,
       content: DropdownMenu<String>(
         enableSearch: false,
@@ -220,12 +230,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
           DropdownMenuEntry(value: "HARD", label: localizations.hard),
         ],
       ),
-      actions: [
-        ElevatedButton(
-          onPressed: () => Navigator.pop(context, settings),
-          child: Text(localizations.save),
-        ),
-      ],
+      actions: [_buildSettingsDialogActions(context)],
     );
   }
 
@@ -233,6 +238,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
     var key = TenTurnsGame.numberOfTargetsSettingKey;
     final localizations = AppLocalizations.of(context)!;
     return StyledDialog(
+      smallTitle: true,
       title: "${localizations.amountOfTurns}: ${_getIntSetting(key, 10)}",
       content: Slider(
         value: _getIntSetting(key, 10).toDouble(),
@@ -242,25 +248,13 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
         onChanged: (value) =>
             setState(() => settings[key] = value.round().toString()),
       ),
-      actions: [
-        ElevatedButton(
-          onPressed: () => Navigator.pop(context, settings),
-          child: Text(localizations.save),
-        ),
-      ],
+      actions: [_buildSettingsDialogActions(context)],
     );
   }
 
-  Widget _buildNoSettingsDialog(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+  Widget _buildDefaultSettingsDialog(BuildContext context) {
     return StyledDialog(
-      title: localizations.noSettings,
-      actions: [
-        ElevatedButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(localizations.ok),
-        )
-      ],
+      actions: [_buildSettingsDialogActions(context)],
     );
   }
 }

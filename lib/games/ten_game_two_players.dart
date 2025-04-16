@@ -1,5 +1,6 @@
 import "dart:math";
 
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/games/game.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -14,10 +15,10 @@ class TenGameTwoPlayers extends Game {
   static const description = """Toinen pelaa punaisella ja toinen vihreällä.""";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     ...List.generate(
         10,
-        (index) => IconAnimationUtils.multipleColors(Colors.red, {
+        (index) => IconAnimationUtils.multipleColors(DriblaColors.orange, {
               Random(index).nextInt(8): Colors.lightGreenAccent,
               Random(index + 1).nextInt(8): Colors.cyan,
             }))
@@ -31,6 +32,7 @@ class TenGameTwoPlayers extends Game {
   int currentTargetPlayer2 = 3;
   int pointsPlayer1 = 0;
   int pointsPlayer2 = 0;
+  bool playerWon = false;
 
   @override
   int getIndex() {
@@ -62,16 +64,24 @@ class TenGameTwoPlayers extends Game {
 
   @override
   void onSensorValueUpdate(List<int> activeSensors) {
-    if (activeSensors.contains(currentTargetPlayer1)) {
-      _progressGamePlayer1();
-    }
-    if (activeSensors.contains(currentTargetPlayer2)) {
-      _progressGamePlayer2();
+    if (!playerWon) {
+      if (activeSensors.contains(currentTargetPlayer1)) {
+        _progressGamePlayer1();
+      }
+      if (activeSensors.contains(currentTargetPlayer2)) {
+        _progressGamePlayer2();
+      }
     }
   }
 
   @override
+  bool skipEndingFanfare() {
+    return true;
+  }
+
+  @override
   void setupGame() async {
+    playerWon = false;
     await DeviceConnection.setAllLedColors(LedColors.red);
     var settings = await getGameSettings();
     maxPoints = hasSetting(settings, numberOfTargetsSettingKey)
@@ -95,7 +105,11 @@ class TenGameTwoPlayers extends Game {
         _getNextTarget([currentTargetPlayer1, currentTargetPlayer2]);
 
     if (pointsPlayer1 >= maxPoints) {
-      finish(true);
+      playerWon = true;
+      pauseGame();
+      AudioPlayers.playVictory();
+      _setWinnerColors(LedColors.green);
+      _finishWithDelay();
     } else {
       currentTargetPlayer1 = nextTarget;
       _updateTargetLeds(nextTarget, currentTargetPlayer2);
@@ -110,7 +124,11 @@ class TenGameTwoPlayers extends Game {
         _getNextTarget([currentTargetPlayer1, currentTargetPlayer2]);
 
     if (pointsPlayer2 >= maxPoints) {
-      finish(true);
+      playerWon = true;
+      pauseGame();
+      AudioPlayers.playVictory();
+      _setWinnerColors(LedColors.blue);
+      _finishWithDelay();
     } else {
       currentTargetPlayer2 = nextTarget;
       _updateTargetLeds(currentTargetPlayer1, nextTarget);
@@ -123,6 +141,16 @@ class TenGameTwoPlayers extends Game {
       nextTarget = Random().nextInt(sensorCount) + 1;
     } while (exclude.contains(nextTarget));
     return nextTarget;
+  }
+
+  Future<void> _finishWithDelay() async {
+    await Future.delayed(const Duration(milliseconds: 5000));
+    finish(true);
+  }
+
+  Future<void> _setWinnerColors(int color) async {
+    await DeviceConnection.setAllLedColors(color);
+    await DeviceConnection.resetLeds();
   }
 
   Future<void> _updateTargetLeds(int currentTarget, int currentTarget2) async {

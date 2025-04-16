@@ -139,6 +139,7 @@ class GameUtils {
   }
 
   static void setGameSettings(int index, Map<String, String?> settings) async {
+    await TenGame().setStartDelay(settings);
     // ignore: void_checks
     return switch (index) {
       TenGame.index => await TenGame().setGameSettings(settings),

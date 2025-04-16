@@ -97,5 +97,7 @@
     "updateAvailable": "Uusi versio saatavilla",
     "updateToVersion": "Päivitä sovellus versioon: ",
     "updateButtonText": "Päivitä",
-    "closeButtonText": "Sulje"
+    "closeButtonText": "Sulje",
+    "startDelay10s": "Aloitusviive 10s",
+    "startDelay5s": "Aloitusviive 5s"
 }

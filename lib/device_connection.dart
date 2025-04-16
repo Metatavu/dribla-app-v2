@@ -1,5 +1,6 @@
 import "dart:async";
 import "dart:io";
+import "dart:typed_data";
 
 import "package:collection/collection.dart";
 import "package:dribla_app_v2/led_colors.dart";
@@ -26,6 +27,7 @@ class DeviceConnection {
   static List<BluetoothCharacteristic> ledCharacteristics = [];
   static BluetoothCharacteristic? resetCharacteristic;
   static BluetoothCharacteristic? shutdownCharacteristic;
+  static BluetoothCharacteristic? batteryLevelCharacteristic;
   static List<Function(List<int>)> sensorValueListeners = [];
   static bool _connecting = false;
   static bool _resetting = false;
@@ -195,6 +197,11 @@ class DeviceConnection {
         (service) => service.serviceUuid == BluetoothIds.systemServiceId,
       );
 
+      DeviceConnection.batteryLevelCharacteristic =
+          systemService.characteristics.firstWhereOrNull((c) =>
+              c.characteristicUuid ==
+              BluetoothIds.batteryLevelCharacteristicsId);
+
       var sensorCountCharasteristic = systemService.characteristics
           .firstWhereOrNull((c) =>
               c.characteristicUuid == BluetoothIds.sensorCountharacteristicsId);
@@ -232,6 +239,23 @@ class DeviceConnection {
         }
       }
     });
+  }
+
+  static Future<int?> readBatteryLevel() async {
+    if (connectionStatus != ConnectionStatus.bleConnected) {
+      return null;
+    }
+    try {
+      var bytes = await batteryLevelCharacteristic?.read();
+      if (bytes != null) {
+        var data = Uint8List.fromList(bytes);
+        var batteryLevel = data.buffer.asInt16List();
+        return batteryLevel.firstOrNull;
+      }
+    } catch (e) {
+      developer.log("Error reading battery level: $e");
+    }
+    return null;
   }
 
   static void addSensorValueListener(Function(List<int>) listener) {

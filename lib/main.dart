@@ -1,4 +1,5 @@
 import "package:dribla_app_v2/audio_players.dart";
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/permission_utils.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:dribla_app_v2/screens/permissions_screen.dart";
@@ -61,64 +62,59 @@ class _DriblaAppState extends State<DriblaApp> {
               headlineSmall: TextStyle(
                 color: Colors.white,
                 decoration: TextDecoration.none,
-                fontFamily: "Nunito",
+                fontFamily: "Urbanist",
                 fontWeight: FontWeight.w900,
-                fontStyle: FontStyle.italic,
                 fontSize: 15.0.sp,
               ),
               headlineMedium: TextStyle(
                 color: Colors.white,
                 decoration: TextDecoration.none,
-                fontFamily: "Nunito",
+                fontFamily: "Urbanist",
                 fontWeight: FontWeight.w900,
-                fontStyle: FontStyle.italic,
                 fontSize: 23.0.sp,
               ),
               headlineLarge: TextStyle(
                 color: Colors.white,
                 decoration: TextDecoration.none,
-                fontFamily: "Nunito",
+                fontFamily: "Urbanist",
                 fontWeight: FontWeight.w900,
-                fontStyle: FontStyle.italic,
                 fontSize: 51.0.sp,
               ),
               bodySmall: TextStyle(
                 color: Colors.white,
                 decoration: TextDecoration.none,
-                fontFamily: "Nunito",
-                fontWeight: FontWeight.normal,
+                fontFamily: "Urbanist",
+                fontWeight: FontWeight.w400,
                 fontStyle: FontStyle.normal,
                 fontSize: 11.0.sp,
               ),
             ),
             elevatedButtonTheme: const ElevatedButtonThemeData(
               style: ButtonStyle(
-                minimumSize: MaterialStatePropertyAll(Size(108, 54)),
-                shape: MaterialStatePropertyAll(ContinuousRectangleBorder()),
-                elevation: MaterialStatePropertyAll(0),
-                backgroundColor: MaterialStatePropertyAll(Colors.red),
-                foregroundColor: MaterialStatePropertyAll(Colors.white),
-                textStyle: MaterialStatePropertyAll(TextStyle(
+                minimumSize: WidgetStatePropertyAll(Size(108, 54)),
+                shape: WidgetStatePropertyAll(ContinuousRectangleBorder()),
+                elevation: WidgetStatePropertyAll(0),
+                backgroundColor: WidgetStatePropertyAll(DriblaColors.orange),
+                foregroundColor: WidgetStatePropertyAll(DriblaColors.white),
+                textStyle: WidgetStatePropertyAll(TextStyle(
                   decoration: TextDecoration.none,
-                  fontFamily: "Nunito",
+                  fontFamily: "Urbanist",
                   fontWeight: FontWeight.w900,
-                  fontStyle: FontStyle.italic,
                   fontSize: 28.0,
                 )),
               ),
             ),
             outlinedButtonTheme: const OutlinedButtonThemeData(
               style: ButtonStyle(
-                minimumSize: MaterialStatePropertyAll(Size(108, 54)),
-                side: MaterialStatePropertyAll(
-                    BorderSide(color: Colors.white, width: 3)),
-                shape: MaterialStatePropertyAll(ContinuousRectangleBorder()),
-                foregroundColor: MaterialStatePropertyAll(Colors.white),
-                textStyle: MaterialStatePropertyAll(TextStyle(
+                minimumSize: WidgetStatePropertyAll(Size(108, 54)),
+                side: WidgetStatePropertyAll(
+                    BorderSide(color: DriblaColors.white, width: 3)),
+                shape: WidgetStatePropertyAll(ContinuousRectangleBorder()),
+                foregroundColor: WidgetStatePropertyAll(DriblaColors.white),
+                textStyle: WidgetStatePropertyAll(TextStyle(
                   decoration: TextDecoration.none,
-                  fontFamily: "Nunito",
+                  fontFamily: "Urbanist",
                   fontWeight: FontWeight.w900,
-                  fontStyle: FontStyle.italic,
                   fontSize: 28.0,
                 )),
               ),
@@ -130,23 +126,21 @@ class _DriblaAppState extends State<DriblaApp> {
               titleTextStyle: TextStyle(
                 color: Colors.white,
                 decoration: TextDecoration.none,
-                fontFamily: "Nunito",
+                fontFamily: "Urbanist",
                 fontWeight: FontWeight.w900,
-                fontStyle: FontStyle.italic,
                 fontSize: 28.0,
               ),
               contentTextStyle: TextStyle(
                 color: Colors.white,
                 decoration: TextDecoration.none,
-                fontFamily: "Nunito",
-                fontWeight: FontWeight.normal,
-                fontStyle: FontStyle.normal,
+                fontFamily: "Urbanist",
+                fontWeight: FontWeight.w400,
                 fontSize: 16.0,
               ),
             ),
             sliderTheme: const SliderThemeData(
-              thumbColor: Colors.red,
-              activeTrackColor: Colors.redAccent,
+              thumbColor: DriblaColors.orange,
+              activeTrackColor: DriblaColors.orange,
             ),
             dropdownMenuTheme: const DropdownMenuThemeData(
               inputDecorationTheme: InputDecorationTheme(
@@ -158,9 +152,9 @@ class _DriblaAppState extends State<DriblaApp> {
                 suffixIconColor: Colors.white,
               ),
               menuStyle: MenuStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.white),
-                elevation: MaterialStatePropertyAll(0),
-                shape: MaterialStatePropertyAll(
+                backgroundColor: WidgetStatePropertyAll(Colors.white),
+                elevation: WidgetStatePropertyAll(0),
+                shape: WidgetStatePropertyAll(
                   ContinuousRectangleBorder(
                     borderRadius: BorderRadius.zero,
                   ),
@@ -169,8 +163,8 @@ class _DriblaAppState extends State<DriblaApp> {
               textStyle: TextStyle(
                 color: Colors.white,
                 decoration: TextDecoration.none,
-                fontFamily: "Nunito",
-                fontWeight: FontWeight.bold,
+                fontFamily: "Urbanist",
+                fontWeight: FontWeight.w700,
                 fontStyle: FontStyle.normal,
                 fontSize: 16.0,
               ),

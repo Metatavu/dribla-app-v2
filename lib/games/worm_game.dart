@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/games/game.dart";
 import "package:flutter/material.dart";
 
@@ -16,40 +17,40 @@ class WormGame extends Game {
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 0),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 2),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 3),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 0),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 2),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 3),
     IconAnimationUtils.single(
         Colors.white, const Color.fromARGB(255, 200, 150, 100), 3),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 5),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 5),
     IconAnimationUtils.single(
-        Colors.red, const Color.fromARGB(255, 200, 150, 100), 5),
+        DriblaColors.orange, const Color.fromARGB(255, 200, 150, 100), 5),
     IconAnimationUtils.single(
-        Colors.red, const Color.fromARGB(255, 230, 100, 70), 5),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 4),
+        DriblaColors.orange, const Color.fromARGB(255, 230, 100, 70), 5),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 4),
     IconAnimationUtils.single(
-        Colors.red, const Color.fromARGB(255, 200, 150, 100), 4),
+        DriblaColors.orange, const Color.fromARGB(255, 200, 150, 100), 4),
     IconAnimationUtils.single(
-        Colors.red, const Color.fromARGB(255, 230, 100, 70), 4),
+        DriblaColors.orange, const Color.fromARGB(255, 230, 100, 70), 4),
     IconAnimationUtils.single(
-        Colors.red, const Color.fromARGB(255, 230, 70, 50), 4),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 1),
+        DriblaColors.orange, const Color.fromARGB(255, 230, 70, 50), 4),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 1),
     IconAnimationUtils.single(
-        Colors.red, const Color.fromARGB(255, 200, 150, 100), 1),
+        DriblaColors.orange, const Color.fromARGB(255, 200, 150, 100), 1),
     IconAnimationUtils.single(
-        Colors.red, const Color.fromARGB(255, 230, 100, 70), 1),
+        DriblaColors.orange, const Color.fromARGB(255, 230, 100, 70), 1),
     IconAnimationUtils.single(
-        Colors.red, const Color.fromARGB(255, 230, 70, 50), 1),
+        DriblaColors.orange, const Color.fromARGB(255, 230, 70, 50), 1),
     IconAnimationUtils.single(
-        Colors.red, const Color.fromARGB(255, 230, 30, 30), 1),
+        DriblaColors.orange, const Color.fromARGB(255, 230, 30, 30), 1),
     IconAnimationUtils.single(
-        Colors.red, const Color.fromARGB(255, 230, 0, 0), 1),
+        DriblaColors.orange, const Color.fromARGB(255, 230, 0, 0), 1),
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.all(Colors.white),
   ];
   static const String difficultySettingKey = "WORM_GAME_DIFFICULTY";

@@ -74,5 +74,7 @@
     "updateAvailable": "Neue Version verfügbar",
     "updateToVersion": "App auf Version aktualisieren: ",
     "updateButtonText": "Aktualisieren",
-    "closeButtonText": "Schließen"
+    "closeButtonText": "Schließen",
+    "startDelay10s": "Startverzögerung 10 s",
+    "startDelay5s": "Startverzögerung 5 s"
 }

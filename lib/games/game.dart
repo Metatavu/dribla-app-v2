@@ -46,12 +46,15 @@ abstract class Game {
     return 100;
   }
 
-  void run() {
+  void run() async {
+    final delay = await getStartDelay();
+    _beginningTimerValue = delay ?? 10;
     setupGame();
     const oneSec = Duration(seconds: 1);
     var countDownStarted = false;
     bool onoff = false;
     onStatusUpdate("startGame");
+    onCountDownUpdate(_beginningTimerValue);
     _beginningTimer = Timer.periodic(oneSec, (timer) {
       _beginningTimerValue--;
       onCountDownUpdate(_beginningTimerValue);
@@ -76,17 +79,34 @@ abstract class Game {
     final prefs = await SharedPreferences.getInstance();
     Map<String, String?> settings = {};
     var keys = getGameSettingKeys();
+    keys.add("start_delay");
     for (var settingKey in keys) {
       settings[settingKey] = prefs.getString(settingKey);
     }
     return settings;
   }
 
+  Future<int?> getStartDelay() async {
+    final prefs = await SharedPreferences.getInstance();
+    final startDelay = prefs.getString("start_delay") ?? "10";
+    return int.tryParse(startDelay);
+  }
+
+  setStartDelay(Map<String, String?> settings) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (settings.containsKey("start_delay") &&
+        settings["start_delay"] != null) {
+      prefs.setString("start_delay", settings["start_delay"]!);
+    } else {
+      prefs.remove("start_delay");
+    }
+  }
+
   setGameSettings(Map<String, String?> settings) async {
     final prefs = await SharedPreferences.getInstance();
     var keys = getGameSettingKeys();
     for (var settingKey in keys) {
-      if (settings.containsKey(settingKey)) {
+      if (settings.containsKey(settingKey) && settings[settingKey] != null) {
         prefs.setString(settingKey, settings[settingKey]!);
       } else {
         prefs.remove(settingKey);

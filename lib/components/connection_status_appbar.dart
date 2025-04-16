@@ -1,13 +1,14 @@
 import "dart:async";
+import "dart:developer" as developer;
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/components/styled_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:flutter/material.dart";
-import "package:flutter_svg/svg.dart";
 import "package:device_policy_controller/device_policy_controller.dart";
 import "package:package_info_plus/package_info_plus.dart";
+import "package:sizer/sizer.dart";
 
 import "../device_connection.dart";
 
@@ -28,6 +29,8 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
   Timer? tapResetTimer;
   int lockDeviceTapCount = 0;
   Stream<ConnectionStatus> _connectionStatusStream = const Stream.empty();
+  int? _batteryLevel;
+  Timer? _batteryCheckTimer;
   PackageInfo _packageInfo = PackageInfo(
     appName: "Unknown",
     packageName: "Unknown",
@@ -43,12 +46,31 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
     _connectionStatusStream =
         DeviceConnection.connectionStatusController.stream;
     _initPackageInfo();
+    _checkBatteryLevel();
+    _batteryCheckTimer =
+        Timer.periodic(const Duration(seconds: 10), (Timer timer) {
+      _checkBatteryLevel();
+    });
+  }
+
+  @override
+  void dispose() {
+    _batteryCheckTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _initPackageInfo() async {
     final info = await PackageInfo.fromPlatform();
     setState(() {
       _packageInfo = info;
+    });
+  }
+
+  Future<void> _checkBatteryLevel() async {
+    final batteryLevel = await DeviceConnection.readBatteryLevel();
+    developer.log("Got battery level: " + batteryLevel.toString());
+    setState(() {
+      _batteryLevel = batteryLevel;
     });
   }
 
@@ -59,6 +81,59 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
       ConnectionStatus.bleConnecting => const Icon(Icons.bluetooth_searching),
       ConnectionStatus.bleConnected => const Icon(Icons.bluetooth_connected)
     };
+  }
+
+  Widget _getBatteryLevelIcon() {
+    var batteryLevel = _batteryLevel ?? 0;
+    if (batteryLevel > 415) {
+      return Icon(
+        Icons.battery_full,
+        color: Colors.greenAccent,
+        size: 10.w,
+      );
+    } else if (batteryLevel > 400) {
+      return Icon(
+        Icons.battery_6_bar,
+        color: Colors.greenAccent,
+        size: 10.w,
+      );
+    } else if (batteryLevel > 408) {
+      return Icon(
+        Icons.battery_5_bar,
+        color: Colors.greenAccent,
+        size: 10.w,
+      );
+    } else if (batteryLevel > 398) {
+      return Icon(
+        Icons.battery_4_bar,
+        color: Colors.white,
+        size: 10.w,
+      );
+    } else if (batteryLevel > 387) {
+      return Icon(
+        Icons.battery_3_bar,
+        color: Colors.white,
+        size: 10.w,
+      );
+    } else if (batteryLevel > 384) {
+      return Icon(
+        Icons.battery_2_bar,
+        color: Colors.white,
+        size: 10.w,
+      );
+    } else if (batteryLevel > 375) {
+      return Icon(
+        Icons.battery_1_bar,
+        color: Colors.red,
+        size: 10.w,
+      );
+    } else {
+      return Icon(
+        Icons.battery_0_bar,
+        color: Colors.red,
+        size: 10.w,
+      );
+    }
   }
 
   String _getDeviceConnectionStatusText(
@@ -79,14 +154,24 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          _getDeviceConnectionStatusText(
-              DeviceConnection.connectionStatus, localizations),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (DeviceConnection.connectionStatus ==
+                    ConnectionStatus.bleConnected &&
+                _batteryLevel != null) ...[
+              _getBatteryLevelIcon(),
+            ],
+            Text(
+              _getDeviceConnectionStatusText(
+                  DeviceConnection.connectionStatus, localizations),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
         if (DeviceConnection.connectedDeviceId.isNotEmpty) ...[
           const SizedBox(height: 8),
@@ -200,25 +285,26 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
           color: Color.fromRGBO(255, 255, 255, 0),
         ),
         child: GestureDetector(
-          onTap: () {
-            if (lockDeviceTapCount == 10) {
-              _toggleDeviceLockMode(context, localizations);
-            }
-            tapResetTimer?.cancel();
-            lockDeviceTapCount++;
-            tapResetTimer = Timer(const Duration(seconds: 1), () {
-              lockDeviceTapCount = 0;
-            });
-          },
-          child: SvgPicture.asset(
-            Assets.logoAsset,
-            width: 150,
-          ),
-        ),
+            onTap: () {
+              if (lockDeviceTapCount == 10) {
+                _toggleDeviceLockMode(context, localizations);
+              }
+              tapResetTimer?.cancel();
+              lockDeviceTapCount++;
+              tapResetTimer = Timer(const Duration(seconds: 1), () {
+                lockDeviceTapCount = 0;
+              });
+            },
+            child: Image(
+              image: const AssetImage(Assets.logoAsset),
+              width: 50.w,
+            )),
       ),
       actions: [
         IconButton(
-          onPressed: () => _openConnectionStatusDialog(context, theme),
+          onPressed: () {
+            _openConnectionStatusDialog(context, theme);
+          },
           icon: const Icon(Icons.settings),
         )
       ],

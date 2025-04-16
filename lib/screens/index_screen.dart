@@ -1,7 +1,7 @@
 import "package:dribla_app_v2/assets.dart";
 import "package:flutter/material.dart";
-import "package:flutter_svg/flutter_svg.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:sizer/sizer.dart";
 
 class IndexScreen extends StatefulWidget {
   final String connectionErrorMessage;
@@ -32,11 +32,13 @@ class _IndexScreenState extends State<IndexScreen> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 300.0),
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Color.fromRGBO(255, 255, 255, 0),
-                ),
-                child: SvgPicture.asset(Assets.logoAsset),
-              ),
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(255, 255, 255, 0),
+                  ),
+                  child: Image(
+                    image: const AssetImage(Assets.logoAsset),
+                    width: 50.w,
+                  )),
             ),
           ),
           Align(

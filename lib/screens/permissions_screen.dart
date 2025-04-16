@@ -4,8 +4,8 @@ import "package:dribla_app_v2/permission_utils.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:flutter_svg/svg.dart";
 import "package:permission_handler/permission_handler.dart";
+import "package:sizer/sizer.dart";
 
 class PermissionsScreen extends StatefulWidget {
   const PermissionsScreen({super.key});
@@ -65,7 +65,10 @@ class _PermissionsScreenState extends State<PermissionsScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset(Assets.logoAsset),
+              Image(
+                image: const AssetImage(Assets.logoAsset),
+                width: 50.w,
+              ),
               const SizedBox(height: 48),
               if (!allPermissionsGranted)
                 Text(
@@ -82,7 +85,7 @@ class _PermissionsScreenState extends State<PermissionsScreen>
               MaterialPageRoute(builder: (context) => const ChooseGameScreen()),
             ),
             style: theme.elevatedButtonTheme.style?.copyWith(
-              fixedSize: const MaterialStatePropertyAll(Size.fromHeight(65)),
+              fixedSize: const WidgetStatePropertyAll(Size.fromHeight(65)),
             ),
             child: Text(localized.start, style: theme.textTheme.headlineMedium),
           )
@@ -90,7 +93,7 @@ class _PermissionsScreenState extends State<PermissionsScreen>
           StyledElevatedButton(
             onPressed: openAppSettings,
             style: theme.elevatedButtonTheme.style?.copyWith(
-              fixedSize: const MaterialStatePropertyAll(Size.fromHeight(65.0)),
+              fixedSize: const WidgetStatePropertyAll(Size.fromHeight(65.0)),
             ),
             child: Text(
               localized.settings,

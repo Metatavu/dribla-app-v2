@@ -1,4 +1,5 @@
 import "package:collection/collection.dart";
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/games/game.dart";
 import "package:dribla_app_v2/icon_animation_utils.dart";
 import "package:flutter/material.dart";
@@ -15,16 +16,16 @@ class ZigZagGame extends Game {
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 7),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 5),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 4),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 2),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 1),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 0),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 2),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 3),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 5),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 6),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 7),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 5),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 4),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 2),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 1),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 0),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 2),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 3),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 5),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 6),
   ];
   static const String numberOfRoundsSettingKey = "ZIGZAG_NUMBER_OF_ROUNDS";
 
