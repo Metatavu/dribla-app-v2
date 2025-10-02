@@ -1,11 +1,12 @@
 import "dart:async";
 
 import "package:dribla_app_v2/assets.dart";
+import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/led_colors.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:flutter_svg/flutter_svg.dart";
 import "package:sizer/sizer.dart";
 
 import "../games/game.dart";
@@ -22,8 +23,8 @@ class PlayGameScreen extends StatefulWidget {
 
 class _PlayGameScreen extends State<PlayGameScreen>
     with SingleTickerProviderStateMixin {
-  int _timeToStart = 10; // Starting value for the timer
-  String _score = "0";
+  int _timeToStart = 0;
+  String _score = "";
   String _gameStatusText = "";
   bool _disconnected = false;
   StreamSubscription<ConnectionStatus>? _connectionStatusStreamSubscription;
@@ -149,9 +150,9 @@ class _PlayGameScreen extends State<PlayGameScreen>
               decoration: const BoxDecoration(
                 color: Color.fromRGBO(255, 255, 255, 0),
               ),
-              child: SvgPicture.asset(
-                Assets.logoAsset,
-                width: 138,
+              child: Image(
+                image: const AssetImage(Assets.logoAsset),
+                width: 50.w,
               ),
             ),
           ),
@@ -182,9 +183,8 @@ class _PlayGameScreen extends State<PlayGameScreen>
                   style: TextStyle(
                     color: Colors.white,
                     decoration: TextDecoration.none,
-                    fontFamily: "Nunito",
+                    fontFamily: "Urbanist",
                     fontWeight: FontWeight.w900,
-                    fontStyle: FontStyle.italic,
                     fontSize: _disconnected
                         ? 20.0
                         : _timeToStart > 0
@@ -200,7 +200,7 @@ class _PlayGameScreen extends State<PlayGameScreen>
                   child: LinearProgressIndicator(
                     value: _disconnectedAnimationController.value,
                     minHeight: 16.0,
-                    color: const Color.fromARGB(0xff, 0x3f, 0xa5, 0x35),
+                    color: DriblaColors.orange,
                     semanticsLabel: "Reconnect indicator",
                   ),
                 )
@@ -209,20 +209,11 @@ class _PlayGameScreen extends State<PlayGameScreen>
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(bottom: 25.0),
-          decoration: const BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white,
-                offset: Offset(5, 5),
-              ),
-            ],
-          ),
-          child: ElevatedButton(
+          margin: const EdgeInsets.only(bottom: 45.0),
+          child: StyledElevatedButton(
             onPressed: _navigateBack,
             style: theme.elevatedButtonTheme.style!.copyWith(
-              fixedSize: MaterialStatePropertyAll(Size(80.w, 7.h)),
-              backgroundColor: const MaterialStatePropertyAll(Colors.blue),
+              fixedSize: WidgetStatePropertyAll(Size(80.w, 7.h)),
             ),
             child: Text(
               locale.backButtonText,

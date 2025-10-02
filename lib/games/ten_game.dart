@@ -1,5 +1,6 @@
 import "dart:math";
 
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/games/game.dart";
 import "package:flutter/material.dart";
 
@@ -18,7 +19,7 @@ class TenGame extends Game {
     ...List.generate(
         10,
         (index) => IconAnimationUtils.single(
-            Colors.red, Colors.lightGreenAccent, Random().nextInt(8)))
+            DriblaColors.orange, Colors.lightGreenAccent, Random().nextInt(8)))
   ];
 
   static const String numberOfTargetsSettingKey = "TEN_GAME_NUMBER_OF_TARGETS";

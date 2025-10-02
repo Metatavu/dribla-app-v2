@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/games/game.dart";
 import "package:flutter/material.dart";
 
@@ -14,18 +15,18 @@ class MineFieldGame extends Game {
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.all(Colors.red),
-    IconAnimationUtils.all(Colors.red),
-    IconAnimationUtils.all(Colors.red),
-    IconAnimationUtils.all(Colors.red),
-    IconAnimationUtils.single(Colors.red, Colors.white, 5),
-    IconAnimationUtils.single(Colors.red, Colors.white, 5),
+    IconAnimationUtils.all(DriblaColors.orange),
+    IconAnimationUtils.all(DriblaColors.orange),
+    IconAnimationUtils.all(DriblaColors.orange),
+    IconAnimationUtils.all(DriblaColors.orange),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.white, 5),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.white, 5),
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.all(Colors.white),
     IconAnimationUtils.all(Colors.white),
     IconAnimationUtils.all(Colors.white),

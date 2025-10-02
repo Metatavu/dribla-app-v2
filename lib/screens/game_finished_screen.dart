@@ -1,12 +1,13 @@
 import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/audio_players.dart";
+import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/game_utils.dart";
 import "package:dribla_app_v2/led_colors.dart";
 import "package:dribla_app_v2/screens/play_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:flutter_svg/flutter_svg.dart";
 import "package:sizer/sizer.dart";
 
 class GameFinishedScreen extends StatefulWidget {
@@ -62,9 +63,9 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
               decoration: const BoxDecoration(
                 color: Color.fromRGBO(255, 255, 255, 0),
               ),
-              child: SvgPicture.asset(
-                Assets.logoAsset,
-                width: 138,
+              child: Image(
+                image: const AssetImage(Assets.logoAsset),
+                width: 50.w,
               ),
             ),
           ),
@@ -104,59 +105,40 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
             ],
           ),
         ),
-        Container(
-          decoration: const BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white,
-                offset: Offset(5, 5),
-              ),
-            ],
+        StyledElevatedButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PlayGameScreen(
+                          selectedGame: GameUtils.selectGame(
+                        widget.gameIndex,
+                      ))),
+            );
+          },
+          style: theme.elevatedButtonTheme.style?.copyWith(
+            fixedSize: WidgetStatePropertyAll(Size(80.w, 10.0.h)),
           ),
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => PlayGameScreen(
-                            selectedGame: GameUtils.selectGame(
-                          widget.gameIndex,
-                        ))),
-              );
-            },
-            style: theme.elevatedButtonTheme.style?.copyWith(
-              fixedSize: MaterialStatePropertyAll(Size(80.w, 10.0.h)),
-            ),
-            child: Text(
-              loc.replay,
-              style: theme.textTheme.headlineMedium,
-            ),
+          child: Icon(
+            Icons.play_circle_outline,
+            color: DriblaColors.white,
+            size: 15.w.toDouble(),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-          child: Container(
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white,
-                  offset: Offset(5, 5),
-                ),
-              ],
+          padding: const EdgeInsets.only(top: 15.0, bottom: 45.0),
+          child: OutlinedButton(
+            onPressed: () {
+              DeviceConnection.startIdleAnimation();
+              Navigator.pop(context);
+            },
+            style: theme.outlinedButtonTheme.style?.copyWith(
+              fixedSize: WidgetStatePropertyAll(Size(80.w, 7.h)),
+              backgroundColor: const WidgetStatePropertyAll(DriblaColors.black),
             ),
-            child: ElevatedButton(
-              onPressed: () {
-                DeviceConnection.startIdleAnimation();
-                Navigator.pop(context);
-              },
-              style: theme.elevatedButtonTheme.style?.copyWith(
-                fixedSize: MaterialStatePropertyAll(Size(80.w, 7.h)),
-                backgroundColor: const MaterialStatePropertyAll(Colors.blue),
-              ),
-              child: Text(
-                loc.backButtonText,
-                style: theme.textTheme.headlineMedium,
-              ),
+            child: Text(
+              loc.backButtonText,
+              style: theme.textTheme.headlineMedium,
             ),
           ),
         ),

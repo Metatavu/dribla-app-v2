@@ -5,10 +5,14 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
+device_policy_controller-0.0.3+1/
+android/app/.cxx/
 
 # IntelliJ related
 *.iml

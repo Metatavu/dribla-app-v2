@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/games/game.dart";
 import "package:flutter/material.dart";
 
@@ -18,37 +19,44 @@ class MemoryGame extends Game {
       Vaikea: Kuviot. Kosketa kuvion valoja syttymisjärjestyksessä""";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
-    IconAnimationUtils.all(Colors.red),
-    IconAnimationUtils.multiple(Colors.red, Colors.cyan, [2]),
-    IconAnimationUtils.multiple(Colors.red, Colors.cyan, [2, 1]),
-    IconAnimationUtils.multiple(Colors.red, Colors.cyan, [2, 1, 0]),
-    IconAnimationUtils.multiple(Colors.red, Colors.cyan, [2, 1, 0, 7]),
-    IconAnimationUtils.all(Colors.red),
-    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [2]),
-    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [2, 1]),
-    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [2, 1, 0]),
+    IconAnimationUtils.all(DriblaColors.orange),
+    IconAnimationUtils.multiple(DriblaColors.orange, Colors.cyan, [2]),
+    IconAnimationUtils.multiple(DriblaColors.orange, Colors.cyan, [2, 1]),
+    IconAnimationUtils.multiple(DriblaColors.orange, Colors.cyan, [2, 1, 0]),
+    IconAnimationUtils.multiple(DriblaColors.orange, Colors.cyan, [2, 1, 0, 7]),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.multiple(
-        Colors.red, Colors.lightGreenAccent, [2, 1, 0, 7]),
-    IconAnimationUtils.all(Colors.red),
-    IconAnimationUtils.multiple(Colors.red, Colors.cyan, [0]),
-    IconAnimationUtils.multiple(Colors.red, Colors.cyan, [0, 1]),
-    IconAnimationUtils.multiple(Colors.red, Colors.cyan, [0, 1, 2]),
-    IconAnimationUtils.multiple(Colors.red, Colors.cyan, [0, 1, 2, 4]),
-    IconAnimationUtils.multiple(Colors.red, Colors.cyan, [0, 1, 2, 4, 5]),
-    IconAnimationUtils.all(Colors.red),
-    IconAnimationUtils.all(Colors.red),
-    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [0]),
-    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [0, 1]),
-    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [0, 1, 2]),
+        DriblaColors.orange, Colors.lightGreenAccent, [2]),
     IconAnimationUtils.multiple(
-        Colors.red, Colors.lightGreenAccent, [0, 1, 2, 4]),
-    IconAnimationUtils.single(Colors.white, Colors.red, 6),
+        DriblaColors.orange, Colors.lightGreenAccent, [2, 1]),
+    IconAnimationUtils.multiple(
+        DriblaColors.orange, Colors.lightGreenAccent, [2, 1, 0]),
+    IconAnimationUtils.multiple(
+        DriblaColors.orange, Colors.lightGreenAccent, [2, 1, 0, 7]),
+    IconAnimationUtils.all(DriblaColors.orange),
+    IconAnimationUtils.multiple(DriblaColors.orange, Colors.cyan, [0]),
+    IconAnimationUtils.multiple(DriblaColors.orange, Colors.cyan, [0, 1]),
+    IconAnimationUtils.multiple(DriblaColors.orange, Colors.cyan, [0, 1, 2]),
+    IconAnimationUtils.multiple(DriblaColors.orange, Colors.cyan, [0, 1, 2, 4]),
+    IconAnimationUtils.multiple(
+        DriblaColors.orange, Colors.cyan, [0, 1, 2, 4, 5]),
+    IconAnimationUtils.all(DriblaColors.orange),
+    IconAnimationUtils.all(DriblaColors.orange),
+    IconAnimationUtils.multiple(
+        DriblaColors.orange, Colors.lightGreenAccent, [0]),
+    IconAnimationUtils.multiple(
+        DriblaColors.orange, Colors.lightGreenAccent, [0, 1]),
+    IconAnimationUtils.multiple(
+        DriblaColors.orange, Colors.lightGreenAccent, [0, 1, 2]),
+    IconAnimationUtils.multiple(
+        DriblaColors.orange, Colors.lightGreenAccent, [0, 1, 2, 4]),
+    IconAnimationUtils.single(Colors.white, DriblaColors.orange, 6),
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.all(Colors.white),
     IconAnimationUtils.all(Colors.white),
   ];

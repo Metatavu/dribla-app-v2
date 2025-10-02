@@ -1,5 +1,6 @@
 import "dart:math";
 
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/games/game.dart";
 import "package:flutter/material.dart";
 
@@ -14,77 +15,77 @@ class TenTurnsGame extends Game {
   static const description = "";
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.multipleColors(
         Colors.red, {7: Colors.cyan, 5: Colors.cyan, 1: Colors.cyan}),
-    IconAnimationUtils.multipleColors(Colors.red,
+    IconAnimationUtils.multipleColors(DriblaColors.orange,
         {7: Colors.lightGreenAccent, 5: Colors.cyan, 1: Colors.cyan}),
-    IconAnimationUtils.multipleColors(Colors.red, {
+    IconAnimationUtils.multipleColors(DriblaColors.orange, {
       7: Colors.lightGreenAccent,
       5: Colors.lightGreenAccent,
       1: Colors.cyan
     }),
-    IconAnimationUtils.multipleColors(Colors.red, {
+    IconAnimationUtils.multipleColors(DriblaColors.orange, {
       7: Colors.lightGreenAccent,
       5: Colors.lightGreenAccent,
       1: Colors.lightGreenAccent
     }),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.multipleColors(
-        Colors.red, {0: Colors.cyan, 1: Colors.cyan, 5: Colors.cyan}),
-    IconAnimationUtils.multipleColors(Colors.red,
+        DriblaColors.orange, {0: Colors.cyan, 1: Colors.cyan, 5: Colors.cyan}),
+    IconAnimationUtils.multipleColors(DriblaColors.orange,
         {0: Colors.lightGreenAccent, 1: Colors.cyan, 5: Colors.cyan}),
-    IconAnimationUtils.multipleColors(Colors.red, {
+    IconAnimationUtils.multipleColors(DriblaColors.orange, {
       0: Colors.lightGreenAccent,
       1: Colors.lightGreenAccent,
       5: Colors.cyan
     }),
-    IconAnimationUtils.multipleColors(Colors.red, {
+    IconAnimationUtils.multipleColors(DriblaColors.orange, {
       0: Colors.lightGreenAccent,
       1: Colors.lightGreenAccent,
       5: Colors.lightGreenAccent
     }),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.multipleColors(
-        Colors.red, {1: Colors.cyan, 6: Colors.cyan, 5: Colors.cyan}),
-    IconAnimationUtils.multipleColors(Colors.red,
+        DriblaColors.orange, {1: Colors.cyan, 6: Colors.cyan, 5: Colors.cyan}),
+    IconAnimationUtils.multipleColors(DriblaColors.orange,
         {1: Colors.lightGreenAccent, 6: Colors.cyan, 5: Colors.cyan}),
-    IconAnimationUtils.multipleColors(Colors.red, {
+    IconAnimationUtils.multipleColors(DriblaColors.orange, {
       1: Colors.lightGreenAccent,
       6: Colors.lightGreenAccent,
       5: Colors.cyan
     }),
-    IconAnimationUtils.multipleColors(Colors.red, {
+    IconAnimationUtils.multipleColors(DriblaColors.orange, {
       1: Colors.lightGreenAccent,
       6: Colors.lightGreenAccent,
       5: Colors.lightGreenAccent
     }),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.multipleColors(
-        Colors.red, {1: Colors.cyan, 2: Colors.cyan, 4: Colors.cyan}),
-    IconAnimationUtils.multipleColors(Colors.red,
+        DriblaColors.orange, {1: Colors.cyan, 2: Colors.cyan, 4: Colors.cyan}),
+    IconAnimationUtils.multipleColors(DriblaColors.orange,
         {1: Colors.lightGreenAccent, 2: Colors.cyan, 4: Colors.cyan}),
-    IconAnimationUtils.multipleColors(Colors.red, {
+    IconAnimationUtils.multipleColors(DriblaColors.orange, {
       1: Colors.lightGreenAccent,
       2: Colors.lightGreenAccent,
       4: Colors.cyan
     }),
-    IconAnimationUtils.multipleColors(Colors.red, {
+    IconAnimationUtils.multipleColors(DriblaColors.orange, {
       1: Colors.lightGreenAccent,
       2: Colors.lightGreenAccent,
       4: Colors.lightGreenAccent
     }),
-    IconAnimationUtils.all(Colors.red),
+    IconAnimationUtils.all(DriblaColors.orange),
     IconAnimationUtils.multipleColors(
-        Colors.red, {6: Colors.cyan, 5: Colors.cyan, 3: Colors.cyan}),
-    IconAnimationUtils.multipleColors(Colors.red,
+        DriblaColors.orange, {6: Colors.cyan, 5: Colors.cyan, 3: Colors.cyan}),
+    IconAnimationUtils.multipleColors(DriblaColors.orange,
         {6: Colors.lightGreenAccent, 5: Colors.cyan, 3: Colors.cyan}),
-    IconAnimationUtils.multipleColors(Colors.red, {
+    IconAnimationUtils.multipleColors(DriblaColors.orange, {
       6: Colors.lightGreenAccent,
       5: Colors.lightGreenAccent,
       3: Colors.cyan
     }),
-    IconAnimationUtils.multipleColors(Colors.red, {
+    IconAnimationUtils.multipleColors(DriblaColors.orange, {
       6: Colors.lightGreenAccent,
       5: Colors.lightGreenAccent,
       3: Colors.lightGreenAccent

@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:flutter_blue_plus/flutter_blue_plus.dart";
 
 class BluetoothIds {
@@ -32,4 +33,7 @@ class BluetoothIds {
 
   static Guid sensorCountharacteristicsId =
       Guid.fromString("21EF9772-812E-423D-BD4D-C7F2C7819FED");
+
+  static Guid batteryLevelCharacteristicsId =
+      Guid.fromString("0437FCA3-F777-4EB7-B613-ECEB4C30E718");
 }

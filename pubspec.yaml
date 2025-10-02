@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.5+6
+version: 1.0.8+8
 
 environment:
   sdk: ">=3.0.3 <4.0.0"
@@ -30,12 +30,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  collection: 1.18.0
+  collection: 1.19.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  flutter_svg: ^2.0.7
   flutter_localizations:
     sdk: flutter
   intl: any
@@ -46,13 +45,13 @@ dependencies:
   permission_handler: ^11.1.0
   device_info_plus: ^9.1.1
   flutter_launcher_icons: ^0.13.1
-  wakelock_plus: ^1.1.4
-  url_launcher: ^6.2.6
+  wakelock_plus: ^1.2.11
+  url_launcher: ^6.3.1
+  url_launcher_ios: ^6.3.2
   sizer: ^3.0.3
-  device_policy_controller: ^0.0.3+1
-  version_check: ^0.7.1
-  package_info_plus: ^5.0.1
+  package_info_plus: ^8.3.0
   flutter_blue_plus: ^1.34.5
+  new_version_plus: ^0.1.0
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +73,55 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  fonts:
+    - family: Urbanist
+      fonts:
+        - asset: fonts/Urbanist-Thin.ttf
+          weight: 100
+        - asset: fonts/Urbanist-ThinItalic.ttf
+          weight: 100
+          style: italic
+        - asset: fonts/Urbanist-ExtraLight.ttf
+          weight: 200
+        - asset: fonts/Urbanist-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
+        - asset: fonts/Urbanist-Light.ttf
+          weight: 300
+        - asset: fonts/Urbanist-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: fonts/Urbanist-Regular.ttf
+          weight: 400
+        - asset: fonts/Urbanist-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: fonts/Urbanist-Medium.ttf
+          weight: 500
+        - asset: fonts/Urbanist-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: fonts/Urbanist-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Urbanist-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: fonts/Urbanist-Bold.ttf
+          weight: 700
+        - asset: fonts/Urbanist-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: fonts/Urbanist-ExtraBold.ttf
+          weight: 800
+        - asset: fonts/Urbanist-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: fonts/Urbanist-Black.ttf
+          weight: 900
+        - asset: fonts/Urbanist-BlackItalic.ttf
+          weight: 900
+          style: italic
 
   # To add assets to your application, add an assets section, like this:
   # assets:

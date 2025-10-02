@@ -1,3 +1,4 @@
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/games/game.dart";
 import "package:flutter/material.dart";
 
@@ -13,10 +14,13 @@ class MineSweeperGame extends Game {
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.all(Colors.red),
-    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [0]),
-    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [0, 1]),
-    IconAnimationUtils.multiple(Colors.red, Colors.lightGreenAccent, [0, 1, 2]),
+    IconAnimationUtils.all(DriblaColors.orange),
+    IconAnimationUtils.multiple(
+        DriblaColors.orange, Colors.lightGreenAccent, [0]),
+    IconAnimationUtils.multiple(
+        DriblaColors.orange, Colors.lightGreenAccent, [0, 1]),
+    IconAnimationUtils.multiple(
+        DriblaColors.orange, Colors.lightGreenAccent, [0, 1, 2]),
     IconAnimationUtils.multiple(
         Colors.red, Colors.lightGreenAccent, [0, 1, 2, 3]),
     IconAnimationUtils.multiple(

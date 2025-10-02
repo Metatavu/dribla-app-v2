@@ -1,4 +1,5 @@
 import "package:collection/collection.dart";
+import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/games/game.dart";
 import "package:flutter/material.dart";
 
@@ -14,18 +15,18 @@ class LetterGame extends Game {
   static const int iconAnimationSpeed = 200;
   static List<List<Color>> iconAnimation = [
     IconAnimationUtils.all(Colors.white),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 7),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 6),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 1),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 0),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 7),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 6),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 1),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 0),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 7),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 6),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 1),
-    IconAnimationUtils.single(Colors.red, Colors.lightGreenAccent, 0),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 7),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 6),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 1),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 0),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 7),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 6),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 1),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 0),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 7),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 6),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 1),
+    IconAnimationUtils.single(DriblaColors.orange, Colors.lightGreenAccent, 0),
   ];
   List<int> targets = [];
   int currentTargetIndex = 0;
