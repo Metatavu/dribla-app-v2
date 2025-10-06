@@ -4,7 +4,7 @@ import "package:dribla_app_v2/components/game_settings_dialog.dart";
 import "package:dribla_app_v2/components/styled_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
-import "package:dribla_app_v2/dribla_colors.dart";
+import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/game_utils.dart";
 import "package:dribla_app_v2/games/letter_game.dart";
 import "package:dribla_app_v2/games/memory_game.dart";
@@ -16,6 +16,7 @@ import "package:dribla_app_v2/games/ten_game_two_players.dart";
 import "package:dribla_app_v2/games/ten_turns_game.dart";
 import "package:dribla_app_v2/games/worm_game.dart";
 import "package:dribla_app_v2/games/zigzag_game.dart";
+import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/play_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -149,6 +150,30 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 ),
                 child: Text(
                   loc.instructionsButtonText,
+                  style: theme.textTheme.headlineMedium,
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 15.0),
+              child: OutlinedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CharacterCreationScreen(),
+                    ),
+                  );
+                },
+                style: theme.outlinedButtonTheme.style?.copyWith(
+                  fixedSize: WidgetStatePropertyAll(
+                    Size(80.w, 7.h),
+                  ),
+                  backgroundColor: const WidgetStatePropertyAll(
+                      Color.fromARGB(255, 46, 152, 4)),
+                ),
+                child: Text(
+                  'Hahmon luonti',
                   style: theme.textTheme.headlineMedium,
                 ),
               ),

@@ -1,5 +1,5 @@
 import "package:collection/collection.dart";
-import "package:dribla_app_v2/dribla_colors.dart";
+import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/games/game.dart";
 import "package:dribla_app_v2/icon_animation_utils.dart";
 import "package:flutter/material.dart";

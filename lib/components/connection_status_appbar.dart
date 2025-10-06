@@ -6,7 +6,7 @@ import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/components/styled_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:flutter/material.dart";
-import "package:device_policy_controller/device_policy_controller.dart";
+// need to reimport device policy controller when not debugging
 import "package:package_info_plus/package_info_plus.dart";
 import "package:sizer/sizer.dart";
 
@@ -68,7 +68,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
 
   Future<void> _checkBatteryLevel() async {
     final batteryLevel = await DeviceConnection.readBatteryLevel();
-    developer.log("Got battery level: " + batteryLevel.toString());
+    //developer.log("Got battery level: " + batteryLevel.toString());
     setState(() {
       _batteryLevel = batteryLevel;
     });
@@ -201,21 +201,22 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
 
   _toggleDeviceLockMode(
       BuildContext context, AppLocalizations localizations) async {
-    final dpc = DevicePolicyController.instance;
-    final isLocked = await dpc.isAppLocked();
-    if (isLocked) {
-      final bool success = await dpc.unlockApp();
-      if (success && context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(localizations.appUnlocked)));
-      }
-    } else {
-      final bool success = await dpc.lockApp(home: true);
-      if (success && context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(localizations.appLocked)));
-      }
-    }
+    // tarvitaan kommentteihin debuggausta varten
+    // final dpc = DevicePolicyController.instance;
+    // final isLocked = await dpc.isAppLocked();
+    // if (isLocked) {
+    //   final bool success = await dpc.unlockApp();
+    //   if (success && context.mounted) {
+    //     ScaffoldMessenger.of(context)
+    //         .showSnackBar(SnackBar(content: Text(localizations.appUnlocked)));
+    //   }
+    // } else {
+    //   final bool success = await dpc.lockApp(home: true);
+    //   if (success && context.mounted) {
+    //     ScaffoldMessenger.of(context)
+    //         .showSnackBar(SnackBar(content: Text(localizations.appLocked)));
+    //   }
+    // }
   }
 
   Future<void> _openConnectionStatusDialog(
@@ -297,7 +298,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
             },
             child: Image(
               image: const AssetImage(Assets.logoAsset),
-              width: 50.w,
+              width: 30.w,
             )),
       ),
       actions: [
