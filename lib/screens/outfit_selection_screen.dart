@@ -1,3 +1,6 @@
+import "package:dribla_app_v2/components/app_drawer.dart";
+import "package:dribla_app_v2/components/app_footer.dart";
+import "package:dribla_app_v2/components/app_header_appbar.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
 import "package:dribla_app_v2/components/game_icon.dart";
 import "package:dribla_app_v2/components/game_settings_dialog.dart";
@@ -35,7 +38,8 @@ class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
     final loc = AppLocalizations.of(context)!;
     return Scaffold(
         extendBodyBehindAppBar: false,
-        appBar: const ConnectionStatusAppBar(),
+        appBar: const AppHeaderAppBar(),
+        drawer: const AppDrawer(),
         body: SafeArea(
           child: Container(
             decoration: BoxDecoration(
@@ -138,6 +142,7 @@ class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
                     ],
                   ),
                 ),
+                const AppFooter(),
               ],
             ),
           ),

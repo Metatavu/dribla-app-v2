@@ -43,7 +43,15 @@ ThemeData getTheme(final BuildContext context) {
         fontFamily: "Urbanist",
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
-        fontSize: 11.0.sp,
+        fontSize: 17.0.sp,
+      ),
+      bodyMedium: TextStyle(
+        color: Colors.white,
+        decoration: TextDecoration.none,
+        fontFamily: "Urbanist",
+        fontWeight: FontWeight.w600,
+        fontStyle: FontStyle.normal,
+        fontSize: 19.0.sp,
       ),
     ),
     elevatedButtonTheme: const ElevatedButtonThemeData(
@@ -128,22 +136,60 @@ ThemeData getTheme(final BuildContext context) {
     ),
   );
 
-  return baseTheme;
   // todo fonts
-  // final themeWithFonts = baseTheme.copyWith();
+  final themeWithFonts = baseTheme.copyWith();
 
-  // return themeWithFonts.copyWith(
-  //   colorScheme: ColorScheme.fromSeed(
-  //     seedColor: const Color(0xFF268C5D),
-  //     brightness: Brightness.light,
-  //     primary: ColorTheme.primary,
-  //     background: const Color(0xFFF7F7F7),
-  //   ),
-  //   appBarTheme: AppBarTheme(
-  //     //backgroundColor: Colors.white,
-  //     // backgroundColor: baseTheme.primaryColor,
-  //     // foregroundColor: Colors.white,
-  //     // leadingWidth: 60,
-  //   ),
-  // );
+  return themeWithFonts.copyWith(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.deepPurple,
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        // leadingWidth: 60,
+      ),
+      drawerTheme: DrawerThemeData(
+        backgroundColor: Colors.black,
+      ),
+      listTileTheme: ListTileThemeData(
+        textColor: Colors.white,
+        iconColor: Colors.white,
+        tileColor: Colors.black,
+        selectedColor: DriblaColors.orange,
+        selectedTileColor: Colors.black,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.black,
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16.0,
+          horizontal: 16.0,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(0),
+          borderSide: const BorderSide(color: Colors.white, width: 2),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(0),
+          borderSide: const BorderSide(color: Colors.white, width: 2),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(0),
+          borderSide: const BorderSide(color: DriblaColors.orange, width: 2),
+        ),
+        labelStyle: const TextStyle(
+          color: Colors.white,
+          decoration: TextDecoration.none,
+          fontFamily: "Urbanist",
+          fontWeight: FontWeight.w600,
+          fontSize: 16.0,
+        ),
+        hintStyle: const TextStyle(
+          color: Colors.white70,
+          decoration: TextDecoration.none,
+          fontFamily: "Urbanist",
+          fontWeight: FontWeight.w400,
+          fontSize: 16.0,
+        ),
+      ));
 }

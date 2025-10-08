@@ -1,7 +1,11 @@
 import "package:dribla_app_v2/audio_players.dart";
 import "package:dribla_app_v2/permission_utils.dart";
+import "package:dribla_app_v2/screens/account_creation_screen.dart";
+import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
+import "package:dribla_app_v2/screens/main_page_screen.dart";
 import "package:dribla_app_v2/screens/permissions_screen.dart";
+import "package:dribla_app_v2/screens/sign_in_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -61,6 +65,13 @@ class _DriblaAppState extends State<DriblaApp> {
                   .every((permission) => permission.isGranted)
               ? const ChooseGameScreen()
               : const PermissionsScreen(),
+          routes: {
+            '/main': (context) => const MainPageScreen(),
+            '/profile': (context) => const CharacterCreationScreen(),
+            '/games': (context) => const ChooseGameScreen(),
+            '/login': (context) => const SignInScreen(),
+            '/create_account': (context) => const AccountCreationScreen(),
+          },
         );
       },
     );

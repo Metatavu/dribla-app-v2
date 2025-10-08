@@ -4,6 +4,7 @@ import "package:dribla_app_v2/components/game_settings_dialog.dart";
 import "package:dribla_app_v2/components/styled_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
+import "package:dribla_app_v2/screens/main_page_screen.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/game_utils.dart";
 import "package:dribla_app_v2/games/letter_game.dart";
@@ -90,161 +91,170 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
       extendBodyBehindAppBar: true,
       appBar: const ConnectionStatusAppBar(),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SizedBox(
-                child: Swiper(
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Padding(padding: EdgeInsets.only(top: 5.h)),
-                        GameIcon(
-                            animationSpeedMs:
-                                GameUtils.getIconAnimationSpeed(index),
-                            colorSequency: GameUtils.getIconAnimation(index)),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Text(
-                            getLocalizedTitle(index, loc),
-                            style: theme.textTheme.headlineMedium,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                  itemCount: 9,
-                  loop: false,
-                  onIndexChanged: (index) => {
-                    setState(() {
-                      chosenGame = index;
-                    })
-                  },
-                  control: const SwiperControl(color: DriblaColors.white),
-                  pagination: SwiperPagination(
-                    alignment: Alignment.bottomCenter,
-                    margin: const EdgeInsets.only(bottom: 22.0),
-                    builder: DotSwiperPaginationBuilder(
-                        activeColor: DriblaColors.orange,
-                        color: DriblaColors.white,
-                        size: 15.0.sp,
-                        activeSize: 15.0.sp,
-                        space: 7.sp),
-                  ),
-                ),
+        child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/dribla_new_background.jpg"),
+                fit: BoxFit.cover,
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 15.0),
-              child: OutlinedButton(
-                onPressed: () async {
-                  launchUrlString(getLocalizedInstructionUrl(chosenGame, loc));
-                },
-                style: theme.outlinedButtonTheme.style?.copyWith(
-                  fixedSize: WidgetStatePropertyAll(
-                    Size(80.w, 7.h),
-                  ),
-                  backgroundColor:
-                      const WidgetStatePropertyAll(DriblaColors.black),
-                ),
-                child: Text(
-                  loc.instructionsButtonText,
-                  style: theme.textTheme.headlineMedium,
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 15.0),
-              child: OutlinedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CharacterCreationScreen(),
+            child: Column(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    child: Swiper(
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 5.h)),
+                            GameIcon(
+                                animationSpeedMs:
+                                    GameUtils.getIconAnimationSpeed(index),
+                                colorSequency:
+                                    GameUtils.getIconAnimation(index)),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Text(
+                                getLocalizedTitle(index, loc),
+                                style: theme.textTheme.headlineMedium,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                      itemCount: 9,
+                      loop: false,
+                      onIndexChanged: (index) => {
+                        setState(() {
+                          chosenGame = index;
+                        })
+                      },
+                      control: const SwiperControl(color: DriblaColors.white),
+                      pagination: SwiperPagination(
+                        alignment: Alignment.bottomCenter,
+                        margin: const EdgeInsets.only(bottom: 22.0),
+                        builder: DotSwiperPaginationBuilder(
+                            activeColor: DriblaColors.orange,
+                            color: DriblaColors.white,
+                            size: 15.0.sp,
+                            activeSize: 15.0.sp,
+                            space: 7.sp),
+                      ),
                     ),
-                  );
-                },
-                style: theme.outlinedButtonTheme.style?.copyWith(
-                  fixedSize: WidgetStatePropertyAll(
-                    Size(80.w, 7.h),
                   ),
-                  backgroundColor: const WidgetStatePropertyAll(
-                      Color.fromARGB(255, 46, 152, 4)),
                 ),
-                child: Text(
-                  'Hahmon luonti',
-                  style: theme.textTheme.headlineMedium,
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 15.0),
-              child: OutlinedButton(
-                onPressed: () async {
-                  var data = await showDialog<Map<String, String?>>(
-                    context: context,
-                    builder: (context) =>
-                        GameSettingsDialog(gameIndex: chosenGame),
-                  );
-                  if (data != null) {
-                    GameUtils.setGameSettings(chosenGame, data);
-                  }
-                },
-                style: theme.outlinedButtonTheme.style?.copyWith(
-                  fixedSize: WidgetStatePropertyAll(
-                    Size(80.w, 7.h),
-                  ),
-                  backgroundColor:
-                      const WidgetStatePropertyAll(DriblaColors.black),
-                ),
-                child: Text(
-                  loc.settingsButtonText,
-                  style: theme.textTheme.headlineMedium,
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 15.0),
-              child: StyledElevatedButton(
-                onPressed: () {
-                  if (DeviceConnection.connectionStatus ==
-                          ConnectionStatus.bleConnected &&
-                      GameUtils.isAllowed(
-                          chosenGame, DeviceConnection.connectedSensorsCount)) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PlayGameScreen(
-                          selectedGame: GameUtils.selectGame(chosenGame),
-                        ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 15.0),
+                  child: OutlinedButton(
+                    onPressed: () async {
+                      launchUrlString(
+                          getLocalizedInstructionUrl(chosenGame, loc));
+                    },
+                    style: theme.outlinedButtonTheme.style?.copyWith(
+                      fixedSize: WidgetStatePropertyAll(
+                        Size(80.w, 7.h),
                       ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
+                      backgroundColor:
+                          const WidgetStatePropertyAll(DriblaColors.black),
+                    ),
+                    child: Text(
+                      loc.instructionsButtonText,
+                      style: theme.textTheme.headlineMedium,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 15.0),
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MainPageScreen(),
+                        ),
+                      );
+                    },
+                    style: theme.outlinedButtonTheme.style?.copyWith(
+                      fixedSize: WidgetStatePropertyAll(
+                        Size(80.w, 7.h),
+                      ),
+                      backgroundColor: const WidgetStatePropertyAll(
+                          Color.fromARGB(255, 46, 152, 4)),
+                    ),
+                    child: Text(
+                      'DEBUG 2.0',
+                      style: theme.textTheme.headlineMedium,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 15.0),
+                  child: OutlinedButton(
+                    onPressed: () async {
+                      var data = await showDialog<Map<String, String?>>(
+                        context: context,
+                        builder: (context) =>
+                            GameSettingsDialog(gameIndex: chosenGame),
+                      );
+                      if (data != null) {
+                        GameUtils.setGameSettings(chosenGame, data);
+                      }
+                    },
+                    style: theme.outlinedButtonTheme.style?.copyWith(
+                      fixedSize: WidgetStatePropertyAll(
+                        Size(80.w, 7.h),
+                      ),
+                      backgroundColor:
+                          const WidgetStatePropertyAll(DriblaColors.black),
+                    ),
+                    child: Text(
+                      loc.settingsButtonText,
+                      style: theme.textTheme.headlineMedium,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 15.0),
+                  child: StyledElevatedButton(
+                    onPressed: () {
+                      if (DeviceConnection.connectionStatus ==
+                              ConnectionStatus.bleConnected &&
                           GameUtils.isAllowed(chosenGame,
-                                  DeviceConnection.connectedSensorsCount)
-                              ? loc.noConnection
-                              : loc.gameNotAvailable,
-                        ),
-                      ),
-                    );
-                  }
-                },
-                style: theme.elevatedButtonTheme.style?.copyWith(
-                  fixedSize: WidgetStatePropertyAll(Size(80.w, 10.0.h)),
+                              DeviceConnection.connectedSensorsCount)) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PlayGameScreen(
+                              selectedGame: GameUtils.selectGame(chosenGame),
+                            ),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              GameUtils.isAllowed(chosenGame,
+                                      DeviceConnection.connectedSensorsCount)
+                                  ? loc.noConnection
+                                  : loc.gameNotAvailable,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    style: theme.elevatedButtonTheme.style?.copyWith(
+                      fixedSize: WidgetStatePropertyAll(Size(80.w, 10.0.h)),
+                    ),
+                    child: Icon(
+                      Icons.play_circle_outline,
+                      color: DriblaColors.white,
+                      size: 15.w.toDouble(),
+                    ),
+                  ),
                 ),
-                child: Icon(
-                  Icons.play_circle_outline,
-                  color: DriblaColors.white,
-                  size: 15.w.toDouble(),
-                ),
-              ),
-            ),
-          ],
-        ),
+              ],
+            )),
       ),
     );
   }
