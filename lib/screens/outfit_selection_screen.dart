@@ -19,7 +19,9 @@ import "package:sizer/sizer.dart";
 import "package:url_launcher/url_launcher_string.dart";
 
 class OutfitSelectionScreen extends StatefulWidget {
-  const OutfitSelectionScreen({super.key});
+  const OutfitSelectionScreen({super.key, required this.chosenCharacter});
+
+  final int chosenCharacter;
 
   @override
   State<StatefulWidget> createState() => _OutfitSelectionScreenState();
@@ -52,7 +54,7 @@ class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
               children: [
                 Text('Outfit', style: theme.textTheme.headlineMedium),
                 Text(
-                  'Choose your outfit',
+                  'Choose your outfit- Char ${widget.chosenCharacter}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -128,8 +130,9 @@ class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const CharacterReadyScreen(),
+                                builder: (context) => CharacterReadyScreen(
+                                    chosenCharacter: widget.chosenCharacter,
+                                    chosenOutfit: chosenOutfit),
                               ),
                             );
                           },

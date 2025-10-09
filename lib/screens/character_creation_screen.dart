@@ -126,8 +126,8 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const OutfitSelectionScreen(),
+                                builder: (context) => OutfitSelectionScreen(
+                                    chosenCharacter: chosenCharacter),
                               ),
                             );
                           },

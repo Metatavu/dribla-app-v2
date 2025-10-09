@@ -19,7 +19,11 @@ import "package:sizer/sizer.dart";
 import "package:url_launcher/url_launcher_string.dart";
 
 class CharacterReadyScreen extends StatefulWidget {
-  const CharacterReadyScreen({super.key});
+  const CharacterReadyScreen(
+      {super.key, required this.chosenCharacter, required this.chosenOutfit});
+
+  final int chosenCharacter;
+  final int chosenOutfit;
 
   @override
   State<StatefulWidget> createState() => _CharacterReadyScreenState();
@@ -52,7 +56,7 @@ class _CharacterReadyScreenState extends State<CharacterReadyScreen> {
               children: [
                 Text('Hello username!', style: theme.textTheme.headlineMedium),
                 Text(
-                  'Looking good! Ready to play?',
+                  'Looking good! Ready to play? You selected Char ${widget.chosenCharacter} with Outfit ${widget.chosenOutfit}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -78,8 +82,8 @@ class _CharacterReadyScreenState extends State<CharacterReadyScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const OutfitSelectionScreen(),
+                                builder: (context) => OutfitSelectionScreen(
+                                    chosenCharacter: chosenOutfit),
                               ),
                             );
                           },
