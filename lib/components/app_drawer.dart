@@ -42,9 +42,9 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.subscriptions),
-            title: Text('Subscription'),
+            title: Text('Character'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed('/login');
+              Navigator.of(context).pushReplacementNamed('/character');
             },
           ),
           Divider(),

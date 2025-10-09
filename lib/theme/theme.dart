@@ -41,9 +41,9 @@ ThemeData getTheme(final BuildContext context) {
         color: Colors.white,
         decoration: TextDecoration.none,
         fontFamily: "Urbanist",
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w600,
         fontStyle: FontStyle.normal,
-        fontSize: 17.0.sp,
+        fontSize: 16.0.sp,
       ),
       bodyMedium: TextStyle(
         color: Colors.white,

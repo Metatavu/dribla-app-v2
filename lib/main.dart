@@ -5,6 +5,7 @@ import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:dribla_app_v2/screens/main_page_screen.dart";
 import "package:dribla_app_v2/screens/permissions_screen.dart";
+import "package:dribla_app_v2/screens/profile_screen.dart";
 import "package:dribla_app_v2/screens/sign_in_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -67,10 +68,11 @@ class _DriblaAppState extends State<DriblaApp> {
               : const PermissionsScreen(),
           routes: {
             '/main': (context) => const MainPageScreen(),
-            '/profile': (context) => const CharacterCreationScreen(),
+            '/character': (context) => const CharacterCreationScreen(),
             '/games': (context) => const ChooseGameScreen(),
             '/login': (context) => const SignInScreen(),
             '/create_account': (context) => const AccountCreationScreen(),
+            '/profile': (context) => const ProfileScreen(),
           },
         );
       },

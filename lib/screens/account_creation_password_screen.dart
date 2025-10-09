@@ -1,5 +1,6 @@
 import "package:dribla_app_v2/components/app_drawer.dart";
 import "package:dribla_app_v2/components/app_header_appbar.dart";
+import "package:dribla_app_v2/screens/welcome_page.dart";
 import 'package:flutter/material.dart';
 import "package:sizer/sizer.dart";
 import "package:dribla_app_v2/theme/theme.dart";
@@ -106,7 +107,17 @@ class _AccountCreationPasswordScreenState
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _isLoading ? null : _signIn,
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          // Navigate to the next screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const WelcomePageScreen()),
+                          );
+                        }
+                      },
                       child: _isLoading
                           ? const CircularProgressIndicator(
                               valueColor:
