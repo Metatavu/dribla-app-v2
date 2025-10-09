@@ -4,6 +4,7 @@ import "package:dribla_app_v2/screens/account_creation_screen.dart";
 import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:dribla_app_v2/screens/main_page_screen.dart";
+import "package:dribla_app_v2/screens/payments_screen.dart";
 import "package:dribla_app_v2/screens/permissions_screen.dart";
 import "package:dribla_app_v2/screens/profile_screen.dart";
 import "package:dribla_app_v2/screens/sign_in_screen.dart";
@@ -73,6 +74,7 @@ class _DriblaAppState extends State<DriblaApp> {
             '/login': (context) => const SignInScreen(),
             '/create_account': (context) => const AccountCreationScreen(),
             '/profile': (context) => const ProfileScreen(),
+            '/payments': (context) => PaymentsScreen(),
           },
         );
       },

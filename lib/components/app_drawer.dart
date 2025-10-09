@@ -41,10 +41,17 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.subscriptions),
+            leading: Icon(Icons.person_2_outlined),
             title: Text('Character'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/character');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.subscriptions),
+            title: Text('Payments'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed('/payments');
             },
           ),
           Divider(),
