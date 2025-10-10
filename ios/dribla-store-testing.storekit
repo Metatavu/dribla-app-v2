@@ -1,0 +1,150 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "0CB3B57E",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "0.00",
+      "familyShareable" : false,
+      "internalID" : "2EB8F5BE",
+      "localizations" : [
+        {
+          "description" : "Testing product 1",
+          "displayName" : "Sample Product 1",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sample_product_1",
+      "referenceName" : "Sample Product 1",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.00",
+      "familyShareable" : false,
+      "internalID" : "EF247E03",
+      "localizations" : [
+        {
+          "description" : "Testing Product 2",
+          "displayName" : "Sample Product 2",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sample_product_2",
+      "referenceName" : "Sample Product 2",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.00",
+      "familyShareable" : false,
+      "internalID" : "49AF11B9",
+      "localizations" : [
+        {
+          "description" : "Testing sample product 3 desc",
+          "displayName" : "Sample Product 3",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sample_product_3",
+      "referenceName" : "Sample Product 3",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.00",
+      "familyShareable" : false,
+      "internalID" : "588E940F",
+      "localizations" : [
+        {
+          "description" : "Testing product desc. 4",
+          "displayName" : "Sample Product 4",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sample_product_4",
+      "referenceName" : "Sample Product 4",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.00",
+      "familyShareable" : false,
+      "internalID" : "A65D9ABF",
+      "localizations" : [
+        {
+          "description" : "Testing product desc. 5",
+          "displayName" : "Sample Product 5",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "sample_product_5",
+      "referenceName" : "Sample Product 5",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

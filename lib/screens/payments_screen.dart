@@ -33,7 +33,13 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       });
       return;
     }
-    const Set<String> _kIds = {'sample_product_1', 'sample_product_2'};
+    const Set<String> _kIds = {
+      'sample_product_1',
+      'sample_product_2',
+      'sample_product_3',
+      'sample_product_4',
+      'sample_product_5'
+    };
     final ProductDetailsResponse response =
         await _iap.queryProductDetails(_kIds);
     setState(() {
@@ -47,6 +53,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       if (purchase.status == PurchaseStatus.purchased) {
         // Verify purchase and deliver product.
         // For now, just complete the purchase.
+        print('purchase successful: ${purchase.productID}');
         _iap.completePurchase(purchase);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Purchase successful: ${purchase.productID}')),
