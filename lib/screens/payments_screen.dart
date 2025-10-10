@@ -1,4 +1,6 @@
 import 'dart:async';
+import "package:dribla_app_v2/components/app_drawer.dart";
+import "package:dribla_app_v2/components/app_header_appbar.dart";
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
@@ -15,13 +17,15 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
   @override
   void initState() {
-    super.initState();
     final purchaseUpdated = _iap.purchaseStream;
-    _subscription = purchaseUpdated.listen(_onPurchaseUpdated, onDone: () {
+    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+    }, onDone: () {
       _subscription.cancel();
     }, onError: (error) {
-      // Handle error here.
+      // handle error here.
     });
+    super.initState();
     _initialize();
   }
 
@@ -48,22 +52,58 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     });
   }
 
-  void _onPurchaseUpdated(List<PurchaseDetails> purchases) {
-    for (var purchase in purchases) {
-      if (purchase.status == PurchaseStatus.purchased) {
-        // Verify purchase and deliver product.
-        // For now, just complete the purchase.
-        print('purchase successful: ${purchase.productID}');
-        _iap.completePurchase(purchase);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Purchase successful: ${purchase.productID}')),
-        );
-      } else if (purchase.status == PurchaseStatus.error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Purchase error: ${purchase.error}')),
-        );
+  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+      if (purchaseDetails.status == PurchaseStatus.pending) {
+        _showPendingUI();
+      } else {
+        if (purchaseDetails.status == PurchaseStatus.error) {
+          _handleError(purchaseDetails.error!);
+        } else if (purchaseDetails.status == PurchaseStatus.purchased ||
+            purchaseDetails.status == PurchaseStatus.restored) {
+          bool valid = await _verifyPurchase(purchaseDetails);
+          if (valid) {
+            _deliverProduct(purchaseDetails);
+          } else {
+            _handleInvalidPurchase(purchaseDetails);
+          }
+        }
+        if (purchaseDetails.pendingCompletePurchase) {
+          await InAppPurchase.instance.completePurchase(purchaseDetails);
+        }
       }
-    }
+    });
+  }
+
+  void _showPendingUI() {
+    // Show UI to indicate that the purchase is pending.
+  }
+
+  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
+    // Implement your purchase verification logic here.
+    return true; // For simplicity, we assume all purchases are valid.
+  }
+
+  void _deliverProduct(PurchaseDetails purchaseDetails) {
+    // Deliver the product to the user.
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text('Product delivered: ${purchaseDetails.productID}')),
+    );
+  }
+
+  void _handleError(IAPError error) {
+    // Handle the error appropriately.
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Purchase error: ${error.message}')),
+    );
+  }
+
+  void _handleInvalidPurchase(PurchaseDetails purchaseDetails) {
+    // Handle invalid purchase here.
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Invalid purchase: ${purchaseDetails.productID}')),
+    );
   }
 
   @override
@@ -87,7 +127,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       );
     }
     return Scaffold(
-      appBar: AppBar(title: Text('Payments')),
+      appBar: const AppHeaderAppBar(),
+      drawer: const AppDrawer(),
       body: _products.isEmpty
           ? Center(child: Text('No products available'))
           : ListView.builder(
