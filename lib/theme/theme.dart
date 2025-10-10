@@ -54,19 +54,28 @@ ThemeData getTheme(final BuildContext context) {
         fontSize: 19.0.sp,
       ),
     ),
+    // elevatedButtonTheme: const ElevatedButtonThemeData(
+    //   style: ButtonStyle(
+    //     minimumSize: WidgetStatePropertyAll(Size(108, 54)),
+    //     shape: WidgetStatePropertyAll(ContinuousRectangleBorder()),
+    //     elevation: WidgetStatePropertyAll(0),
+    //     backgroundColor: WidgetStatePropertyAll(DriblaColors.orange),
+    //     foregroundColor: WidgetStatePropertyAll(DriblaColors.white),
+    //     textStyle: WidgetStatePropertyAll(TextStyle(
+    //       decoration: TextDecoration.none,
+    //       fontFamily: "Urbanist",
+    //       fontWeight: FontWeight.w900,
+    //       fontSize: 28.0,
+    //     )),
+    //   ),
+    // ),
     elevatedButtonTheme: const ElevatedButtonThemeData(
       style: ButtonStyle(
-        minimumSize: WidgetStatePropertyAll(Size(108, 54)),
-        shape: WidgetStatePropertyAll(ContinuousRectangleBorder()),
-        elevation: WidgetStatePropertyAll(0),
-        backgroundColor: WidgetStatePropertyAll(DriblaColors.orange),
-        foregroundColor: WidgetStatePropertyAll(DriblaColors.white),
-        textStyle: WidgetStatePropertyAll(TextStyle(
-          decoration: TextDecoration.none,
-          fontFamily: "Urbanist",
-          fontWeight: FontWeight.w900,
-          fontSize: 28.0,
-        )),
+        backgroundColor: WidgetStatePropertyAll(DriblaColors.newBtnColor),
+        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)))),
+        padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 10)),
+        iconSize: WidgetStatePropertyAll(24),
       ),
     ),
     outlinedButtonTheme: const OutlinedButtonThemeData(

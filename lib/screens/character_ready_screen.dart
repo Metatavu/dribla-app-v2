@@ -70,42 +70,74 @@ class _CharacterReadyScreenState extends State<CharacterReadyScreen> {
                   )),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
+                  padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton.icon(
-                          style: const ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                  DriblaColors.newBtnColor)),
+                      Container(
+                        height: 9.w,
+                        width: 25.w,
+                        child: ElevatedButton(
+                          style: theme.elevatedButtonTheme.style,
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => OutfitSelectionScreen(
-                                    chosenCharacter: chosenOutfit),
+                                    chosenCharacter: widget.chosenCharacter),
                               ),
                             );
                           },
-                          icon:
-                              const Icon(Icons.arrow_back, color: Colors.white),
-                          label: const Text(
-                            "Back",
-                            style: TextStyle(color: Colors.white),
-                          )),
+                          child: const Row(
+                            children: [
+                              SizedBox(width: 5),
+                              Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'Back',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
+                              SizedBox(width: 5),
+                            ],
+                          ),
+                        ),
+                      ),
                       SizedBox(width: 15.w),
                       SizedBox(width: 15.w),
-                      TextButton.icon(
-                          style: const ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                  DriblaColors.newBtnColor)),
-                          onPressed: null,
-                          icon: const Icon(Icons.arrow_forward,
-                              color: Colors.white),
-                          label: const Text(
-                            "Start",
-                            style: TextStyle(color: Colors.white),
-                          )),
+                      Container(
+                        height: 9.w,
+                        width: 25.w,
+                        child: ElevatedButton(
+                          style: theme.elevatedButtonTheme.style,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ChooseGameScreen()),
+                            );
+                          },
+                          child: const Row(
+                            children: [
+                              SizedBox(width: 5),
+                              Text(
+                                'Start',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
+                              SizedBox(width: 5),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
