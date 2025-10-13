@@ -141,7 +141,43 @@
     ]
   },
   "subscriptionGroups" : [
+    {
+      "id" : "6D000C70",
+      "localizations" : [
 
+      ],
+      "name" : "BasicTest",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.00",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "3226030B",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "12 years subscription",
+              "displayName" : "Basic Test Sub",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "basic_test_sub",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Basic Test Sub",
+          "subscriptionGroupID" : "6D000C70",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
   ],
   "version" : {
     "major" : 4,

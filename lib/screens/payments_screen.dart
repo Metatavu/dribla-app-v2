@@ -1,8 +1,10 @@
 import 'dart:async';
 import "package:dribla_app_v2/components/app_drawer.dart";
+import "package:dribla_app_v2/components/app_footer.dart";
 import "package:dribla_app_v2/components/app_header_appbar.dart";
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import "package:sizer/sizer.dart";
 
 class PaymentsScreen extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   final InAppPurchase _iap = InAppPurchase.instance;
   late StreamSubscription<List<PurchaseDetails>> _subscription;
   List<ProductDetails> _products = [];
+  ProductDetails? _defaultSubscription;
   bool _loading = true;
 
   @override
@@ -42,12 +45,15 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       'sample_product_2',
       'sample_product_3',
       'sample_product_4',
-      'sample_product_5'
+      'sample_product_5',
+      'basic_test_sub',
     };
     final ProductDetailsResponse response =
         await _iap.queryProductDetails(_kIds);
     setState(() {
       _products = response.productDetails;
+      _defaultSubscription =
+          _products.firstWhere((product) => product.id == 'basic_test_sub');
       _loading = false;
     });
   }
@@ -118,8 +124,21 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     _iap.buyNonConsumable(purchaseParam: purchaseParam);
   }
 
+  void _buySubscription() {
+    ProductDetails productDetails = _defaultSubscription!;
+    final PurchaseParam purchaseParam =
+        PurchaseParam(productDetails: productDetails);
+    try {
+      print('Attempting to buy subscription: ${productDetails.id}');
+      _iap.buyNonConsumable(purchaseParam: purchaseParam);
+    } catch (e) {
+      print('Error during purchase attempt: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     if (_loading) {
       return Scaffold(
         appBar: AppBar(title: Text('Payments')),
@@ -129,7 +148,56 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     return Scaffold(
       appBar: const AppHeaderAppBar(),
       drawer: const AppDrawer(),
-      body: _products.isEmpty
+      body: Stack(children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/dribla_new_background.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Buy a subscription',
+                      style: theme.textTheme.headlineMedium),
+                  Text(
+                      'Join now for early access and get up to 6 months of free play time!',
+                      style: theme.textTheme.bodyMedium),
+                  Image.asset('assets/promo_image_mat.jpg', height: 60.w),
+                  SizedBox(height: 2.h),
+                  Text(
+                      'First 6 months free, then first 12 months for \$39.90. After first year only \$19.90!',
+                      style: theme.textTheme.bodyMedium),
+                  SizedBox(height: 2.h),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _buySubscription();
+                      },
+                      child: Text(
+                        'Subscribe now',
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+        ),
+        const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
+        //const AppFooter(),
+      ]),
+    );
+  }
+
+/*
+_products.isEmpty
           ? Center(child: Text('No products available'))
           : ListView.builder(
               itemCount: _products.length,
@@ -145,6 +213,5 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 );
               },
             ),
-    );
-  }
+*/
 }
