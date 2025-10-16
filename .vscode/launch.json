@@ -7,19 +7,25 @@
     {
       "name": "dribla-app-v2",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "customTool": "${workspaceFolder}/scripts/fvm-flutter-with-secrets.sh",
+      "customToolReplacesArgs": 0
     },
     {
       "name": "dribla-app-v2 (profile mode)",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "profile",
+      "customTool": "${workspaceFolder}/scripts/fvm-flutter-with-secrets.sh",
+      "customToolReplacesArgs": 0
     },
     {
       "name": "dribla-app-v2 (release mode)",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release"
+      "flutterMode": "release",
+      "customTool": "${workspaceFolder}/scripts/fvm-flutter-with-secrets.sh",
+      "customToolReplacesArgs": 0
     }
   ]
 }

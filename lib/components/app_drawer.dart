@@ -35,7 +35,7 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.settings),
-            title: Text('Sign in'),
+            title: Text('Login'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/login');
             },
@@ -52,6 +52,13 @@ class AppDrawer extends StatelessWidget {
             title: Text('Payments'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/payments');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.perm_device_info),
+            title: Text('Temp Sign In'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed('/signin');
             },
           ),
           Divider(),

@@ -1,8 +1,10 @@
 import "package:dribla_app_v2/audio_players.dart";
 import "package:dribla_app_v2/permission_utils.dart";
+import "package:dribla_app_v2/providers/auth_providers.dart";
 import "package:dribla_app_v2/screens/account_creation_screen.dart";
 import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
+import "package:dribla_app_v2/screens/login_screen.dart";
 import "package:dribla_app_v2/screens/main_page_screen.dart";
 import "package:dribla_app_v2/screens/payments_screen.dart";
 import "package:dribla_app_v2/screens/permissions_screen.dart";
@@ -16,6 +18,9 @@ import "package:wakelock_plus/wakelock_plus.dart";
 import "package:sizer/sizer.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+
 import "device_connection.dart";
 
 late Map<Permission, PermissionStatus> permissionStatuses;
@@ -23,38 +28,46 @@ late Map<Permission, PermissionStatus> permissionStatuses;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   permissionStatuses = await askAndCheckPermissionStatuses();
-  runApp(const DriblaApp());
+  runApp(
+    ProviderScope(
+      child: const DriblaApp(),
+    ),
+  );
 }
 
-class DriblaApp extends StatefulWidget {
+class DriblaApp extends HookConsumerWidget {
   const DriblaApp({super.key});
 
   @override
-  State<StatefulWidget> createState() => _DriblaAppState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    useEffect(() {
+      // This runs after the first build
+      Future.microtask(() async {
+        final auth = ref.read(authNotifierProvider);
+        if (auth.value == null) {
+          await ref.read(authNotifierProvider.notifier).login();
+        }
+        bool isAuthenticated =
+            await ref.read(authNotifierProvider.notifier).isAuthenticated;
+        if (!isAuthenticated) {
+          // Handle unauthenticated state if necessary
+          print('User is not authenticated');
+        }
+      });
 
-class _DriblaAppState extends State<DriblaApp> {
-  @override
-  void initState() {
-    super.initState();
-    AudioPlayers.init();
-    DeviceConnection.init();
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+      AudioPlayers.init();
+      DeviceConnection.init();
+      SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp],
+      );
+      WakelockPlus.enable();
+      return () {
+        AudioPlayers.deinit();
+        WakelockPlus.disable();
+        DeviceConnection.deinit();
+      };
+    }, const []);
 
-    WakelockPlus.enable();
-  }
-
-  @override
-  void dispose() {
-    AudioPlayers.deinit();
-    WakelockPlus.disable();
-    DeviceConnection.deinit();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Sizer(
       builder: (context, orientation, screenType) {
         return MaterialApp(
@@ -71,13 +84,29 @@ class _DriblaAppState extends State<DriblaApp> {
             '/main': (context) => const MainPageScreen(),
             '/character': (context) => const CharacterCreationScreen(),
             '/games': (context) => const ChooseGameScreen(),
-            '/login': (context) => const SignInScreen(),
+            '/signin': (context) => const SignInScreen(),
             '/create_account': (context) => const AccountCreationScreen(),
             '/profile': (context) => const ProfileScreen(),
             '/payments': (context) => PaymentsScreen(),
+            '/login': (context) => const LoginScreen(),
           },
         );
       },
     );
   }
 }
+
+// Future<bool> _checkUserAuthentication(WidgetRef ref) async {
+//   final auth = ref.watch(authNotifierProvider);
+//   if (auth.value == null) {
+//     await ref.read(authNotifierProvider.notifier).login();
+//   }
+//   return ref.read(authNotifierProvider.notifier).isAuthenticated;
+// }
+
+// Future<void> _login() async {
+//   final isAuthenticated = await _checkUserAuthentication(ref);
+//   if (!isAuthenticated) {
+//     return;
+//   }
+// }

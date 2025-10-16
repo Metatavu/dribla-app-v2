@@ -53,6 +53,13 @@ dependencies:
   flutter_blue_plus: ^1.34.5
   new_version_plus: ^0.1.0
   in_app_purchase: ^3.2.3
+  jwt_decoder: ^2.0.1
+  flutter_web_auth_2: ^4.1.0
+  flutter_secure_storage: ^9.2.4
+  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.4
+  hooks_riverpod: ^2.6.1
+  flutter_hooks: ^0.20.0
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +71,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  dart_define: ^2.1.1
+  json_serializable: ^6.9.5
+  freezed: ^2.5.2
+  build_runner: ^2.4.13
+  riverpod_generator: ^2.4.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -163,3 +175,17 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+dart_define:
+  json: false
+  dart_path: lib/app/env.gen.dart
+  class_name: env
+  variables:
+    - name: KC_URL
+      description: Keycloak API URL
+    - name: KC_REALM
+      description: Keycloak realm name
+    - name: KC_CLIENT_ID
+      description: Keycloak client ID
+    - name: KC_APP_AUTH_SCHEME
+      description: App auth scheme for AppAuth redirect URI
