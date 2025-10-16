@@ -1,14 +1,20 @@
 import "package:dribla_app_v2/audio_players.dart";
-import "package:dribla_app_v2/dribla_colors.dart";
 import "package:dribla_app_v2/permission_utils.dart";
+import "package:dribla_app_v2/screens/account_creation_screen.dart";
+import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
+import "package:dribla_app_v2/screens/main_page_screen.dart";
+import "package:dribla_app_v2/screens/payments_screen.dart";
 import "package:dribla_app_v2/screens/permissions_screen.dart";
+import "package:dribla_app_v2/screens/profile_screen.dart";
+import "package:dribla_app_v2/screens/sign_in_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:wakelock_plus/wakelock_plus.dart";
 import "package:sizer/sizer.dart";
+import "package:dribla_app_v2/theme/theme.dart";
 
 import "device_connection.dart";
 
@@ -54,128 +60,22 @@ class _DriblaAppState extends State<DriblaApp> {
         return MaterialApp(
           title: "Dribla App V2",
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            scaffoldBackgroundColor: Colors.black,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-            textTheme: TextTheme(
-              headlineSmall: TextStyle(
-                color: Colors.white,
-                decoration: TextDecoration.none,
-                fontFamily: "Urbanist",
-                fontWeight: FontWeight.w900,
-                fontSize: 15.0.sp,
-              ),
-              headlineMedium: TextStyle(
-                color: Colors.white,
-                decoration: TextDecoration.none,
-                fontFamily: "Urbanist",
-                fontWeight: FontWeight.w900,
-                fontSize: 23.0.sp,
-              ),
-              headlineLarge: TextStyle(
-                color: Colors.white,
-                decoration: TextDecoration.none,
-                fontFamily: "Urbanist",
-                fontWeight: FontWeight.w900,
-                fontSize: 51.0.sp,
-              ),
-              bodySmall: TextStyle(
-                color: Colors.white,
-                decoration: TextDecoration.none,
-                fontFamily: "Urbanist",
-                fontWeight: FontWeight.w400,
-                fontStyle: FontStyle.normal,
-                fontSize: 11.0.sp,
-              ),
-            ),
-            elevatedButtonTheme: const ElevatedButtonThemeData(
-              style: ButtonStyle(
-                minimumSize: WidgetStatePropertyAll(Size(108, 54)),
-                shape: WidgetStatePropertyAll(ContinuousRectangleBorder()),
-                elevation: WidgetStatePropertyAll(0),
-                backgroundColor: WidgetStatePropertyAll(DriblaColors.orange),
-                foregroundColor: WidgetStatePropertyAll(DriblaColors.white),
-                textStyle: WidgetStatePropertyAll(TextStyle(
-                  decoration: TextDecoration.none,
-                  fontFamily: "Urbanist",
-                  fontWeight: FontWeight.w900,
-                  fontSize: 28.0,
-                )),
-              ),
-            ),
-            outlinedButtonTheme: const OutlinedButtonThemeData(
-              style: ButtonStyle(
-                minimumSize: WidgetStatePropertyAll(Size(108, 54)),
-                side: WidgetStatePropertyAll(
-                    BorderSide(color: DriblaColors.white, width: 3)),
-                shape: WidgetStatePropertyAll(ContinuousRectangleBorder()),
-                foregroundColor: WidgetStatePropertyAll(DriblaColors.white),
-                textStyle: WidgetStatePropertyAll(TextStyle(
-                  decoration: TextDecoration.none,
-                  fontFamily: "Urbanist",
-                  fontWeight: FontWeight.w900,
-                  fontSize: 28.0,
-                )),
-              ),
-            ),
-            dialogTheme: const DialogTheme(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              shape: ContinuousRectangleBorder(),
-              titleTextStyle: TextStyle(
-                color: Colors.white,
-                decoration: TextDecoration.none,
-                fontFamily: "Urbanist",
-                fontWeight: FontWeight.w900,
-                fontSize: 28.0,
-              ),
-              contentTextStyle: TextStyle(
-                color: Colors.white,
-                decoration: TextDecoration.none,
-                fontFamily: "Urbanist",
-                fontWeight: FontWeight.w400,
-                fontSize: 16.0,
-              ),
-            ),
-            sliderTheme: const SliderThemeData(
-              thumbColor: DriblaColors.orange,
-              activeTrackColor: DriblaColors.orange,
-            ),
-            dropdownMenuTheme: const DropdownMenuThemeData(
-              inputDecorationTheme: InputDecorationTheme(
-                constraints: BoxConstraints.expand(height: 54.0),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.zero,
-                  borderSide: BorderSide(color: Colors.white, width: 2),
-                ),
-                suffixIconColor: Colors.white,
-              ),
-              menuStyle: MenuStyle(
-                backgroundColor: WidgetStatePropertyAll(Colors.white),
-                elevation: WidgetStatePropertyAll(0),
-                shape: WidgetStatePropertyAll(
-                  ContinuousRectangleBorder(
-                    borderRadius: BorderRadius.zero,
-                  ),
-                ),
-              ),
-              textStyle: TextStyle(
-                color: Colors.white,
-                decoration: TextDecoration.none,
-                fontFamily: "Urbanist",
-                fontWeight: FontWeight.w700,
-                fontStyle: FontStyle.normal,
-                fontSize: 16.0,
-              ),
-            ),
-          ),
+          theme: getTheme(context),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: permissionStatuses.values
                   .every((permission) => permission.isGranted)
               ? const ChooseGameScreen()
               : const PermissionsScreen(),
+          routes: {
+            '/main': (context) => const MainPageScreen(),
+            '/character': (context) => const CharacterCreationScreen(),
+            '/games': (context) => const ChooseGameScreen(),
+            '/login': (context) => const SignInScreen(),
+            '/create_account': (context) => const AccountCreationScreen(),
+            '/profile': (context) => const ProfileScreen(),
+            '/payments': (context) => PaymentsScreen(),
+          },
         );
       },
     );

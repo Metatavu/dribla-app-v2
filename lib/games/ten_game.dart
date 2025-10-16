@@ -1,6 +1,6 @@
 import "dart:math";
 
-import "package:dribla_app_v2/dribla_colors.dart";
+import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/games/game.dart";
 import "package:flutter/material.dart";
 

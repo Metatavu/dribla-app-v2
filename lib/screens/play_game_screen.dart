@@ -3,7 +3,7 @@ import "dart:async";
 import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
-import "package:dribla_app_v2/dribla_colors.dart";
+import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/led_colors.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";

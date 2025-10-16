@@ -1,6 +1,6 @@
-import "package:dribla_app_v2/dribla_colors.dart";
 import "package:flutter/material.dart";
 import "package:sizer/sizer.dart";
+import "package:dribla_app_v2/theme/theme.dart";
 
 class StyledDialog extends StatelessWidget {
   final String? title;
