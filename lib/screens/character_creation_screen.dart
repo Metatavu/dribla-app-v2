@@ -31,6 +31,14 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
     super.initState();
   }
 
+  static String getCharacterAsset(int index) {
+    return switch (index) {
+      0 => "assets/avatars/avatar_01/avatar_01_base.png",
+      1 => "assets/avatars/avatar_02/avatar_02_base.png",
+      _ => "assets/avatars/avatar_01/avatar_01_base.png",
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -64,16 +72,16 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                       itemBuilder: (context, index) {
                         return Column(
                           children: [
-                            Padding(padding: EdgeInsets.only(top: 2.h)),
-                            GameIcon(
-                                animationSpeedMs:
-                                    GameUtils.getIconAnimationSpeed(index),
-                                colorSequency:
-                                    GameUtils.getIconAnimation(index)),
+                            Padding(padding: EdgeInsets.only(top: 8.h)),
+                            Image.asset(
+                              getCharacterAsset(index),
+                              width: 60.w,
+                              height: 60.w,
+                            ),
                           ],
                         );
                       },
-                      itemCount: 9,
+                      itemCount: 2,
                       loop: false,
                       onIndexChanged: (index) => {
                         setState(() {
@@ -86,7 +94,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
+                  padding: const EdgeInsets.only(bottom: 80.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -123,7 +131,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                       ),
                       SizedBox(width: 15.w),
                       Text(
-                        '${chosenCharacter + 1} / 9',
+                        '${chosenCharacter + 1} / 2',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,

@@ -9,7 +9,6 @@ import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/character_ready_screen.dart";
-import "package:dribla_app_v2/screens/shoes_selection_screen.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/game_utils.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
@@ -19,38 +18,40 @@ import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
 import "package:sizer/sizer.dart";
 import "package:url_launcher/url_launcher_string.dart";
 
-class OutfitSelectionScreen extends StatefulWidget {
-  const OutfitSelectionScreen({super.key, required this.chosenCharacter});
+class ShoesSelectionScreen extends StatefulWidget {
+  const ShoesSelectionScreen(
+      {super.key, required this.chosenCharacter, required this.chosenOutfit});
 
   final int chosenCharacter;
+  final int chosenOutfit;
 
   @override
-  State<StatefulWidget> createState() => _OutfitSelectionScreenState();
+  State<StatefulWidget> createState() => _ShoesSelectionScreenState();
 }
 
-class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
-  int chosenOutfit = 0;
+class _ShoesSelectionScreenState extends State<ShoesSelectionScreen> {
+  int chosenShoes = 0;
   @override
   void initState() {
     super.initState();
   }
 
-  static String getOutfitAsset(int index, int character) {
+  static String getShoesAsset(int index, int character, int outfit) {
     return switch (index) {
       0 =>
-        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_01_shoes_01.png",
+        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_01.png",
       1 =>
-        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_02_shoes_01.png",
+        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_02.png",
       2 =>
-        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_03_shoes_01.png",
+        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_03.png",
       3 =>
-        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_04_shoes_01.png",
+        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_04.png",
       4 =>
-        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_05_shoes_01.png",
+        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_05.png",
       5 =>
-        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_06_shoes_01.png",
+        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_06.png",
       _ =>
-        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_01_shoes_01.png",
+        "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_01.png",
     };
   }
 
@@ -72,9 +73,9 @@ class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
             ),
             child: Column(
               children: [
-                Text('Outfit', style: theme.textTheme.headlineMedium),
+                Text('Shoes', style: theme.textTheme.headlineMedium),
                 Text(
-                  'Next choose your outfit',
+                  'Next choose your shoes',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -89,7 +90,8 @@ class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
                           children: [
                             Padding(padding: EdgeInsets.only(top: 8.h)),
                             Image.asset(
-                              getOutfitAsset(index, widget.chosenCharacter),
+                              getShoesAsset(index, widget.chosenCharacter,
+                                  widget.chosenOutfit),
                               width: 60.w,
                               height: 60.w,
                             ),
@@ -100,8 +102,8 @@ class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
                       loop: false,
                       onIndexChanged: (index) => {
                         setState(() {
-                          chosenOutfit = index;
-                          print('Chosen outfit: $chosenOutfit');
+                          chosenShoes = index;
+                          print('Chosen shoes: $chosenShoes');
                         })
                       },
                       control: const SwiperControl(color: DriblaColors.white),
@@ -147,7 +149,7 @@ class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
                       ),
                       SizedBox(width: 15.w),
                       Text(
-                        '${chosenOutfit + 1} / 6',
+                        '${chosenShoes + 1} / 6',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -164,9 +166,10 @@ class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ShoesSelectionScreen(
+                                  builder: (context) => CharacterReadyScreen(
                                       chosenCharacter: widget.chosenCharacter,
-                                      chosenOutfit: chosenOutfit)),
+                                      chosenOutfit: widget.chosenOutfit,
+                                      chosenShoes: chosenShoes)),
                             );
                           },
                           child: const Row(

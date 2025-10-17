@@ -149,6 +149,9 @@ flutter:
     - assets/audio/failure.wav
     - assets/audio/beep.wav
     - assets/audio/bonus.wav
+    - assets/avatars/
+    - assets/avatars/avatar_01/
+    - assets/avatars/avatar_02/
   generate: true
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

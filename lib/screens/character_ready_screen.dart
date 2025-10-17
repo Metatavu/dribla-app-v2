@@ -9,6 +9,7 @@ import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/outfit_selection_screen.dart";
+import "package:dribla_app_v2/screens/shoes_selection_screen.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/game_utils.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
@@ -20,10 +21,14 @@ import "package:url_launcher/url_launcher_string.dart";
 
 class CharacterReadyScreen extends StatefulWidget {
   const CharacterReadyScreen(
-      {super.key, required this.chosenCharacter, required this.chosenOutfit});
+      {super.key,
+      required this.chosenCharacter,
+      required this.chosenOutfit,
+      required this.chosenShoes});
 
   final int chosenCharacter;
   final int chosenOutfit;
+  final int chosenShoes;
 
   @override
   State<StatefulWidget> createState() => _CharacterReadyScreenState();
@@ -34,6 +39,10 @@ class _CharacterReadyScreenState extends State<CharacterReadyScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  static String getFinalAsset(int character, int outfit, int shoes) {
+    return "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_0${shoes + 1}.png";
   }
 
   @override
@@ -56,7 +65,7 @@ class _CharacterReadyScreenState extends State<CharacterReadyScreen> {
               children: [
                 Text('Hello username!', style: theme.textTheme.headlineMedium),
                 Text(
-                  'Looking good! Ready to play? You selected Char ${widget.chosenCharacter} with Outfit ${widget.chosenOutfit}',
+                  'Looking good! Ready to play?',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -66,11 +75,16 @@ class _CharacterReadyScreenState extends State<CharacterReadyScreen> {
                 Expanded(
                   child: SizedBox(
                       child: Container(
-                    child: Text('TODO'),
+                    child: Image.asset(
+                      getFinalAsset(widget.chosenCharacter, widget.chosenOutfit,
+                          widget.chosenShoes),
+                      width: 50.w,
+                      height: 50.w,
+                    ),
                   )),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
+                  padding: const EdgeInsets.only(bottom: 80.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -83,8 +97,9 @@ class _CharacterReadyScreenState extends State<CharacterReadyScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => OutfitSelectionScreen(
-                                    chosenCharacter: widget.chosenCharacter),
+                                builder: (context) => ShoesSelectionScreen(
+                                    chosenCharacter: widget.chosenCharacter,
+                                    chosenOutfit: widget.chosenOutfit),
                               ),
                             );
                           },
