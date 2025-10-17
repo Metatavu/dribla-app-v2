@@ -9,6 +9,7 @@ import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/character_ready_screen.dart";
+import "package:dribla_app_v2/screens/outfit_selection_screen.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/game_utils.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
@@ -103,7 +104,6 @@ class _ShoesSelectionScreenState extends State<ShoesSelectionScreen> {
                       onIndexChanged: (index) => {
                         setState(() {
                           chosenShoes = index;
-                          print('Chosen shoes: $chosenShoes');
                         })
                       },
                       control: const SwiperControl(color: DriblaColors.white),
@@ -124,8 +124,8 @@ class _ShoesSelectionScreenState extends State<ShoesSelectionScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const CharacterCreationScreen(),
+                                builder: (context) => OutfitSelectionScreen(
+                                    chosenCharacter: widget.chosenCharacter),
                               ),
                             );
                           },

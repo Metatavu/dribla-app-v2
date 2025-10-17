@@ -101,7 +101,6 @@ class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
                       onIndexChanged: (index) => {
                         setState(() {
                           chosenOutfit = index;
-                          print('Chosen outfit: $chosenOutfit');
                         })
                       },
                       control: const SwiperControl(color: DriblaColors.white),

@@ -86,7 +86,6 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                       onIndexChanged: (index) => {
                         setState(() {
                           chosenCharacter = index;
-                          print('Chosen character: $chosenCharacter');
                         })
                       },
                       control: const SwiperControl(color: DriblaColors.white),
