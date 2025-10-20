@@ -115,7 +115,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
                         Expanded(
                             flex: 1,
                             child: Text(
-                              'Rank',
+                              loc.rank,
                               style: theme.textTheme.bodyMedium,
                             )),
                         Expanded(
@@ -133,7 +133,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
                         Expanded(
                             flex: 1,
                             child: Text(
-                              'Total hours',
+                              loc.totalHours,
                               style: theme.textTheme.bodyMedium,
                             )),
                         Expanded(

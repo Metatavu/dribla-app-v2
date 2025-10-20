@@ -99,5 +99,7 @@
     "updateButtonText": "Päivitä",
     "closeButtonText": "Sulje",
     "startDelay10s": "Aloitusviive 10s",
-    "startDelay5s": "Aloitusviive 5s"
+    "startDelay5s": "Aloitusviive 5s",
+    "rank": "Taso",
+    "totalHours": "Tunnit yhteensä"
 }

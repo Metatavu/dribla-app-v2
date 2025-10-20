@@ -49,10 +49,7 @@ class DriblaApp extends HookConsumerWidget {
         }
         bool isAuthenticated =
             await ref.read(authNotifierProvider.notifier).isAuthenticated;
-        if (!isAuthenticated) {
-          // Handle unauthenticated state if necessary
-          print('User is not authenticated');
-        }
+        print('Is authenticated: $isAuthenticated');
       });
 
       AudioPlayers.init();
@@ -68,6 +65,8 @@ class DriblaApp extends HookConsumerWidget {
       };
     }, const []);
 
+    final auth = ref.watch(authNotifierProvider);
+
     return Sizer(
       builder: (context, orientation, screenType) {
         return MaterialApp(
@@ -78,7 +77,9 @@ class DriblaApp extends HookConsumerWidget {
           supportedLocales: AppLocalizations.supportedLocales,
           home: permissionStatuses.values
                   .every((permission) => permission.isGranted)
-              ? const ChooseGameScreen()
+              ? (auth.value == null
+                  ? const LoginScreen()
+                  : const ChooseGameScreen())
               : const PermissionsScreen(),
           routes: {
             '/main': (context) => const MainPageScreen(),
@@ -95,18 +96,3 @@ class DriblaApp extends HookConsumerWidget {
     );
   }
 }
-
-// Future<bool> _checkUserAuthentication(WidgetRef ref) async {
-//   final auth = ref.watch(authNotifierProvider);
-//   if (auth.value == null) {
-//     await ref.read(authNotifierProvider.notifier).login();
-//   }
-//   return ref.read(authNotifierProvider.notifier).isAuthenticated;
-// }
-
-// Future<void> _login() async {
-//   final isAuthenticated = await _checkUserAuthentication(ref);
-//   if (!isAuthenticated) {
-//     return;
-//   }
-// }

@@ -76,5 +76,7 @@
     "updateButtonText": "Aktualisieren",
     "closeButtonText": "Schließen",
     "startDelay10s": "Startverzögerung 10 s",
-    "startDelay5s": "Startverzögerung 5 s"
+    "startDelay5s": "Startverzögerung 5 s",
+    "rank": "Rank todo",
+    "totalHours": "Total hours todo"
 }

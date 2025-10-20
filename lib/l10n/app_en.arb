@@ -75,5 +75,7 @@
     "updateButtonText": "Update",
     "closeButtonText": "Close",
     "startDelay10s": "Starting delay 10s",
-    "startDelay5s": "Starting delay 5s"
+    "startDelay5s": "Starting delay 5s",
+    "rank": "Rank",
+    "totalHours": "Total hours"
 }
