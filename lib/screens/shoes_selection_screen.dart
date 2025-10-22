@@ -17,25 +17,17 @@ import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
 import "package:sizer/sizer.dart";
-import "package:url_launcher/url_launcher_string.dart";
 
-class ShoesSelectionScreen extends StatefulWidget {
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:dribla_app_v2/providers/auth_providers.dart';
+
+class ShoesSelectionScreen extends HookConsumerWidget {
   const ShoesSelectionScreen(
       {super.key, required this.chosenCharacter, required this.chosenOutfit});
 
   final int chosenCharacter;
   final int chosenOutfit;
-
-  @override
-  State<StatefulWidget> createState() => _ShoesSelectionScreenState();
-}
-
-class _ShoesSelectionScreenState extends State<ShoesSelectionScreen> {
-  int chosenShoes = 0;
-  @override
-  void initState() {
-    super.initState();
-  }
 
   static String getShoesAsset(int index, int character, int outfit) {
     return switch (index) {
@@ -57,145 +49,153 @@ class _ShoesSelectionScreenState extends State<ShoesSelectionScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
+    final isAuthExpired = ref.watch(isAuthExpiredProvider);
+    final chosenShoes = useState<int>(0);
+
+    useEffect(() {
+      if (isAuthExpired) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacementNamed(context, '/login');
+        });
+      }
+      return null;
+    }, [isAuthExpired]);
+
     return Scaffold(
-        extendBodyBehindAppBar: false,
-        appBar: const AppHeaderAppBar(),
-        drawer: const AppDrawer(),
-        body: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/dribla_new_background.jpg"),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Column(
-              children: [
-                Text('Shoes', style: theme.textTheme.headlineMedium),
-                Text(
-                  'Next choose your shoes',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Expanded(
-                  child: SizedBox(
-                    child: Swiper(
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Padding(padding: EdgeInsets.only(top: 8.h)),
-                            Image.asset(
-                              getShoesAsset(index, widget.chosenCharacter,
-                                  widget.chosenOutfit),
-                              width: 60.w,
-                              height: 60.w,
-                            ),
-                          ],
-                        );
-                      },
-                      itemCount: 6,
-                      loop: false,
-                      onIndexChanged: (index) => {
-                        setState(() {
-                          chosenShoes = index;
-                        })
-                      },
-                      control: const SwiperControl(color: DriblaColors.white),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 80.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 9.w,
-                        width: 25.w,
-                        child: ElevatedButton(
-                          style: theme.elevatedButtonTheme.style,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => OutfitSelectionScreen(
-                                    chosenCharacter: widget.chosenCharacter),
-                              ),
-                            );
-                          },
-                          child: const Row(
-                            children: [
-                              SizedBox(width: 5),
-                              Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'Back',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
-                              SizedBox(width: 5),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 15.w),
-                      Text(
-                        '${chosenShoes + 1} / 6',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(width: 15.w),
-                      Container(
-                        height: 9.w,
-                        width: 25.w,
-                        child: ElevatedButton(
-                          style: theme.elevatedButtonTheme.style,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CharacterReadyScreen(
-                                      chosenCharacter: widget.chosenCharacter,
-                                      chosenOutfit: widget.chosenOutfit,
-                                      chosenShoes: chosenShoes)),
-                            );
-                          },
-                          child: const Row(
-                            children: [
-                              SizedBox(width: 5),
-                              Text(
-                                'Next',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
-                              SizedBox(width: 5),
-                              Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const AppFooter(),
-              ],
+      extendBodyBehindAppBar: false,
+      appBar: const AppHeaderAppBar(),
+      drawer: const AppDrawer(),
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/dribla_new_background.jpg"),
+              fit: BoxFit.cover,
             ),
           ),
-        ));
+          child: Column(
+            children: [
+              Text('Shoes', style: theme.textTheme.headlineMedium),
+              Text(
+                'Next choose your shoes',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Expanded(
+                child: SizedBox(
+                  child: Swiper(
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Padding(padding: EdgeInsets.only(top: 8.h)),
+                          Image.asset(
+                            getShoesAsset(index, chosenCharacter, chosenOutfit),
+                            width: 60.w,
+                            height: 60.w,
+                          ),
+                        ],
+                      );
+                    },
+                    itemCount: 6,
+                    loop: false,
+                    onIndexChanged: (index) => chosenShoes.value = index,
+                    control: const SwiperControl(color: DriblaColors.white),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 80.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 9.w,
+                      width: 25.w,
+                      child: ElevatedButton(
+                        style: theme.elevatedButtonTheme.style,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OutfitSelectionScreen(
+                                  chosenCharacter: chosenCharacter),
+                            ),
+                          );
+                        },
+                        child: const Row(
+                          children: [
+                            SizedBox(width: 5),
+                            Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              'Back',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                            SizedBox(width: 5),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 15.w),
+                    Text(
+                      '${chosenShoes.value + 1} / 6',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(width: 15.w),
+                    Container(
+                      height: 9.w,
+                      width: 25.w,
+                      child: ElevatedButton(
+                        style: theme.elevatedButtonTheme.style,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CharacterReadyScreen(
+                                    chosenCharacter: chosenCharacter,
+                                    chosenOutfit: chosenOutfit,
+                                    chosenShoes: chosenShoes.value)),
+                          );
+                        },
+                        child: const Row(
+                          children: [
+                            SizedBox(width: 5),
+                            Text(
+                              'Next',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                            SizedBox(width: 5),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const AppFooter(),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

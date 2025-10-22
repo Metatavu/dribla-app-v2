@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:sizer/sizer.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 
 class AppFooter extends StatefulWidget {
@@ -22,6 +23,7 @@ class _AppFooter extends State<AppFooter> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     return SafeArea(
       child: Container(
@@ -35,7 +37,7 @@ class _AppFooter extends State<AppFooter> {
           children: [
             _FooterButton(
               icon: Icons.person_pin,
-              label: "Players",
+              label: loc.players,
               onPressed: () {
                 Navigator.of(context).pushReplacementNamed('/main');
               },
@@ -43,7 +45,7 @@ class _AppFooter extends State<AppFooter> {
             SizedBox(width: 4.w),
             _FooterButton(
               icon: Icons.sports_soccer,
-              label: "Games",
+              label: loc.games,
               onPressed: () {
                 Navigator.of(context).pushReplacementNamed('/games');
               },
@@ -51,7 +53,7 @@ class _AppFooter extends State<AppFooter> {
             SizedBox(width: 4.w),
             _FooterButton(
               icon: Icons.person,
-              label: "Teams",
+              label: loc.teams,
               onPressed: () {
                 Navigator.of(context).pushReplacementNamed('/profile');
               },

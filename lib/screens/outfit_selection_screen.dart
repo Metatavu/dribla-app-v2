@@ -17,23 +17,15 @@ import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
 import "package:sizer/sizer.dart";
-import "package:url_launcher/url_launcher_string.dart";
 
-class OutfitSelectionScreen extends StatefulWidget {
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:dribla_app_v2/providers/auth_providers.dart';
+
+class OutfitSelectionScreen extends HookConsumerWidget {
   const OutfitSelectionScreen({super.key, required this.chosenCharacter});
 
   final int chosenCharacter;
-
-  @override
-  State<StatefulWidget> createState() => _OutfitSelectionScreenState();
-}
-
-class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
-  int chosenOutfit = 0;
-  @override
-  void initState() {
-    super.initState();
-  }
 
   static String getOutfitAsset(int index, int character) {
     return switch (index) {
@@ -55,143 +47,152 @@ class _OutfitSelectionScreenState extends State<OutfitSelectionScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
+    final isAuthExpired = ref.watch(isAuthExpiredProvider);
+    final chosenOutfit = useState<int>(0);
+
+    useEffect(() {
+      if (isAuthExpired) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacementNamed(context, '/login');
+        });
+      }
+      return null;
+    }, [isAuthExpired]);
+
     return Scaffold(
-        extendBodyBehindAppBar: false,
-        appBar: const AppHeaderAppBar(),
-        drawer: const AppDrawer(),
-        body: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/dribla_new_background.jpg"),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Column(
-              children: [
-                Text('Outfit', style: theme.textTheme.headlineMedium),
-                Text(
-                  'Next choose your outfit',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Expanded(
-                  child: SizedBox(
-                    child: Swiper(
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Padding(padding: EdgeInsets.only(top: 8.h)),
-                            Image.asset(
-                              getOutfitAsset(index, widget.chosenCharacter),
-                              width: 60.w,
-                              height: 60.w,
-                            ),
-                          ],
-                        );
-                      },
-                      itemCount: 6,
-                      loop: false,
-                      onIndexChanged: (index) => {
-                        setState(() {
-                          chosenOutfit = index;
-                        })
-                      },
-                      control: const SwiperControl(color: DriblaColors.white),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 80.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 9.w,
-                        width: 25.w,
-                        child: ElevatedButton(
-                          style: theme.elevatedButtonTheme.style,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const CharacterCreationScreen(),
-                              ),
-                            );
-                          },
-                          child: const Row(
-                            children: [
-                              SizedBox(width: 5),
-                              Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'Back',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
-                              SizedBox(width: 5),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 15.w),
-                      Text(
-                        '${chosenOutfit + 1} / 6',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(width: 15.w),
-                      Container(
-                        height: 9.w,
-                        width: 25.w,
-                        child: ElevatedButton(
-                          style: theme.elevatedButtonTheme.style,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ShoesSelectionScreen(
-                                      chosenCharacter: widget.chosenCharacter,
-                                      chosenOutfit: chosenOutfit)),
-                            );
-                          },
-                          child: const Row(
-                            children: [
-                              SizedBox(width: 5),
-                              Text(
-                                'Next',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
-                              SizedBox(width: 5),
-                              Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const AppFooter(),
-              ],
+      extendBodyBehindAppBar: false,
+      appBar: const AppHeaderAppBar(),
+      drawer: const AppDrawer(),
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/dribla_new_background.jpg"),
+              fit: BoxFit.cover,
             ),
           ),
-        ));
+          child: Column(
+            children: [
+              Text('Outfit', style: theme.textTheme.headlineMedium),
+              Text(
+                'Next choose your outfit',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Expanded(
+                child: SizedBox(
+                  child: Swiper(
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Padding(padding: EdgeInsets.only(top: 8.h)),
+                          Image.asset(
+                            getOutfitAsset(index, chosenCharacter),
+                            width: 60.w,
+                            height: 60.w,
+                          ),
+                        ],
+                      );
+                    },
+                    itemCount: 6,
+                    loop: false,
+                    onIndexChanged: (index) => chosenOutfit.value = index,
+                    control: const SwiperControl(color: DriblaColors.white),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 80.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 9.w,
+                      width: 25.w,
+                      child: ElevatedButton(
+                        style: theme.elevatedButtonTheme.style,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const CharacterCreationScreen(),
+                            ),
+                          );
+                        },
+                        child: const Row(
+                          children: [
+                            SizedBox(width: 5),
+                            Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              'Back',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                            SizedBox(width: 5),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 15.w),
+                    Text(
+                      '${chosenOutfit.value + 1} / 6',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(width: 15.w),
+                    Container(
+                      height: 9.w,
+                      width: 25.w,
+                      child: ElevatedButton(
+                        style: theme.elevatedButtonTheme.style,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ShoesSelectionScreen(
+                                    chosenCharacter: chosenCharacter,
+                                    chosenOutfit: chosenOutfit.value)),
+                          );
+                        },
+                        child: const Row(
+                          children: [
+                            SizedBox(width: 5),
+                            Text(
+                              'Next',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                            SizedBox(width: 5),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const AppFooter(),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

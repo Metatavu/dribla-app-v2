@@ -5,6 +5,7 @@ import "package:dribla_app_v2/models/authentication.dart";
 // import "package:dribla_app_v2/services/api.dart"; remove luontolaatu api calls
 import "package:dribla_app_v2/services/secure_store_service.dart";
 import "package:dribla_app_v2/services/auth_service.dart";
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 part "auth_providers.g.dart";
 
@@ -33,6 +34,7 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   void _stopRefreshTimer() {
+    print('Stopped refresh timer');
     _refreshTimer?.cancel();
     _refreshTimer = null;
   }
@@ -56,6 +58,10 @@ class AuthNotifier extends _$AuthNotifier {
   Future<void> _checkAndUpdateToken() async {
     final authValue = state.valueOrNull;
 
+    print('Checking and updating token...');
+    print(authValue.toString());
+    //print('Just returning');
+
     if (authValue == null) {
       _stopRefreshTimer();
       return;
@@ -73,6 +79,7 @@ class AuthNotifier extends _$AuthNotifier {
       if (storedRefreshToken == null || state.requireValue!.isExpired) {
         state = const AsyncData(null);
         //luontolaatuApi.setBearerAuth("BearerAuth", "");
+        print('No stored refresh token or auth is expired, logging out');
         _stopRefreshTimer();
         return;
       }
@@ -81,10 +88,13 @@ class AuthNotifier extends _$AuthNotifier {
         storedRefreshToken,
       );
 
+      print('Refreshed auth token successfully');
       await _storeRefreshToken(refreshedAuth.refreshToken);
       state = AsyncData(refreshedAuth);
       //luontolaatuApi.setBearerAuth("BearerAuth", refreshedAuth.accessTokenRaw);
     } catch (error) {
+      print('Error!!');
+      print('Error refreshing token');
       // Just log the error but don't clear the auth state
     }
   }
@@ -110,9 +120,10 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   void _startRefreshTimer() {
+    print('Starting new refresh timer, stopping first');
     _stopRefreshTimer();
     _refreshTimer = Timer.periodic(
-      const Duration(seconds: 10),
+      const Duration(seconds: 30),
       (_) => _checkAndUpdateToken(),
     );
   }
@@ -125,6 +136,7 @@ class AuthNotifier extends _$AuthNotifier {
       await _secureStore.delete(SecureStoreService.keyAuthRefreshToken);
       state = const AsyncData(null);
       //luontolaatuApi.setBearerAuth("BearerAuth", "");
+      print('Logged out, stopping refresh timer');
       _stopRefreshTimer();
     } catch (error) {
       // todo(aharkonen22) handling
@@ -139,3 +151,11 @@ class AuthNotifier extends _$AuthNotifier {
     );
   }
 }
+
+final isAuthExpiredProvider = Provider<bool>((ref) {
+  final authAsync = ref.watch(authNotifierProvider);
+  final auth = authAsync.value;
+  // If not logged in, treat as expired
+  if (auth == null) return true;
+  return auth.isExpired;
+});

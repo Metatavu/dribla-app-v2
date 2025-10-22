@@ -17,39 +17,38 @@ import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
 import "package:sizer/sizer.dart";
-import "package:url_launcher/url_launcher_string.dart";
 
-class MainPageScreen extends StatefulWidget {
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:dribla_app_v2/providers/auth_providers.dart';
+
+class MainPageScreen extends HookConsumerWidget {
   const MainPageScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => _MainPageScreenState();
-}
-
-class _MainPageScreenState extends State<MainPageScreen> {
-  int _selectedIndex = 0;
-  int chosenOutfit = 0;
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
+    final isAuthExpired = ref.watch(isAuthExpiredProvider);
+    print('main page screen');
+    print('isAuthExpired: $isAuthExpired');
+
+    useEffect(() {
+      if (isAuthExpired) {
+        // Redirect to login if auth is expired
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacementNamed(context, '/login');
+        });
+      }
+      return null;
+    }, [isAuthExpired]);
+
     return Scaffold(
-        extendBodyBehindAppBar: false,
-        appBar: const AppHeaderAppBar(),
-        drawer: const AppDrawer(),
-        // TODO if there is too much content, make body scrollable
-        body: Stack(children: [
+      extendBodyBehindAppBar: false,
+      appBar: const AppHeaderAppBar(),
+      drawer: const AppDrawer(),
+      body: Stack(
+        children: [
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -58,133 +57,111 @@ class _MainPageScreenState extends State<MainPageScreen> {
               ),
             ),
             child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(width: 5.w),
-                        Text('Username', style: theme.textTheme.headlineMedium),
-                      ],
-                    ),
-                    Row(children: [
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
                       SizedBox(width: 5.w),
-                      Text('Some ID here $_selectedIndex',
-                          style: theme.textTheme.bodyMedium),
-                    ]),
-                    Container(
-                      padding: EdgeInsets.only(top: 2.h, bottom: 2.h),
-                      child: Center(
-                        child: Image.asset('assets/char_pic_temp.png',
-                            width: 60.w, height: 60.w),
-                      ),
-                      // TODO switching between users?
-                      // child: Swiper(
-                      //   itemBuilder: (BuildContext context, int index) {
-                      //     return Column(
-                      //       mainAxisAlignment: MainAxisAlignment.center,
-                      //       children: [
-                      //         GameIcon(
-                      //           animationSpeedMs:
-                      //               GameUtils.getIconAnimationSpeed(index),
-                      //           colorSequency:
-                      //               GameUtils.getIconAnimation(index),
-                      //         ),
-                      //         SizedBox(height: 2.h),
-                      //         Text(
-                      //           'Outfit $index',
-                      //           style: theme.textTheme.bodyMedium,
-                      //         ),
-                      //       ],
-                      //     );
-                      //   },
-                      //   itemCount: 5,
-                      //   viewportFraction: 0.8,
-                      //   scale: 0.9,
-                      //   onIndexChanged: (int index) {
-                      //     setState(() {
-                      //       chosenOutfit = index;
-                      //     });
-                      //   },
-                      // ),
+                      Text('Username', style: theme.textTheme.headlineMedium),
+                    ],
+                  ),
+                  Row(children: [
+                    SizedBox(width: 5.w),
+                    Text('Some ID here', style: theme.textTheme.bodyMedium),
+                  ]),
+                  Container(
+                    padding: EdgeInsets.only(top: 2.h, bottom: 2.h),
+                    child: Center(
+                      child: Image.asset('assets/char_pic_temp.png',
+                          width: 60.w, height: 60.w),
                     ),
-                    Row(
-                      children: [
-                        SizedBox(width: 5.w),
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              loc.rank,
-                              style: theme.textTheme.bodyMedium,
-                            )),
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              '10',
-                              style: theme.textTheme.bodyMedium,
-                              textAlign: TextAlign.center,
-                            )),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(width: 5.w),
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              loc.totalHours,
-                              style: theme.textTheme.bodyMedium,
-                            )),
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              '35.6h',
-                              style: theme.textTheme.bodyMedium,
-                              textAlign: TextAlign.center,
-                            )),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(width: 5.w),
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              'Games played',
-                              style: theme.textTheme.bodyMedium,
-                            )),
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              '124',
-                              style: theme.textTheme.bodyMedium,
-                              textAlign: TextAlign.center,
-                            )),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ProfileScreen()),
-                          );
-                        },
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(width: 5.w),
+                      Expanded(
+                        flex: 1,
                         child: Text(
-                          'View more',
+                          loc.rank,
                           style: theme.textTheme.bodyMedium,
                         ),
                       ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '10',
+                          style: theme.textTheme.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(width: 5.w),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          loc.totalHours,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '35.6h',
+                          style: theme.textTheme.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(width: 5.w),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          loc.gamesPlayed,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '124',
+                          style: theme.textTheme.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ProfileScreen()),
+                        );
+                      },
+                      child: Text(
+                        loc.viewMore,
+                        style: theme.textTheme.bodyMedium,
+                      ),
                     ),
-                  ],
-                )),
+                  ),
+                ],
+              ),
+            ),
           ),
           const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
-          //const AppFooter(),
-        ]));
+        ],
+      ),
+    );
   }
 }

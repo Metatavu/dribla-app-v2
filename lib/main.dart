@@ -41,16 +41,13 @@ class DriblaApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(() {
-      // This runs after the first build
-      Future.microtask(() async {
-        final auth = ref.read(authNotifierProvider);
-        if (auth.value == null) {
-          await ref.read(authNotifierProvider.notifier).login();
-        }
-        bool isAuthenticated =
-            await ref.read(authNotifierProvider.notifier).isAuthenticated;
-        print('Is authenticated: $isAuthenticated');
-      });
+      // If we want to show login immediately on app start
+      // Future.microtask(() async {
+      //   final auth = ref.read(authNotifierProvider);
+      //   if (auth.value == null) {
+      //     await ref.read(authNotifierProvider.notifier).login();
+      //   }
+      // });
 
       AudioPlayers.init();
       DeviceConnection.init();
@@ -65,7 +62,7 @@ class DriblaApp extends HookConsumerWidget {
       };
     }, const []);
 
-    final auth = ref.watch(authNotifierProvider);
+    final isExpired = ref.watch(isAuthExpiredProvider);
 
     return Sizer(
       builder: (context, orientation, screenType) {
@@ -77,9 +74,7 @@ class DriblaApp extends HookConsumerWidget {
           supportedLocales: AppLocalizations.supportedLocales,
           home: permissionStatuses.values
                   .every((permission) => permission.isGranted)
-              ? (auth.value == null
-                  ? const LoginScreen()
-                  : const ChooseGameScreen())
+              ? (isExpired ? const LoginScreen() : const ChooseGameScreen())
               : const PermissionsScreen(),
           routes: {
             '/main': (context) => const MainPageScreen(),

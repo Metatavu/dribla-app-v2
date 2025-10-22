@@ -101,5 +101,17 @@
     "startDelay10s": "Aloitusviive 10s",
     "startDelay5s": "Aloitusviive 5s",
     "rank": "Taso",
-    "totalHours": "Tunnit yhteensä"
+    "totalHours": "Tunnit yhteensä",
+    "login": "Kirjaudu sisään",
+    "loginInfo": "Sovelluksen käyttö vaatii sisäänkirjautumisen. Kirjaudu sisään jatkaaksesi.",
+    "loginError": "Sisäänkirjautuminen epäonnistui, yritä uudestaan",
+    "players": "Pelaajat",
+    "games": "Pelit",
+    "teams": "Joukkueet",
+    "buySubscription": "Osta tilaus",
+    "earlyAccess": "Liity nyt niin saat aikaisen pääsyn ja jopa 6 kuukauden ilmaisen peliajan!",
+    "subscribeInfo": "Ensimmäiset 6 kuukautta ilmaiseksi, sitten ensimmäiset 12kk 39.90e. Ensimmäisen vuoden jälkeen 19.90e!",
+    "subscribeNow": "Tilaa nyt",
+    "gamesPlayed": "Pelejä pelattu",
+    "viewMore": "Näytä lisää"
 }

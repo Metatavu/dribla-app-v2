@@ -5,141 +5,110 @@ import "package:dribla_app_v2/components/app_header_appbar.dart";
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import "package:sizer/sizer.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import 'package:dribla_app_v2/providers/auth_providers.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class PaymentsScreen extends StatefulWidget {
-  @override
-  _PaymentsScreenState createState() => _PaymentsScreenState();
-}
-
-class _PaymentsScreenState extends State<PaymentsScreen> {
-  final InAppPurchase _iap = InAppPurchase.instance;
-  late StreamSubscription<List<PurchaseDetails>> _subscription;
-  List<ProductDetails> _products = [];
-  ProductDetails? _defaultSubscription;
-  bool _loading = true;
+class PaymentsScreen extends HookConsumerWidget {
+  const PaymentsScreen({super.key});
 
   @override
-  void initState() {
-    final purchaseUpdated = _iap.purchaseStream;
-    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
-      _listenToPurchaseUpdated(purchaseDetailsList);
-    }, onDone: () {
-      _subscription.cancel();
-    }, onError: (error) {
-      // handle error here.
-    });
-    super.initState();
-    _initialize();
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isAuthExpired = ref.watch(isAuthExpiredProvider);
+    final loc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
-  Future<void> _initialize() async {
-    final bool available = await _iap.isAvailable();
-    if (!available) {
-      setState(() {
-        _loading = false;
-      });
-      return;
-    }
-    const Set<String> _kIds = {
-      'sample_product_1',
-      'sample_product_2',
-      'sample_product_3',
-      'sample_product_4',
-      'sample_product_5',
-      'basic_test_sub',
-    };
-    final ProductDetailsResponse response =
-        await _iap.queryProductDetails(_kIds);
-    setState(() {
-      _products = response.productDetails;
-      _defaultSubscription =
-          _products.firstWhere((product) => product.id == 'basic_test_sub');
-      _loading = false;
-    });
-  }
+    // Payment state hooks
+    final iap = InAppPurchase.instance;
+    final products = useState<List<ProductDetails>>([]);
+    final defaultSubscription = useState<ProductDetails?>(null);
+    final loading = useState<bool>(true);
+    final subscription =
+        useRef<StreamSubscription<List<PurchaseDetails>>?>(null);
 
-  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
-    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      if (purchaseDetails.status == PurchaseStatus.pending) {
-        _showPendingUI();
-      } else {
-        if (purchaseDetails.status == PurchaseStatus.error) {
-          _handleError(purchaseDetails.error!);
-        } else if (purchaseDetails.status == PurchaseStatus.purchased ||
-            purchaseDetails.status == PurchaseStatus.restored) {
-          bool valid = await _verifyPurchase(purchaseDetails);
-          if (valid) {
-            _deliverProduct(purchaseDetails);
+    // Listen to purchase updates
+    useEffect(() {
+      subscription.value = iap.purchaseStream.listen((purchaseDetailsList) {
+        for (final purchaseDetails in purchaseDetailsList) {
+          if (purchaseDetails.status == PurchaseStatus.pending) {
+            // Show pending UI if needed
           } else {
-            _handleInvalidPurchase(purchaseDetails);
+            if (purchaseDetails.status == PurchaseStatus.error) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(
+                        'Purchase error: ${purchaseDetails.error?.message ?? "Unknown error"}')),
+              );
+            } else if (purchaseDetails.status == PurchaseStatus.purchased ||
+                purchaseDetails.status == PurchaseStatus.restored) {
+              // For simplicity, assume all purchases are valid
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(
+                        'Product delivered: ${purchaseDetails.productID}')),
+              );
+            }
+            if (purchaseDetails.pendingCompletePurchase) {
+              InAppPurchase.instance.completePurchase(purchaseDetails);
+            }
           }
         }
-        if (purchaseDetails.pendingCompletePurchase) {
-          await InAppPurchase.instance.completePurchase(purchaseDetails);
+      });
+      return () {
+        subscription.value?.cancel();
+      };
+    }, []);
+
+    // Initialize products
+    useEffect(() {
+      Future.microtask(() async {
+        final available = await iap.isAvailable();
+        if (!available) {
+          loading.value = false;
+          return;
         }
+        const Set<String> _kIds = {
+          'sample_product_1',
+          'sample_product_2',
+          'sample_product_3',
+          'sample_product_4',
+          'sample_product_5',
+          'basic_test_sub',
+        };
+        final response = await iap.queryProductDetails(_kIds);
+        products.value = response.productDetails;
+        defaultSubscription.value = response.productDetails
+            .firstWhere((product) => product.id == 'basic_test_sub');
+        loading.value = false;
+      });
+      return null;
+    }, []);
+
+    // Redirect if auth expired
+    useEffect(() {
+      if (isAuthExpired) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacementNamed(context, '/login');
+        });
       }
-    });
-  }
+      return null;
+    }, [isAuthExpired]);
 
-  void _showPendingUI() {
-    // Show UI to indicate that the purchase is pending.
-  }
-
-  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
-    // Implement your purchase verification logic here.
-    return true; // For simplicity, we assume all purchases are valid.
-  }
-
-  void _deliverProduct(PurchaseDetails purchaseDetails) {
-    // Deliver the product to the user.
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-          content: Text('Product delivered: ${purchaseDetails.productID}')),
-    );
-  }
-
-  void _handleError(IAPError error) {
-    // Handle the error appropriately.
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Purchase error: ${error.message}')),
-    );
-  }
-
-  void _handleInvalidPurchase(PurchaseDetails purchaseDetails) {
-    // Handle invalid purchase here.
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Invalid purchase: ${purchaseDetails.productID}')),
-    );
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-
-  void _buyProduct(ProductDetails productDetails) {
-    final PurchaseParam purchaseParam =
-        PurchaseParam(productDetails: productDetails);
-    _iap.buyNonConsumable(purchaseParam: purchaseParam);
-  }
-
-  void _buySubscription() {
-    ProductDetails productDetails = _defaultSubscription!;
-    final PurchaseParam purchaseParam =
-        PurchaseParam(productDetails: productDetails);
-    try {
-      print('Attempting to buy subscription: ${productDetails.id}');
-      _iap.buyNonConsumable(purchaseParam: purchaseParam);
-    } catch (e) {
-      print('Error during purchase attempt: $e');
+    void buySubscription() {
+      final productDetails = defaultSubscription.value;
+      if (productDetails == null) return;
+      final purchaseParam = PurchaseParam(productDetails: productDetails);
+      try {
+        iap.buyNonConsumable(purchaseParam: purchaseParam);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error during purchase attempt: $e')),
+        );
+      }
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    if (_loading) {
+    if (loading.value) {
       return Scaffold(
         appBar: AppBar(title: Text('Payments')),
         body: Center(child: CircularProgressIndicator()),
@@ -157,61 +126,36 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             ),
           ),
           child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Buy a subscription',
-                      style: theme.textTheme.headlineMedium),
-                  Text(
-                      'Join now for early access and get up to 6 months of free play time!',
-                      style: theme.textTheme.bodyMedium),
-                  Image.asset('assets/promo_image_mat.jpg', height: 60.w),
-                  SizedBox(height: 2.h),
-                  Text(
-                      'First 6 months free, then first 12 months for \$39.90. After first year only \$19.90!',
-                      style: theme.textTheme.bodyMedium),
-                  SizedBox(height: 2.h),
-                  SizedBox(
-                    height: 3.h,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _buySubscription();
-                      },
-                      child: Text(
-                        'Subscribe now',
-                        style: theme.textTheme.bodyMedium,
-                      ),
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(loc.buySubscription,
+                    style: theme.textTheme.headlineMedium),
+                Text(loc.earlyAccess, style: theme.textTheme.bodyMedium),
+                Image.asset('assets/promo_image_mat.jpg', height: 60.w),
+                SizedBox(height: 2.h),
+                Text(loc.subscribeInfo, style: theme.textTheme.bodyMedium),
+                SizedBox(height: 2.h),
+                SizedBox(
+                  height: 3.h,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: buySubscription,
+                    child: Text(
+                      loc.subscribeNow,
+                      style: theme.textTheme.bodyMedium,
                     ),
                   ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         ),
         const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
-        //const AppFooter(),
       ]),
     );
   }
-
-/*
-_products.isEmpty
-          ? Center(child: Text('No products available'))
-          : ListView.builder(
-              itemCount: _products.length,
-              itemBuilder: (context, index) {
-                final product = _products[index];
-                return ListTile(
-                  title: Text(product.title),
-                  subtitle: Text(product.description),
-                  trailing: TextButton(
-                    child: Text(product.price),
-                    onPressed: () => _buyProduct(product),
-                  ),
-                );
-              },
-            ),
-*/
 }

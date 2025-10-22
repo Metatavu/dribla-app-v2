@@ -48,12 +48,11 @@ class LoginScreen extends HookConsumerWidget {
                           width: 30.w, height: 30.w),
                     ),
                     Center(
-                        child: Text('Login',
+                        child: Text(loc.login,
                             style: theme.textTheme.headlineMedium)),
                     SizedBox(height: 2.h),
                     Center(
-                        child: Text(
-                            'Using the app requires a login. Please log in to continue.',
+                        child: Text(loc.loginInfo,
                             style: theme.textTheme.bodySmall)),
                     SizedBox(height: 2.h),
                     SizedBox(
@@ -72,15 +71,14 @@ class LoginScreen extends HookConsumerWidget {
                         child: authAsync.isLoading
                             ? const CircularProgressIndicator()
                             : Text(
-                                'Login',
+                                loc.login,
                                 style: theme.textTheme.bodyMedium,
                               ),
                       ),
                     ),
                     SizedBox(height: 2.h),
                     if (authAsync.hasError)
-                      Text('Login failed, try again',
-                          style: TextStyle(color: Colors.red)),
+                      Text(loc.loginError, style: TextStyle(color: Colors.red)),
                   ],
                 )),
           ),
