@@ -1,3 +1,5 @@
+import "package:dribla_app_v2/components/app_drawer.dart";
+import "package:dribla_app_v2/components/app_footer.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
 import "package:dribla_app_v2/components/game_icon.dart";
 import "package:dribla_app_v2/components/game_settings_dialog.dart";
@@ -90,6 +92,7 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: const ConnectionStatusAppBar(),
+      drawer: const AppDrawer(),
       body: SafeArea(
         child: Container(
             decoration: BoxDecoration(
@@ -146,51 +149,20 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                 ),
                 Container(
                   margin: const EdgeInsets.only(bottom: 15.0),
-                  child: OutlinedButton(
+                  child: ElevatedButton(
                     onPressed: () async {
                       launchUrlString(
                           getLocalizedInstructionUrl(chosenGame, loc));
                     },
-                    style: theme.outlinedButtonTheme.style?.copyWith(
-                      fixedSize: WidgetStatePropertyAll(
-                        Size(80.w, 7.h),
-                      ),
-                      backgroundColor:
-                          const WidgetStatePropertyAll(DriblaColors.black),
-                    ),
                     child: Text(
                       loc.instructionsButtonText,
-                      style: theme.textTheme.headlineMedium,
+                      style: theme.textTheme.bodyMedium,
                     ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(bottom: 15.0),
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MainPageScreen(),
-                        ),
-                      );
-                    },
-                    style: theme.outlinedButtonTheme.style?.copyWith(
-                      fixedSize: WidgetStatePropertyAll(
-                        Size(80.w, 7.h),
-                      ),
-                      backgroundColor: const WidgetStatePropertyAll(
-                          Color.fromARGB(255, 46, 152, 4)),
-                    ),
-                    child: Text(
-                      'DEBUG 2.0',
-                      style: theme.textTheme.headlineMedium,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 15.0),
-                  child: OutlinedButton(
+                  child: ElevatedButton(
                     onPressed: () async {
                       var data = await showDialog<Map<String, String?>>(
                         context: context,
@@ -201,22 +173,15 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                         GameUtils.setGameSettings(chosenGame, data);
                       }
                     },
-                    style: theme.outlinedButtonTheme.style?.copyWith(
-                      fixedSize: WidgetStatePropertyAll(
-                        Size(80.w, 7.h),
-                      ),
-                      backgroundColor:
-                          const WidgetStatePropertyAll(DriblaColors.black),
-                    ),
                     child: Text(
                       loc.settingsButtonText,
-                      style: theme.textTheme.headlineMedium,
+                      style: theme.textTheme.bodyMedium,
                     ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(bottom: 15.0),
-                  child: StyledElevatedButton(
+                  child: ElevatedButton(
                     onPressed: () {
                       if (DeviceConnection.connectionStatus ==
                               ConnectionStatus.bleConnected &&
@@ -243,16 +208,24 @@ class _ChooseGameScreenState extends State<ChooseGameScreen> {
                         );
                       }
                     },
-                    style: theme.elevatedButtonTheme.style?.copyWith(
-                      fixedSize: WidgetStatePropertyAll(Size(80.w, 10.0.h)),
-                    ),
-                    child: Icon(
-                      Icons.play_circle_outline,
-                      color: DriblaColors.white,
-                      size: 15.w.toDouble(),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(width: 5),
+                        Text(
+                          loc.startGameButton,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                        const SizedBox(width: 5),
+                        const Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
                 ),
+                const AppFooter(),
               ],
             )),
       ),

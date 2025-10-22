@@ -113,5 +113,6 @@
     "subscribeInfo": "Ensimmäiset 6 kuukautta ilmaiseksi, sitten ensimmäiset 12kk 39.90e. Ensimmäisen vuoden jälkeen 19.90e!",
     "subscribeNow": "Tilaa nyt",
     "gamesPlayed": "Pelejä pelattu",
-    "viewMore": "Näytä lisää"
+    "viewMore": "Näytä lisää",
+    "startGameButton": "Aloita peli"
 }

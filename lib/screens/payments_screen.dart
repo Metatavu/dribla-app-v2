@@ -2,6 +2,7 @@ import 'dart:async';
 import "package:dribla_app_v2/components/app_drawer.dart";
 import "package:dribla_app_v2/components/app_footer.dart";
 import "package:dribla_app_v2/components/app_header_appbar.dart";
+import "package:dribla_app_v2/components/connection_status_appbar.dart";
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import "package:sizer/sizer.dart";
@@ -115,7 +116,7 @@ class PaymentsScreen extends HookConsumerWidget {
       );
     }
     return Scaffold(
-      appBar: const AppHeaderAppBar(),
+      appBar: const ConnectionStatusAppBar(),
       drawer: const AppDrawer(),
       body: Stack(children: [
         Container(

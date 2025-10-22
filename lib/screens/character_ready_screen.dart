@@ -54,7 +54,7 @@ class CharacterReadyScreen extends HookConsumerWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: false,
-      appBar: const AppHeaderAppBar(),
+      appBar: const ConnectionStatusAppBar(),
       drawer: const AppDrawer(),
       body: SafeArea(
         child: Container(
