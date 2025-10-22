@@ -30,8 +30,6 @@ class MainPageScreen extends HookConsumerWidget {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
-    print('main page screen');
-    print('isAuthExpired: $isAuthExpired');
 
     useEffect(() {
       if (isAuthExpired) {

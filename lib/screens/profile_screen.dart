@@ -167,7 +167,7 @@ class ProfileScreen extends HookConsumerWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        print('Todo invite to team');
+                        //print('Todo invite to team');
                       },
                       child: Text(
                         'Invite to team',
