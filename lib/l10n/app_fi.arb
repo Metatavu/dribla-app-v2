@@ -114,5 +114,19 @@
     "subscribeNow": "Tilaa nyt",
     "gamesPlayed": "Pelejä pelattu",
     "viewMore": "Näytä lisää",
-    "startGameButton": "Aloita peli"
+    "startGameButton": "Aloita peli",
+    "mainPage": "Kotisivu",
+    "profile": "Profiili",
+    "editAvatar": "Hahmon muokkaus",
+    "editCharType": "Valitse hahmosi",
+    "editCharOutfit": "Seuraavaksi valitse asusi",
+    "editCharShoes": "Seuraavaksi valitse kengät",
+    "outfit": "Asu",
+    "shoes": "Kengät",
+    "statistics": "Tilastot",
+    "backButton": "Takaisin",
+    "nextButton": "Seuraava",
+    "readyButton": "Valmis",
+    "hello": "Moro",
+    "lookingGood": "Hyvältä näyttää! Valmis pelaamaan?"
 }

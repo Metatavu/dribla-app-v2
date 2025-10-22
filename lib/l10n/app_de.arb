@@ -91,5 +91,19 @@
     "subscribeNow": "Subscribe now todo",
     "gamesPlayed": "Games played todo",
     "viewMore": "View more todo",
-    "startGameButton": "Start game todo"
+    "startGameButton": "Start game todo",
+    "mainPage": "Pääsivu todo",
+    "profile": "Profiili todo",
+    "editAvatar": "Hahmon muokkaus todo",
+    "editCharType": "Valitse hahmosi todo",
+    "editCharOutfit": "Next choose your outfit todo",
+    "editCharShoes": "Seuraavaksi valitse keng todo",
+    "outfit": "Asu todo",
+    "shoes": "Kengät todo",
+    "statistics": "Tilastot todo",
+    "backButton": "Takaisin todo",
+    "nextButton": "Seuraava todo",
+    "readyButton": "Valmis todo",
+    "hello": "Hello todo",
+    "lookingGood": "Hyvältä näyttää! Oletko valmis pelaamaan? todo"
 }

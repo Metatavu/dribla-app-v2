@@ -78,9 +78,9 @@ class ShoesSelectionScreen extends HookConsumerWidget {
           ),
           child: Column(
             children: [
-              Text('Shoes', style: theme.textTheme.headlineMedium),
+              Text(loc.shoes, style: theme.textTheme.headlineMedium),
               Text(
-                'Next choose your shoes',
+                loc.editCharShoes,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -115,8 +115,8 @@ class ShoesSelectionScreen extends HookConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      height: 9.w,
-                      width: 25.w,
+                      height: 12.w,
+                      width: 32.w,
                       child: ElevatedButton(
                         style: theme.elevatedButtonTheme.style,
                         onPressed: () {
@@ -128,25 +128,25 @@ class ShoesSelectionScreen extends HookConsumerWidget {
                             ),
                           );
                         },
-                        child: const Row(
+                        child: Row(
                           children: [
-                            SizedBox(width: 5),
-                            Icon(
+                            const SizedBox(width: 5),
+                            const Icon(
                               Icons.arrow_back,
                               color: Colors.white,
                             ),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             Text(
-                              'Back',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
+                              loc.backButton,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 16),
                             ),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                           ],
                         ),
                       ),
                     ),
-                    SizedBox(width: 15.w),
+                    SizedBox(width: 5.w),
                     Text(
                       '${chosenShoes.value + 1} / 6',
                       style: const TextStyle(
@@ -155,10 +155,10 @@ class ShoesSelectionScreen extends HookConsumerWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(width: 15.w),
+                    SizedBox(width: 5.w),
                     Container(
-                      height: 9.w,
-                      width: 25.w,
+                      height: 12.w,
+                      width: 33.w,
                       child: ElevatedButton(
                         style: theme.elevatedButtonTheme.style,
                         onPressed: () {
@@ -171,16 +171,16 @@ class ShoesSelectionScreen extends HookConsumerWidget {
                                     chosenShoes: chosenShoes.value)),
                           );
                         },
-                        child: const Row(
+                        child: Row(
                           children: [
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             Text(
-                              'Next',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
+                              loc.nextButton,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 16),
                             ),
-                            SizedBox(width: 5),
-                            Icon(
+                            const SizedBox(width: 5),
+                            const Icon(
                               Icons.arrow_forward,
                               color: Colors.white,
                             ),

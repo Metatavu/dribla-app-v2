@@ -66,9 +66,10 @@ class CharacterReadyScreen extends HookConsumerWidget {
           ),
           child: Column(
             children: [
-              Text('Hello username!', style: theme.textTheme.headlineMedium),
+              Text('${loc.hello} username!',
+                  style: theme.textTheme.headlineMedium),
               Text(
-                'Looking good! Ready to play?',
+                loc.lookingGood,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -92,8 +93,8 @@ class CharacterReadyScreen extends HookConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      height: 9.w,
-                      width: 25.w,
+                      height: 12.w,
+                      width: 32.w,
                       child: ElevatedButton(
                         style: theme.elevatedButtonTheme.style,
                         onPressed: () {
@@ -107,29 +108,29 @@ class CharacterReadyScreen extends HookConsumerWidget {
                             ),
                           );
                         },
-                        child: const Row(
+                        child: Row(
                           children: [
-                            SizedBox(width: 5),
-                            Icon(
+                            const SizedBox(width: 5),
+                            const Icon(
                               Icons.arrow_back,
                               color: Colors.white,
                             ),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             Text(
-                              'Back',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
+                              loc.backButton,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 16),
                             ),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                           ],
                         ),
                       ),
                     ),
-                    SizedBox(width: 15.w),
-                    SizedBox(width: 15.w),
+                    SizedBox(width: 5.w),
+                    SizedBox(width: 5.w),
                     Container(
-                      height: 9.w,
-                      width: 25.w,
+                      height: 12.w,
+                      width: 32.w,
                       child: ElevatedButton(
                         style: theme.elevatedButtonTheme.style,
                         onPressed: () {
@@ -139,16 +140,16 @@ class CharacterReadyScreen extends HookConsumerWidget {
                                 builder: (context) => const ChooseGameScreen()),
                           );
                         },
-                        child: const Row(
+                        child: Row(
                           children: [
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             Text(
-                              'Start',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
+                              loc.readyButton,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 16),
                             ),
-                            SizedBox(width: 5),
-                            Icon(
+                            const SizedBox(width: 5),
+                            const Icon(
                               Icons.arrow_forward,
                               color: Colors.white,
                             ),

@@ -90,5 +90,19 @@
     "subscribeNow": "Subscribe now",
     "gamesPlayed": "Games played",
     "viewMore": "View more",
-    "startGameButton": "Start game"
+    "startGameButton": "Start game",
+    "mainPage": "Home page",
+    "profile": "Profile",
+    "editAvatar": "Edit avatar",
+    "editCharType": "Choose your character",
+    "editCharOutfit": "Next choose your outfit",
+    "editCharShoes": "Next choose your shoes",
+    "outfit": "Outfit",
+    "shoes": "Shoes",
+    "statistics": "Statistics",
+    "backButton": "Back",
+    "nextButton": "Next",
+    "readyButton": "Ready",
+    "hello": "Hello",
+    "lookingGood": "Looking good! Ready to play?"
 }
