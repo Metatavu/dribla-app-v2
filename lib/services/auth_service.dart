@@ -108,7 +108,27 @@ class AuthService {
     }
   }
 
-  Future<void> logout(final String idToken) async {
-    throw UnimplementedError();
+  Future<void> logout(final AuthenticationState auth) async {
+    try {
+      final logoutEndpoint = Uri.parse(
+          "${Env.kcUrl}/realms/${Env.kcRealm}/protocol/openid-connect/logout");
+
+      final response = await http.post(
+        logoutEndpoint,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer ${auth.accessTokenRaw}",
+        },
+        body: {
+          "client_id": Env.kcClientId,
+          "refresh_token": auth.refreshToken,
+        },
+      );
+      if (response.statusCode != 204) {
+        throw AuthServiceException("Failed to logout: ${response.body}");
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }

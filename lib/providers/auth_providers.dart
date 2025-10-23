@@ -134,7 +134,7 @@ class AuthNotifier extends _$AuthNotifier {
     try {
       final auth = state.requireValue;
       if (auth == null) return;
-      await AuthService.instance.logout(auth.idToken);
+      await AuthService.instance.logout(auth);
       await _secureStore.delete(SecureStoreService.keyAuthRefreshToken);
       state = const AsyncData(null);
       driblaApi.setBearerAuth("BearerAuth", "");
