@@ -9,13 +9,16 @@ import "package:flutter/material.dart";
 // need to reimport device policy controller when not debugging
 import "package:package_info_plus/package_info_plus.dart";
 import "package:sizer/sizer.dart";
+import "package:dribla_app_v2/theme/theme.dart";
 
 import "../device_connection.dart";
 
 class ConnectionStatusAppBar extends StatefulWidget
     implements PreferredSizeWidget {
+  final VoidCallback? onMenuPressed;
   const ConnectionStatusAppBar({
     super.key,
+    this.onMenuPressed,
   }) : preferredSize = const Size.fromHeight(kToolbarHeight);
 
   @override
@@ -274,12 +277,16 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
       backgroundColor: Colors.transparent,
       elevation: 0.0,
       foregroundColor: Colors.white,
-      leading: StreamBuilder<ConnectionStatus>(
-        stream: _connectionStatusStream,
-        builder: (context, state) => _getConnectionStatusIcon(
-          state.data ?? DeviceConnection.connectionStatus,
+      leading: Row(children: [
+        SizedBox(width: 2.w),
+        IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: widget.onMenuPressed ??
+              () {
+                Scaffold.of(context).openDrawer();
+              },
         ),
-      ),
+      ]),
       title: Container(
         alignment: Alignment.center,
         decoration: const BoxDecoration(
@@ -302,6 +309,13 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
             )),
       ),
       actions: [
+        StreamBuilder<ConnectionStatus>(
+          stream: _connectionStatusStream,
+          builder: (context, state) => _getConnectionStatusIcon(
+            state.data ?? DeviceConnection.connectionStatus,
+          ),
+        ),
+        SizedBox(width: 2.w),
         IconButton(
           onPressed: () {
             _openConnectionStatusDialog(context, theme);

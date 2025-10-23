@@ -210,7 +210,7 @@ class _PlayGameScreen extends State<PlayGameScreen>
         ),
         Container(
           margin: const EdgeInsets.only(bottom: 45.0),
-          child: StyledElevatedButton(
+          child: ElevatedButton(
             onPressed: _navigateBack,
             style: theme.elevatedButtonTheme.style!.copyWith(
               fixedSize: WidgetStatePropertyAll(Size(80.w, 7.h)),

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import "package:sizer/sizer.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 
+// TODO check if this screen is still needed or can be deleted
+
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
 
