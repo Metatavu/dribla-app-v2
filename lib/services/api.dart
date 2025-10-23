@@ -1,13 +1,11 @@
-// might be needed later
+import "package:dio/dio.dart";
+import "package:dribla_api/dribla_api.dart";
+import "package:dribla_app_v2/app/env.gen.dart";
 
-// import "package:dio/dio.dart";
-// import "package:luontolaatu_api/luontolaatu_api.dart";
-// import "package:tapio_luontolaatu_app/app/env.gen.dart";
+late final DriblaApi driblaApi;
 
-// late final LuontolaatuApi luontolaatuApi;
-
-// void initLuontolaatuApi() {
-//   luontolaatuApi = LuontolaatuApi(basePathOverride: Env.apiBaseUrl);
-//   luontolaatuApi.dio.options.connectTimeout = const Duration(seconds: 60);
-//   luontolaatuApi.dio.options.receiveTimeout = const Duration(seconds: 3600);
-// }
+void initDriblaApi() {
+  driblaApi = DriblaApi(basePathOverride: Env.apiBaseUrl);
+  driblaApi.dio.options.connectTimeout = const Duration(seconds: 60);
+  driblaApi.dio.options.receiveTimeout = const Duration(seconds: 3600);
+}

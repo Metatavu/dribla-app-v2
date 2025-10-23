@@ -187,7 +187,8 @@ class ProfileScreen extends HookConsumerWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        //print('Todo invite to team');
+                        print('Logging out');
+                        ref.read(authNotifierProvider.notifier).logout();
                       },
                       child: Text(
                         loc.logoutButton,

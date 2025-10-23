@@ -2,7 +2,7 @@ import "dart:async";
 
 import "package:riverpod_annotation/riverpod_annotation.dart";
 import "package:dribla_app_v2/models/authentication.dart";
-// import "package:dribla_app_v2/services/api.dart"; remove luontolaatu api calls
+import "package:dribla_app_v2/services/api.dart";
 import "package:dribla_app_v2/services/secure_store_service.dart";
 import "package:dribla_app_v2/services/auth_service.dart";
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -48,7 +48,7 @@ class AuthNotifier extends _$AuthNotifier {
 
       await _storeRefreshToken(refreshedAuth.refreshToken);
       state = AsyncData(refreshedAuth);
-      //luontolaatuApi.setBearerAuth("BearerAuth", refreshedAuth.accessTokenRaw);
+      driblaApi.setBearerAuth("BearerAuth", refreshedAuth.accessTokenRaw);
     } catch (error) {
       // todo(aharkonen22) handling
     }
@@ -73,7 +73,7 @@ class AuthNotifier extends _$AuthNotifier {
 
       if (storedRefreshToken == null || state.requireValue!.isExpired) {
         state = const AsyncData(null);
-        //luontolaatuApi.setBearerAuth("BearerAuth", "");
+        driblaApi.setBearerAuth("BearerAuth", "");
         _stopRefreshTimer();
         return;
       }
@@ -84,9 +84,21 @@ class AuthNotifier extends _$AuthNotifier {
 
       await _storeRefreshToken(refreshedAuth.refreshToken);
       state = AsyncData(refreshedAuth);
-      //luontolaatuApi.setBearerAuth("BearerAuth", refreshedAuth.accessTokenRaw);
+      driblaApi.setBearerAuth("BearerAuth", refreshedAuth.accessTokenRaw);
     } catch (error) {
       // Just log the error but don't clear the auth state
+    }
+  }
+
+  Future<void> tryTestPing() async {
+    try {
+      final response = await driblaApi.getSystemApi().ping();
+      if (response.data != null) {
+        print(response.data);
+      }
+    } catch (error) {
+      print('Ping failed, but we tried');
+      // Just log the error
     }
   }
 
@@ -95,7 +107,7 @@ class AuthNotifier extends _$AuthNotifier {
       state = const AsyncLoading();
       final authState = await AuthService.instance.login();
       state = AsyncData(authState);
-      //luontolaatuApi.setBearerAuth("BearerAuth", authState.accessTokenRaw);
+      driblaApi.setBearerAuth("BearerAuth", authState.accessTokenRaw);
       await _storeRefreshToken(authState.refreshToken);
       _startRefreshTimer();
     } catch (error) {
@@ -125,7 +137,7 @@ class AuthNotifier extends _$AuthNotifier {
       await AuthService.instance.logout(auth.idToken);
       await _secureStore.delete(SecureStoreService.keyAuthRefreshToken);
       state = const AsyncData(null);
-      //luontolaatuApi.setBearerAuth("BearerAuth", "");
+      driblaApi.setBearerAuth("BearerAuth", "");
       _stopRefreshTimer();
     } catch (error) {
       // todo(aharkonen22) handling
