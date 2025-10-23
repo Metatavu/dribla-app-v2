@@ -104,5 +104,6 @@
     "nextButton": "Next",
     "readyButton": "Ready",
     "hello": "Hello",
-    "lookingGood": "Looking good! Ready to play?"
+    "lookingGood": "Looking good! Ready to play?",
+    "subscription": "Subscription"
 }

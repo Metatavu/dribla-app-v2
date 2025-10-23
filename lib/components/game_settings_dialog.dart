@@ -92,9 +92,10 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
         const SizedBox(
           height: 25,
         ),
-        StyledElevatedButton(
+        ElevatedButton(
           style: theme.elevatedButtonTheme.style?.copyWith(
             fixedSize: WidgetStatePropertyAll(Size(80.w, 5.h)),
+            foregroundColor: WidgetStateProperty.all(Colors.white),
           ),
           onPressed: () => Navigator.pop(context, settings),
           child: Text(localizations.save),

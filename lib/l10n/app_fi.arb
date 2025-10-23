@@ -128,5 +128,6 @@
     "nextButton": "Seuraava",
     "readyButton": "Valmis",
     "hello": "Moro",
-    "lookingGood": "Hyvältä näyttää! Valmis pelaamaan?"
+    "lookingGood": "Hyvältä näyttää! Valmis pelaamaan?",
+    "subscription": "Tilaus"
 }

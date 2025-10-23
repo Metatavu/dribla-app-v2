@@ -1,0 +1,3 @@
+[submodule "dribla-api-spec"]
+	path = dribla-api-spec
+	url = git@github.com:Metatavu/dribla-api-spec.git

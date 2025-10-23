@@ -257,7 +257,10 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
                   }),
                   child: Text(localizations.forget),
                 ),
-              StyledElevatedButton(
+              ElevatedButton(
+                style: theme.elevatedButtonTheme.style?.copyWith(
+                  foregroundColor: WidgetStateProperty.all(Colors.white),
+                ),
                 child: Text(localizations.ok),
                 onPressed: () => Navigator.pop(context),
               )

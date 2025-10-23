@@ -105,5 +105,6 @@
     "nextButton": "Seuraava todo",
     "readyButton": "Valmis todo",
     "hello": "Hello todo",
-    "lookingGood": "Hyvältä näyttää! Oletko valmis pelaamaan? todo"
+    "lookingGood": "Hyvältä näyttää! Oletko valmis pelaamaan? todo",
+    "subscription": "Subscription todo"
 }
