@@ -57,19 +57,19 @@ class ProfileScreen extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Profile', style: theme.textTheme.headlineMedium),
+                  Text(loc.profile, style: theme.textTheme.headlineMedium),
                   Text('Username', style: theme.textTheme.bodyMedium),
                   Image.asset('assets/profile_pic_temp.png',
                       width: 30.w, height: 30.w),
                   SizedBox(height: 2.h),
-                  Text('Level 100', style: theme.textTheme.bodyMedium),
-                  Text('Challenge coins', style: theme.textTheme.bodySmall),
+                  Text('${loc.level} 100', style: theme.textTheme.bodyMedium),
+                  Text(loc.challengeCoins, style: theme.textTheme.bodySmall),
                   SizedBox(height: 2.h),
                   Row(
                     children: [
                       Expanded(
                         child: Text(
-                          'Games played',
+                          loc.gamesPlayed,
                           style: theme.textTheme.bodySmall,
                         ),
                         flex: 1,
@@ -88,7 +88,7 @@ class ProfileScreen extends HookConsumerWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          'Challenges completed',
+                          loc.challengesCompleted,
                           style: theme.textTheme.bodySmall,
                         ),
                         flex: 1,
@@ -107,7 +107,7 @@ class ProfileScreen extends HookConsumerWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          'Most played game',
+                          loc.mostPlayedGame,
                           style: theme.textTheme.bodySmall,
                         ),
                         flex: 1,
@@ -126,7 +126,7 @@ class ProfileScreen extends HookConsumerWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          'Recent game',
+                          loc.recentGame,
                           style: theme.textTheme.bodySmall,
                         ),
                         flex: 1,
@@ -145,7 +145,7 @@ class ProfileScreen extends HookConsumerWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          'Total time spent',
+                          loc.totalTimeSpent,
                           style: theme.textTheme.bodySmall,
                         ),
                         flex: 1,
@@ -167,10 +167,30 @@ class ProfileScreen extends HookConsumerWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const CharacterCreationScreen()),
+                        );
+                      },
+                      child: Text(
+                        loc.editAvatar,
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
                         //print('Todo invite to team');
                       },
                       child: Text(
-                        'Invite to team',
+                        loc.logoutButton,
                         style: theme.textTheme.bodyMedium,
                       ),
                     ),

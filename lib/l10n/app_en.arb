@@ -105,5 +105,19 @@
     "readyButton": "Ready",
     "hello": "Hello",
     "lookingGood": "Looking good! Ready to play?",
-    "subscription": "Subscription"
+    "subscription": "Subscription",
+    "level": "Level",
+    "challengeCoins": "Challenge coins",
+    "challengesCompleted": "Challenges completed",
+    "mostPlayedGame": "Most played game",
+    "recentGame": "Recent game",
+    "lastTimeActive": "Last time active",
+    "totalTimeSpent": "Total time spent",
+    "thanksForPurchase": "Thank you for your purchase!",
+    "herePlayerCodes": "Here are your player codes:",
+    "findCodesLater": "You can find these later from the player management.",
+    "continueButton": "Continue",
+    "weeklyActivity": "Weekly activity",
+    "logoutButton": "Logout",
+    "cancelButton": "Cancel"
 }

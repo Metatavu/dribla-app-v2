@@ -129,5 +129,19 @@
     "readyButton": "Valmis",
     "hello": "Moro",
     "lookingGood": "Hyvältä näyttää! Valmis pelaamaan?",
-    "subscription": "Tilaus"
+    "subscription": "Tilaus",
+    "level": "Taso",
+    "challengeCoins": "Haastekolikot",
+    "challengesCompleted": "Haasteita suoritettu",
+    "mostPlayedGame": "Eniten pelattu peli",
+    "recentGame": "Viimeisin peli",
+    "lastTimeActive": "Viimeksi aktiivisena",
+    "totalTimeSpent": "Aikaa käytetty yhteensä",
+    "thanksForPurchase": "Kiitos ostoksestasi!",
+    "herePlayerCodes": "Tässä pelaajakoodisi:",
+    "findCodesLater": "Voit löytää nämä koodit myöhemmin pelaajahallinnasta.",
+    "continueButton": "Jatka",
+    "weeklyActivity": "Viikon toiminta",
+    "logoutButton": "Kirjaudu ulos",
+    "cancelButton": "Peruuta"
 }

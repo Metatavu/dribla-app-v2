@@ -119,7 +119,7 @@ class CharacterCreationScreen extends HookConsumerWidget {
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              loc.backButton,
+                              loc.cancelButton,
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 16),
                             ),

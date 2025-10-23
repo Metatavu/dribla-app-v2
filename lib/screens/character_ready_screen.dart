@@ -144,7 +144,7 @@ class CharacterReadyScreen extends HookConsumerWidget {
                           children: [
                             const SizedBox(width: 5),
                             Text(
-                              loc.readyButton,
+                              loc.save,
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 16),
                             ),

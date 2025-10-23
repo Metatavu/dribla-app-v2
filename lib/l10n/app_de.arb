@@ -106,5 +106,19 @@
     "readyButton": "Valmis todo",
     "hello": "Hello todo",
     "lookingGood": "Hyvältä näyttää! Oletko valmis pelaamaan? todo",
-    "subscription": "Subscription todo"
+    "subscription": "Subscription todo",
+    "level": "Level todo",
+    "challengeCoins": "Challenge coins todo",
+    "challengesCompleted": "Challenges completed",
+    "mostPlayedGame": "Most played game todo",
+    "recentGame": "Recent game todo",
+    "lastTimeActive": "Last time active todo",
+    "totalTimeSpent": "Total time spent todo",
+    "thanksForPurchase": "Kiitos ostoksestasi! todo",
+    "herePlayerCodes": "Tässä pelaajakoodisi: todo",
+    "findCodesLater": "Voit löytää nämä koodit myöhemmin pelaajahallinnasta. todo",
+    "continueButton": "Continue todo",
+    "weeklyActivity": "Weekly activity todo",
+    "logoutButton": "Logout button todo",
+    "cancelButton": "Cancel todo"
 }
