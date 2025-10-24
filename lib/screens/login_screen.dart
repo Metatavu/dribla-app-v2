@@ -1,3 +1,4 @@
+import "package:dribla_app_v2/services/api.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -19,7 +20,9 @@ class LoginScreen extends HookConsumerWidget {
     // navigate back to app on successful login
     useEffect(() {
       if (authAsync.hasValue && authAsync.value != null) {
-        //print('User logged in: ${authAsync.value.toString()}');
+        print('User logged in: ${authAsync.value.toString()}');
+        // userProfileId = accesstoken.sub
+        //driblaApi.getUserProfilesApi().findUserProfile(userProfileId: authAsync.value!.userProfileId);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.of(context).pushReplacementNamed('/main');
         });

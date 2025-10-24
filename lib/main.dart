@@ -11,6 +11,7 @@ import "package:dribla_app_v2/screens/permissions_screen.dart";
 import "package:dribla_app_v2/screens/profile_screen.dart";
 import "package:dribla_app_v2/screens/sign_in_screen.dart";
 import "package:dribla_app_v2/screens/statistics_screen.dart";
+import "package:dribla_app_v2/services/api.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -27,6 +28,8 @@ import "device_connection.dart";
 late Map<Permission, PermissionStatus> permissionStatuses;
 
 void main() async {
+  // find user profile from api on startup or upsert a new one
+  initDriblaApi();
   WidgetsFlutterBinding.ensureInitialized();
   permissionStatuses = await askAndCheckPermissionStatuses();
   runApp(
@@ -47,6 +50,9 @@ class DriblaApp extends HookConsumerWidget {
       //   final auth = ref.read(authNotifierProvider);
       //   if (auth.value == null) {
       //     await ref.read(authNotifierProvider.notifier).login();
+      //   }
+      //   if (auth.hasValue && auth.value != null) {
+      //     print('User logged in: ${auth.value.toString()}');
       //   }
       // });
 

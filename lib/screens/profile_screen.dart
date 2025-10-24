@@ -29,12 +29,17 @@ class ProfileScreen extends HookConsumerWidget {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
+    final auth = ref.watch(authNotifierProvider);
 
     useEffect(() {
+      print('profile screen');
       if (isAuthExpired) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushReplacementNamed(context, '/login');
         });
+      }
+      if (auth.hasValue && auth.value != null) {
+        print('User in profile screen: ${auth.value.toString()}');
       }
       return null;
     }, [isAuthExpired]);
