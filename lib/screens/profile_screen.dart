@@ -9,6 +9,7 @@ import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/outfit_selection_screen.dart";
+import "package:dribla_app_v2/services/api.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/game_utils.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
@@ -40,6 +41,12 @@ class ProfileScreen extends HookConsumerWidget {
       }
       if (auth.hasValue && auth.value != null) {
         print('User in profile screen: ${auth.value.toString()}');
+        final userProfileId = auth.value?.accessToken.sub;
+        print(userProfileId);
+        final profile = ref
+            .read(authNotifierProvider.notifier)
+            .getOrUpsertUserProfile(userProfileId!);
+        print(profile);
       }
       return null;
     }, [isAuthExpired]);

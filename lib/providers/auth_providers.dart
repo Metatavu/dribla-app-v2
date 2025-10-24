@@ -1,5 +1,7 @@
 import "dart:async";
 
+import "package:dio/dio.dart";
+import "package:dribla_api/dribla_api.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
 import "package:dribla_app_v2/models/authentication.dart";
 import "package:dribla_app_v2/services/api.dart";
@@ -48,7 +50,7 @@ class AuthNotifier extends _$AuthNotifier {
 
       await _storeRefreshToken(refreshedAuth.refreshToken);
       state = AsyncData(refreshedAuth);
-      driblaApi.setBearerAuth("BearerAuth", refreshedAuth.accessTokenRaw);
+      driblaApi.setBearerAuth("bearerAuth", refreshedAuth.accessTokenRaw);
     } catch (error) {
       // todo(aharkonen22) handling
     }
@@ -73,7 +75,7 @@ class AuthNotifier extends _$AuthNotifier {
 
       if (storedRefreshToken == null || state.requireValue!.isExpired) {
         state = const AsyncData(null);
-        driblaApi.setBearerAuth("BearerAuth", "");
+        driblaApi.setBearerAuth("bearerAuth", "");
         _stopRefreshTimer();
         return;
       }
@@ -84,7 +86,7 @@ class AuthNotifier extends _$AuthNotifier {
 
       await _storeRefreshToken(refreshedAuth.refreshToken);
       state = AsyncData(refreshedAuth);
-      driblaApi.setBearerAuth("BearerAuth", refreshedAuth.accessTokenRaw);
+      driblaApi.setBearerAuth("bearerAuth", refreshedAuth.accessTokenRaw);
     } catch (error) {
       // Just log the error but don't clear the auth state
     }
@@ -102,12 +104,43 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  Future<UserProfile?> getOrUpsertUserProfile(String userProfileId) async {
+    try {
+      final response = await driblaApi
+          .getUserProfilesApi()
+          .findUserProfile(userProfileId: userProfileId);
+      if (response.data != null) {
+        print('Fetched user profile:');
+        print(response.data);
+        return response.data;
+      }
+    } catch (error) {
+      // TODO configure client to not throw on 404 if possible; this should be handled differently
+      print('Failed to get user profile');
+      if (error is DioException) {
+        if (error.response?.statusCode == 404) {
+          // Create new user profile
+          final newProfile = UserProfile();
+          final createResponse = await driblaApi
+              .getUserProfilesApi()
+              .upsertUserProfile(
+                  userProfileId: userProfileId, userProfile: newProfile);
+          if (createResponse.data != null) {
+            print('Created new user profile: ${createResponse.data}');
+            return createResponse.data;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   Future<void> login() async {
     try {
       state = const AsyncLoading();
       final authState = await AuthService.instance.login();
       state = AsyncData(authState);
-      driblaApi.setBearerAuth("BearerAuth", authState.accessTokenRaw);
+      driblaApi.setBearerAuth("bearerAuth", authState.accessTokenRaw);
       await _storeRefreshToken(authState.refreshToken);
       _startRefreshTimer();
     } catch (error) {
@@ -137,7 +170,7 @@ class AuthNotifier extends _$AuthNotifier {
       await AuthService.instance.logout(auth);
       await _secureStore.delete(SecureStoreService.keyAuthRefreshToken);
       state = const AsyncData(null);
-      driblaApi.setBearerAuth("BearerAuth", "");
+      driblaApi.setBearerAuth("bearerAuth", "");
       _stopRefreshTimer();
     } catch (error) {
       // todo(aharkonen22) handling
