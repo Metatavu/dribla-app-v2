@@ -10,6 +10,7 @@ import "package:dribla_app_v2/screens/payments_screen.dart";
 import "package:dribla_app_v2/screens/permissions_screen.dart";
 import "package:dribla_app_v2/screens/profile_screen.dart";
 import "package:dribla_app_v2/screens/sign_in_screen.dart";
+import "package:dribla_app_v2/screens/statistics_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -85,6 +86,7 @@ class DriblaApp extends HookConsumerWidget {
             '/profile': (context) => const ProfileScreen(),
             '/payments': (context) => PaymentsScreen(),
             '/login': (context) => const LoginScreen(),
+            '/statistics': (context) => const StatisticsScreen(),
           },
         );
       },

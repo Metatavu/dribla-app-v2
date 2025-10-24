@@ -25,12 +25,13 @@ class _AppFooter extends State<AppFooter> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    return SafeArea(
-      child: Container(
-        decoration: BoxDecoration(
-          border: const Border(top: BorderSide(color: Colors.white24)),
-        ),
-        child: Row(
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black,
+        border: const Border(top: BorderSide(color: Colors.white24)),
+      ),
+      child: Column(children: [
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           // TODO replace routes with actual ones
           // TODO orange highlight for selected or active button
@@ -52,15 +53,16 @@ class _AppFooter extends State<AppFooter> {
             ),
             SizedBox(width: 4.w),
             _FooterButton(
-              icon: Icons.person,
-              label: loc.teams,
+              icon: Icons.bar_chart,
+              label: loc.statistics,
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed('/profile');
+                Navigator.of(context).pushReplacementNamed('/statistics');
               },
             ),
           ],
         ),
-      ),
+        SizedBox(height: 5.h),
+      ]),
     );
   }
 }

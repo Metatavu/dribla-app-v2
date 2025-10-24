@@ -63,6 +63,7 @@ dependencies:
   dio: ^5.7.0
   dribla_api:
     path: packages/dribla_api
+  fl_chart: 1.0.0
 
 dev_dependencies:
   flutter_test:
