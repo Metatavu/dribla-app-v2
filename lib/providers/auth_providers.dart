@@ -135,6 +135,41 @@ class AuthNotifier extends _$AuthNotifier {
     return null;
   }
 
+  Future<UserProfile?> updateUserProfile(
+      String userProfileId, UserProfile userProfile) async {
+    try {
+      final response = await driblaApi.getUserProfilesApi().upsertUserProfile(
+          userProfileId: userProfileId, userProfile: userProfile);
+      if (response.data != null) {
+        print('Updated user profile: ${response.data}');
+        return response.data;
+      }
+    } catch (error) {
+      print('Failed to update user profile');
+    }
+    return null;
+  }
+
+  Future<UserProfile?> updateUserProfileCharacters(String userProfileId,
+      {required int characterType,
+      required int characterOutfitType,
+      required int characterShoesType}) async {
+    try {
+      final existingProfile = await getOrUpsertUserProfile(userProfileId);
+      if (existingProfile == null) return null;
+
+      final updatedProfile = existingProfile.rebuild((b) => b
+        ..characterType = characterType
+        ..characterOutfitType = characterOutfitType
+        ..characterShoesType = characterShoesType);
+
+      return await updateUserProfile(userProfileId, updatedProfile);
+    } catch (error) {
+      print('Failed to update user profile characters');
+    }
+    return null;
+  }
+
   Future<void> login() async {
     try {
       state = const AsyncLoading();

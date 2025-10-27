@@ -42,6 +42,10 @@ class CharacterReadyScreen extends HookConsumerWidget {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
+    final auth = ref.watch(authNotifierProvider);
+    String? userProfileId = auth.value?.accessToken.sub;
+    print('user prof. id');
+    print(userProfileId);
 
     useEffect(() {
       if (isAuthExpired) {
@@ -134,6 +138,15 @@ class CharacterReadyScreen extends HookConsumerWidget {
                       child: ElevatedButton(
                         style: theme.elevatedButtonTheme.style,
                         onPressed: () {
+                          // Update user profile with saved character
+                          ref
+                              .read(authNotifierProvider.notifier)
+                              .updateUserProfileCharacters(
+                                userProfileId!,
+                                characterType: chosenCharacter,
+                                characterOutfitType: chosenOutfit,
+                                characterShoesType: chosenShoes,
+                              );
                           Navigator.push(
                             context,
                             MaterialPageRoute(

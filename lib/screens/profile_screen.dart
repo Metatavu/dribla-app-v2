@@ -22,8 +22,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:dribla_app_v2/providers/auth_providers.dart';
 
+import "package:dribla_api/src/model/user_profile.dart";
+
 class ProfileScreen extends HookConsumerWidget {
   const ProfileScreen({super.key});
+
+  static String getFinalAsset(int character, int outfit, int shoes) {
+    return "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_0${shoes + 1}.png";
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,23 +37,37 @@ class ProfileScreen extends HookConsumerWidget {
     final loc = AppLocalizations.of(context)!;
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
+    String? userProfileId = auth.value?.accessToken.sub;
+    String? username = auth.value?.accessToken.preferred_username;
+    final characterType = useState<int>(0);
+    final outfitType = useState<int>(0);
+    final shoesType = useState<int>(0);
+    print('user prof. id - profile screen');
+    print(userProfileId);
 
     useEffect(() {
-      print('profile screen');
-      if (isAuthExpired) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacementNamed(context, '/login');
-        });
+      Future<void> fetchProfile() async {
+        if (isAuthExpired) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushReplacementNamed(context, '/login');
+          });
+        }
+        if (auth.hasValue && auth.value != null) {
+          print('User in profile screen: ${auth.value.toString()}');
+          final userProfileId = auth.value?.accessToken.sub;
+          final profile = await ref
+              .read(authNotifierProvider.notifier)
+              .getOrUpsertUserProfile(userProfileId!);
+          if (profile != null) {
+            print('profile fetched, updating character info');
+            characterType.value = profile.characterType!;
+            outfitType.value = profile.characterOutfitType!;
+            shoesType.value = profile.characterShoesType!;
+          }
+        }
       }
-      if (auth.hasValue && auth.value != null) {
-        print('User in profile screen: ${auth.value.toString()}');
-        final userProfileId = auth.value?.accessToken.sub;
-        print(userProfileId);
-        final profile = ref
-            .read(authNotifierProvider.notifier)
-            .getOrUpsertUserProfile(userProfileId!);
-        print(profile);
-      }
+
+      fetchProfile();
       return null;
     }, [isAuthExpired]);
 
@@ -66,13 +86,17 @@ class ProfileScreen extends HookConsumerWidget {
             ),
             child: Padding(
               padding: EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(loc.profile, style: theme.textTheme.headlineMedium),
-                  Text('Username', style: theme.textTheme.bodyMedium),
-                  Image.asset('assets/profile_pic_temp.png',
-                      width: 30.w, height: 30.w),
+                  Text(username!, style: theme.textTheme.bodyMedium),
+                  Image.asset(
+                      getFinalAsset(characterType.value, outfitType.value,
+                          shoesType.value),
+                      width: 40.w,
+                      height: 40.w),
                   SizedBox(height: 2.h),
                   Text('${loc.level} 100', style: theme.textTheme.bodyMedium),
                   Text(loc.challengeCoins, style: theme.textTheme.bodySmall),
@@ -208,8 +232,9 @@ class ProfileScreen extends HookConsumerWidget {
                       ),
                     ),
                   ),
+                  SizedBox(height: 50.h),
                 ],
-              ),
+              )),
             ),
           ),
           const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),

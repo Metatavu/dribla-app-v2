@@ -25,19 +25,47 @@ import 'package:dribla_app_v2/providers/auth_providers.dart';
 class MainPageScreen extends HookConsumerWidget {
   const MainPageScreen({super.key});
 
+  static String getFinalAsset(int character, int outfit, int shoes) {
+    return "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_0${shoes + 1}.png";
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
+    final auth = ref.watch(authNotifierProvider);
+    String? userProfileId = auth.value?.accessToken.sub;
+    String? username = auth.value?.accessToken.preferred_username;
+    final characterType = useState<int>(0);
+    final outfitType = useState<int>(0);
+    final shoesType = useState<int>(0);
+    print('user prof. id - main screen');
+    print(userProfileId);
 
     useEffect(() {
-      if (isAuthExpired) {
-        // Redirect to login if auth is expired
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacementNamed(context, '/login');
-        });
+      Future<void> fetchProfile() async {
+        if (isAuthExpired) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushReplacementNamed(context, '/login');
+          });
+        }
+        if (auth.hasValue && auth.value != null) {
+          print('User in main screen: ${auth.value.toString()}');
+          final userProfileId = auth.value?.accessToken.sub;
+          final profile = await ref
+              .read(authNotifierProvider.notifier)
+              .getOrUpsertUserProfile(userProfileId!);
+          if (profile != null) {
+            print('profile fetched, updating character info');
+            characterType.value = profile.characterType!;
+            outfitType.value = profile.characterOutfitType!;
+            shoesType.value = profile.characterShoesType!;
+          }
+        }
       }
+
+      fetchProfile();
       return null;
     }, [isAuthExpired]);
 
@@ -62,18 +90,17 @@ class MainPageScreen extends HookConsumerWidget {
                   Row(
                     children: [
                       SizedBox(width: 5.w),
-                      Text('Username', style: theme.textTheme.headlineMedium),
+                      Text(username!, style: theme.textTheme.headlineMedium),
                     ],
                   ),
-                  Row(children: [
-                    SizedBox(width: 5.w),
-                    Text('Some ID here', style: theme.textTheme.bodyMedium),
-                  ]),
                   Container(
                     padding: EdgeInsets.only(top: 2.h, bottom: 2.h),
                     child: Center(
-                      child: Image.asset('assets/char_pic_temp.png',
-                          width: 60.w, height: 60.w),
+                      child: Image.asset(
+                          getFinalAsset(characterType.value, outfitType.value,
+                              shoesType.value),
+                          width: 60.w,
+                          height: 60.w),
                     ),
                   ),
                   Row(
