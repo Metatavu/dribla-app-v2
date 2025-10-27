@@ -44,8 +44,6 @@ class CharacterReadyScreen extends HookConsumerWidget {
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
     String? userProfileId = auth.value?.accessToken.sub;
-    print('user prof. id');
-    print(userProfileId);
 
     useEffect(() {
       if (isAuthExpired) {

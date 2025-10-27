@@ -35,13 +35,10 @@ class MainPageScreen extends HookConsumerWidget {
     final loc = AppLocalizations.of(context)!;
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
-    String? userProfileId = auth.value?.accessToken.sub;
     String? username = auth.value?.accessToken.preferred_username;
     final characterType = useState<int>(0);
     final outfitType = useState<int>(0);
     final shoesType = useState<int>(0);
-    print('user prof. id - main screen');
-    print(userProfileId);
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -51,16 +48,15 @@ class MainPageScreen extends HookConsumerWidget {
           });
         }
         if (auth.hasValue && auth.value != null) {
-          print('User in main screen: ${auth.value.toString()}');
+          // print('User in main screen: ${auth.value.toString()}');
           final userProfileId = auth.value?.accessToken.sub;
           final profile = await ref
               .read(authNotifierProvider.notifier)
               .getOrUpsertUserProfile(userProfileId!);
           if (profile != null) {
-            print('profile fetched, updating character info');
-            characterType.value = profile.characterType!;
-            outfitType.value = profile.characterOutfitType!;
-            shoesType.value = profile.characterShoesType!;
+            characterType.value = (profile.characterType ?? 0);
+            outfitType.value = (profile.characterOutfitType ?? 0);
+            shoesType.value = (profile.characterShoesType ?? 0);
           }
         }
       }
