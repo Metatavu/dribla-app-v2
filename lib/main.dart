@@ -45,16 +45,14 @@ class DriblaApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(() {
-      // If we want to show login immediately on app start
-      // Future.microtask(() async {
-      //   final auth = ref.read(authNotifierProvider);
-      //   if (auth.value == null) {
-      //     await ref.read(authNotifierProvider.notifier).login();
-      //   }
-      //   if (auth.hasValue && auth.value != null) {
-      //     print('User logged in: ${auth.value.toString()}');
-      //   }
-      // });
+      Future.microtask(() async {
+        final auth = ref.read(authNotifierProvider);
+        if (auth.value == null || auth.value!.isExpired) {
+          await ref
+              .read(authNotifierProvider.notifier)
+              .tryLoginWithStoredToken();
+        }
+      });
 
       AudioPlayers.init();
       DeviceConnection.init();

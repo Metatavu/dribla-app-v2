@@ -20,7 +20,7 @@ class AuthService {
   Uri get redirectUri => Uri.parse("${Env.kcAppAuthScheme}:/");
 
   Uri get authorizationEndpoint => Uri.parse(
-      "${Env.kcUrl}/realms/${Env.kcRealm}/protocol/openid-connect/auth?client_id=$clientId&redirect_uri=${redirectUri.toString()}&response_type=code&scope=openid%20profile%20email");
+      "${Env.kcUrl}/realms/${Env.kcRealm}/protocol/openid-connect/auth?client_id=$clientId&redirect_uri=${redirectUri.toString()}&response_type=code&scope=openid%20profile%20email%20offline_access");
 
   Uri get tokenEndpoint => Uri.parse(
       "${Env.kcUrl}/realms/${Env.kcRealm}/protocol/openid-connect/token");

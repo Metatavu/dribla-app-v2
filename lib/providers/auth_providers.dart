@@ -56,6 +56,26 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  Future<void> tryLoginWithStoredToken() async {
+    print('Trying to login with stored token');
+    final storedRefreshToken = await _secureStore.read(
+      SecureStoreService.keyAuthRefreshToken,
+    );
+
+    if (storedRefreshToken == null) {
+      return;
+    }
+
+    print('Found stored refresh token, attempting to refresh auth');
+    final authState = await AuthService.instance.refreshAuth(
+      storedRefreshToken,
+    );
+    await _storeRefreshToken(authState.refreshToken);
+    state = AsyncData(authState);
+    driblaApi.setBearerAuth("bearerAuth", authState.accessTokenRaw);
+    _startRefreshTimer();
+  }
+
   Future<void> _checkAndUpdateToken() async {
     final authValue = state.valueOrNull;
 
