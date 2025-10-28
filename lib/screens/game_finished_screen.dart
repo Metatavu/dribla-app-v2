@@ -1,3 +1,4 @@
+import "package:sizer/sizer.dart";
 import "package:dribla_app_v2/assets.dart";
 import "package:dribla_app_v2/audio_players.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
@@ -8,51 +9,98 @@ import "package:dribla_app_v2/led_colors.dart";
 import "package:dribla_app_v2/screens/play_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:sizer/sizer.dart";
 
-class GameFinishedScreen extends StatefulWidget {
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:dribla_app_v2/providers/auth_providers.dart';
+
+class GameFinishedScreen extends HookConsumerWidget {
   final String? finalScore;
   final int gameIndex;
   final bool win;
   final bool skipEndingFanfare;
+  final int elapsedTime;
 
   const GameFinishedScreen({
     super.key,
     this.finalScore,
+    required this.elapsedTime,
     required this.gameIndex,
     required this.win,
     required this.skipEndingFanfare,
   });
 
   @override
-  State<GameFinishedScreen> createState() => _GameFinishedScreen();
-}
-
-class _GameFinishedScreen extends State<GameFinishedScreen> {
-  @override
-  void initState() {
-    super.initState();
-    if (!widget.skipEndingFanfare) {
-      if (widget.win) {
-        AudioPlayers.playVictory();
-      } else {
-        AudioPlayers.playFailure();
-      }
-    }
-    DeviceConnection.setAllLedColors(LedColors.red);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    String gameTitle = "";
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
-    gameTitle = loc.gameEnded;
+    final isAuthExpired = ref.watch(isAuthExpiredProvider);
+    final auth = ref.watch(authNotifierProvider);
+    String? userProfileId = auth.value?.accessToken.sub;
+    print(userProfileId);
+
+    useEffect(() {
+      if (!skipEndingFanfare) {
+        if (win) {
+          AudioPlayers.playVictory();
+        } else {
+          AudioPlayers.playFailure();
+        }
+      }
+      DeviceConnection.setAllLedColors(LedColors.red);
+      print('Final score is');
+      print(finalScore);
+      int? convertedScore = int.tryParse(finalScore ?? "0");
+      // duration in ms, rounded to seconds
+      int? duration = elapsedTime ~/ 1000;
+      String game = "Unknown game";
+      switch (gameIndex) {
+        case 1:
+          game = "Letter Game";
+          break;
+        case 2:
+          game = "ZigZag";
+          break;
+        case 3:
+          game = "MineSweeper";
+          break;
+        case 4:
+          game = "TenGame";
+          break;
+        case 5:
+          game = "TenGameTwoPlayers";
+          break;
+        case 6:
+          game = "TenTurnsGame";
+          break;
+        case 7:
+          game = "WormGame";
+          break;
+        case 8:
+          game = "StarGame";
+          break;
+        case 9:
+          game = "MemoryGame";
+          break;
+        default:
+          game = "Unknown Game";
+      }
+      ref
+          .read(authNotifierProvider.notifier)
+          .createNewGameSession(userProfileId!, convertedScore, duration, game);
+      return null;
+    }, []);
+
+    useEffect(() {
+      if (isAuthExpired) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacementNamed(context, '/login');
+        });
+      }
+      return null;
+    }, [isAuthExpired]);
+
+    String gameTitle = loc.gameEnded;
     return Column(
       children: [
         Align(
@@ -84,24 +132,26 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
                 ),
               ),
               Expanded(
-                  child: Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            widget.win ? loc.results : loc.betterLuckNextTime,
-                            style: theme.textTheme.headlineMedium,
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            widget.finalScore ?? "",
-                            style: theme.textTheme.headlineMedium,
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ))),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        win ? loc.results : loc.betterLuckNextTime,
+                        style: theme.textTheme.headlineMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        finalScore ?? "",
+                        style: theme.textTheme.headlineMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -110,10 +160,10 @@ class _GameFinishedScreen extends State<GameFinishedScreen> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => PlayGameScreen(
-                          selectedGame: GameUtils.selectGame(
-                        widget.gameIndex,
-                      ))),
+                builder: (context) => PlayGameScreen(
+                  selectedGame: GameUtils.selectGame(gameIndex),
+                ),
+              ),
             );
           },
           style: theme.elevatedButtonTheme.style?.copyWith(

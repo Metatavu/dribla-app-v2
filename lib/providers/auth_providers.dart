@@ -170,6 +170,27 @@ class AuthNotifier extends _$AuthNotifier {
     return null;
   }
 
+  Future<GameSession?> createNewGameSession(
+      String userProfileId, int? score, int? duration, String game) async {
+    try {
+      final gameSession = GameSession().toBuilder();
+      gameSession.userId = userProfileId;
+      gameSession.score = score ?? 0;
+      gameSession.duration = duration;
+      gameSession.game = game;
+      final response = await driblaApi
+          .getGameSessionsApi()
+          .creategameSession(gameSession: gameSession.build());
+      if (response.data != null) {
+        print('Created new game session: ${response.data}');
+        return response.data;
+      }
+    } catch (error) {
+      print('Failed to create game session');
+    }
+    return null;
+  }
+
   Future<UserProfile?> updateUserProfileCharacters(String userProfileId,
       {required int characterType,
       required int characterOutfitType,

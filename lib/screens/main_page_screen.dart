@@ -177,19 +177,19 @@ class MainPageScreen extends HookConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // try test ping from auth notifier
-                        ref.read(authNotifierProvider.notifier).tryTestPing();
-                      },
-                      child: Text(
-                        'Test pinging server',
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ),
-                  ),
+                  // SizedBox(
+                  //   width: double.infinity,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       // try test ping from auth notifier
+                  //       ref.read(authNotifierProvider.notifier).tryTestPing();
+                  //     },
+                  //     child: Text(
+                  //       'Test pinging server',
+                  //       style: theme.textTheme.bodyMedium,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
