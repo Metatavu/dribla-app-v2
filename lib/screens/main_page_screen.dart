@@ -35,7 +35,7 @@ class MainPageScreen extends HookConsumerWidget {
     final loc = AppLocalizations.of(context)!;
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
-    String? username = auth.value?.accessToken.preferred_username;
+    String? username = auth.value?.accessToken.preferred_username ?? "";
     final characterType = useState<int>(0);
     final outfitType = useState<int>(0);
     final shoesType = useState<int>(0);
@@ -86,7 +86,7 @@ class MainPageScreen extends HookConsumerWidget {
                   Row(
                     children: [
                       SizedBox(width: 5.w),
-                      Text(username!, style: theme.textTheme.headlineMedium),
+                      Text(username, style: theme.textTheme.headlineMedium),
                     ],
                   ),
                   Container(

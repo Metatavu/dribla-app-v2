@@ -37,7 +37,7 @@ class ProfileScreen extends HookConsumerWidget {
     final loc = AppLocalizations.of(context)!;
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
-    String? username = auth.value?.accessToken.preferred_username;
+    String? username = auth.value?.accessToken.preferred_username ?? "";
     final characterType = useState<int>(0);
     final outfitType = useState<int>(0);
     final shoesType = useState<int>(0);
@@ -86,7 +86,7 @@ class ProfileScreen extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(loc.profile, style: theme.textTheme.headlineMedium),
-                  Text(username!, style: theme.textTheme.bodyMedium),
+                  Text(username, style: theme.textTheme.bodyMedium),
                   Image.asset(
                       getFinalAsset(characterType.value, outfitType.value,
                           shoesType.value),
