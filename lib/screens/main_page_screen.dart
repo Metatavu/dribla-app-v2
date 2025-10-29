@@ -39,6 +39,7 @@ class MainPageScreen extends HookConsumerWidget {
     final characterType = useState<int>(0);
     final outfitType = useState<int>(0);
     final shoesType = useState<int>(0);
+    final gamesPlayed = useState<int>(0);
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -58,6 +59,12 @@ class MainPageScreen extends HookConsumerWidget {
             outfitType.value = (profile.characterOutfitType ?? 0);
             shoesType.value = (profile.characterShoesType ?? 0);
           }
+          final gameSessions = await ref
+              .read(authNotifierProvider.notifier)
+              .getGameSessionsForUser(userProfileId);
+          print('Got game sessions:');
+          print(gameSessions.length);
+          gamesPlayed.value = gameSessions.length;
         }
       }
 
@@ -99,26 +106,7 @@ class MainPageScreen extends HookConsumerWidget {
                           height: 60.w),
                     ),
                   ),
-                  Row(
-                    children: [
-                      SizedBox(width: 5.w),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          loc.rank,
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          '10',
-                          style: theme.textTheme.bodyMedium,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
+                  SizedBox(height: 3.h),
                   Row(
                     children: [
                       SizedBox(width: 5.w),
@@ -152,7 +140,7 @@ class MainPageScreen extends HookConsumerWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          '124',
+                          gamesPlayed.value.toString(),
                           style: theme.textTheme.bodyMedium,
                           textAlign: TextAlign.center,
                         ),

@@ -81,7 +81,7 @@
     "login": "Log in",
     "loginInfo": "Using the app requires a login. Please log in to continue.",
     "loginError": "Login failed, try again",
-    "players": "Players",
+    "players": "Player",
     "games": "Games",
     "teams": "Joukkueet",
     "buySubscription": "Buy a subscription",
@@ -119,5 +119,6 @@
     "continueButton": "Continue",
     "weeklyActivity": "Weekly activity",
     "logoutButton": "Logout",
-    "cancelButton": "Cancel"
+    "cancelButton": "Cancel",
+    "details": "Details"
 }

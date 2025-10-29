@@ -41,6 +41,8 @@ class ProfileScreen extends HookConsumerWidget {
     final characterType = useState<int>(0);
     final outfitType = useState<int>(0);
     final shoesType = useState<int>(0);
+    final gamesPlayed = useState<int>(0);
+    final latestGame = useState<String>("");
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -58,6 +60,18 @@ class ProfileScreen extends HookConsumerWidget {
             characterType.value = (profile.characterType ?? 0);
             outfitType.value = (profile.characterOutfitType ?? 0);
             shoesType.value = (profile.characterShoesType ?? 0);
+          }
+          final gameSessions = await ref
+              .read(authNotifierProvider.notifier)
+              .getGameSessionsForUser(userProfileId);
+          print('Got game sessions:');
+          print(gameSessions.length);
+          gamesPlayed.value = gameSessions.length;
+          final latestSession = await ref
+              .read(authNotifierProvider.notifier)
+              .getLatestGameSession(userProfileId);
+          if (latestSession != null) {
+            latestGame.value = latestSession.game ?? "";
           }
         }
       }
@@ -93,8 +107,7 @@ class ProfileScreen extends HookConsumerWidget {
                       width: 40.w,
                       height: 40.w),
                   SizedBox(height: 2.h),
-                  Text('${loc.level} 100', style: theme.textTheme.bodyMedium),
-                  Text(loc.challengeCoins, style: theme.textTheme.bodySmall),
+                  Text(loc.details, style: theme.textTheme.bodyMedium),
                   SizedBox(height: 2.h),
                   Row(
                     children: [
@@ -107,45 +120,7 @@ class ProfileScreen extends HookConsumerWidget {
                       ),
                       Expanded(
                         child: Text(
-                          '9001',
-                          style: theme.textTheme.bodySmall,
-                          textAlign: TextAlign.center,
-                        ),
-                        flex: 1,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          loc.challengesCompleted,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: Text(
-                          '795',
-                          style: theme.textTheme.bodySmall,
-                          textAlign: TextAlign.center,
-                        ),
-                        flex: 1,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          loc.mostPlayedGame,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: Text(
-                          'The Pit',
+                          gamesPlayed.value.toString(),
                           style: theme.textTheme.bodySmall,
                           textAlign: TextAlign.center,
                         ),
@@ -164,7 +139,7 @@ class ProfileScreen extends HookConsumerWidget {
                       ),
                       Expanded(
                         child: Text(
-                          'The Pit',
+                          latestGame.value,
                           style: theme.textTheme.bodySmall,
                           textAlign: TextAlign.center,
                         ),

@@ -56,31 +56,31 @@ class GameFinishedScreen extends HookConsumerWidget {
       String game = "Unknown game";
       switch (gameIndex) {
         case 1:
-          game = "Letter Game";
+          game = loc.envelope;
           break;
         case 2:
-          game = "ZigZag";
+          game = loc.zigzag;
           break;
         case 3:
-          game = "MineSweeper";
+          game = loc.pickBerries;
           break;
         case 4:
-          game = "TenGame";
+          game = loc.tengame;
           break;
         case 5:
-          game = "TenGameTwoPlayers";
+          game = loc.tengameMultiplayer;
           break;
         case 6:
-          game = "TenTurnsGame";
+          game = loc.tenturns;
           break;
         case 7:
-          game = "WormGame";
+          game = loc.snake;
           break;
         case 8:
-          game = "StarGame";
+          game = loc.starGameText;
           break;
         case 9:
-          game = "MemoryGame";
+          game = loc.memoryGame;
           break;
         default:
           game = "Unknown Game";

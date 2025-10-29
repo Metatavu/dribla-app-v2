@@ -105,7 +105,7 @@
     "login": "Kirjaudu sisään",
     "loginInfo": "Sovelluksen käyttö vaatii sisäänkirjautumisen. Kirjaudu sisään jatkaaksesi.",
     "loginError": "Sisäänkirjautuminen epäonnistui, yritä uudestaan",
-    "players": "Pelaajat",
+    "players": "Pelaaja",
     "games": "Pelit",
     "teams": "Joukkueet",
     "buySubscription": "Osta tilaus",
@@ -143,5 +143,6 @@
     "continueButton": "Jatka",
     "weeklyActivity": "Viikon toiminta",
     "logoutButton": "Kirjaudu ulos",
-    "cancelButton": "Peruuta"
+    "cancelButton": "Peruuta",
+    "details": "Yksityiskohdat"
 }

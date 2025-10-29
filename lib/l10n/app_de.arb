@@ -82,7 +82,7 @@
     "login": "Log in todo",
     "loginInfo": "Using the app requires a login. Todo",
     "loginError": "Login error todo",
-    "players": "Players todo",
+    "players": "Player todo",
     "games": "Games todo",
     "teams": "Teams todo",
     "buySubscription": "Buy a subscription todo",
@@ -120,5 +120,6 @@
     "continueButton": "Continue todo",
     "weeklyActivity": "Weekly activity todo",
     "logoutButton": "Logout button todo",
-    "cancelButton": "Cancel todo"
+    "cancelButton": "Cancel todo",
+    "details": "Details todo"
 }

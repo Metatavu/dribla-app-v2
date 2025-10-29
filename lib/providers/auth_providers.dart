@@ -170,6 +170,36 @@ class AuthNotifier extends _$AuthNotifier {
     return null;
   }
 
+  Future<List<GameSession>> getGameSessionsForUser(String userProfileId) async {
+    try {
+      final response = await driblaApi
+          .getGameSessionsApi()
+          .listgameSessions(userId: userProfileId);
+      if (response.data != null) {
+        final gameSessions = response.data?.toList() ?? [];
+        return gameSessions;
+      }
+    } catch (error) {
+      print('Failed to get game sessions for user');
+    }
+    return [];
+  }
+
+  Future<GameSession?> getLatestGameSession(String userProfileId) async {
+    try {
+      final response = await driblaApi
+          .getGameSessionsApi()
+          .listgameSessions(userId: userProfileId);
+      if (response.data != null) {
+        final gameSessions = response.data?.toList() ?? [];
+        return gameSessions.last;
+      }
+    } catch (error) {
+      print('Failed to get latest game session');
+    }
+    return null;
+  }
+
   Future<GameSession?> createNewGameSession(
       String userProfileId, int? score, int? duration, String game) async {
     try {
