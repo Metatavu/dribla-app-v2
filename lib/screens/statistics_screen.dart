@@ -25,6 +25,160 @@ import 'package:dribla_app_v2/providers/auth_providers.dart';
 class StatisticsScreen extends HookConsumerWidget {
   const StatisticsScreen({super.key});
 
+  // Move these getters outside the build method, as class-level getters
+  BarTouchData get barTouchData => BarTouchData(
+        enabled: false,
+        touchTooltipData: BarTouchTooltipData(
+          getTooltipColor: (group) => Colors.transparent,
+          tooltipPadding: EdgeInsets.zero,
+          tooltipMargin: 8,
+          getTooltipItem: (
+            BarChartGroupData group,
+            int groupIndex,
+            BarChartRodData rod,
+            int rodIndex,
+          ) {
+            return BarTooltipItem(
+              rod.toY.round().toString(),
+              const TextStyle(
+                color: DriblaColors.greenAccent,
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          },
+        ),
+      );
+
+  Widget getTitles(BuildContext context, double value, TitleMeta meta) {
+    final style = TextStyle(
+      color: DriblaColors.greenbg,
+      fontWeight: FontWeight.bold,
+      fontSize: 14,
+    );
+    final loc = AppLocalizations.of(context)!;
+    String text = switch (value.toInt()) {
+      0 => loc.monday,
+      1 => loc.tuesday,
+      2 => loc.wednesday,
+      3 => loc.thursday,
+      4 => loc.friday,
+      5 => loc.saturday,
+      6 => loc.sunday,
+      _ => '',
+    };
+    return SideTitleWidget(
+      meta: meta,
+      space: 4,
+      child: Text(text, style: style),
+    );
+  }
+
+  FlTitlesData titlesData(BuildContext context) => FlTitlesData(
+        show: true,
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            getTitlesWidget: (value, meta) => getTitles(context, value, meta),
+          ),
+        ),
+        leftTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+      );
+
+  FlBorderData get borderData => FlBorderData(
+        show: false,
+      );
+
+  LinearGradient get _barsGradient => LinearGradient(
+        colors: [
+          DriblaColors.newBtnColor,
+          DriblaColors.white,
+        ],
+        begin: Alignment.bottomCenter,
+        end: Alignment.topCenter,
+      );
+
+  List<BarChartGroupData> get barGroups => [
+        BarChartGroupData(
+          x: 0,
+          barRods: [
+            BarChartRodData(
+              toY: 8,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 1,
+          barRods: [
+            BarChartRodData(
+              toY: 10,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 2,
+          barRods: [
+            BarChartRodData(
+              toY: 14,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 3,
+          barRods: [
+            BarChartRodData(
+              toY: 15,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 4,
+          barRods: [
+            BarChartRodData(
+              toY: 13,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 5,
+          barRods: [
+            BarChartRodData(
+              toY: 10,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 6,
+          barRods: [
+            BarChartRodData(
+              toY: 16,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+      ];
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -68,7 +222,8 @@ class StatisticsScreen extends HookConsumerWidget {
           int hours = time ~/ 3600;
           int minutes = (time % 3600) ~/ 60;
           int seconds = time % 60;
-          timeSpent.value = "${hours}h ${minutes}m ${seconds}s";
+          timeSpent.value =
+              "${hours}${loc.hoursCounter} ${minutes}m ${seconds}s";
           int score = weeklyGameSessionSummary?.totalScore ?? 0;
           totalScore.value = score.toString();
         }
@@ -180,45 +335,20 @@ class StatisticsScreen extends HookConsumerWidget {
                     ),
                     SizedBox(height: 4.h),
                     SizedBox(
-                      width: 300, // or use a responsive value like 30.w
-                      height: 300,
-                      child: PieChart(
-                        PieChartData(
-                          sections: [
-                            PieChartSectionData(
-                                value: 40, title: 'Work', color: Colors.green),
-                            PieChartSectionData(
-                                value: 30, title: 'Play', color: Colors.blue),
-                            PieChartSectionData(
-                                value: 30, title: 'Rest', color: Colors.purple),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                    SizedBox(
-                        width: 325, // or use a responsive value like 30.w
-                        height: 325,
-                        child: LineChart(
-                          LineChartData(
-                            lineBarsData: [
-                              LineChartBarData(
-                                spots: [
-                                  FlSpot(0, 3),
-                                  FlSpot(1, 1),
-                                  FlSpot(2, 4),
-                                  FlSpot(3, 1.5),
-                                ],
-                                isCurved: true,
-                                color: Colors.amber,
-                                barWidth: 4,
-                                belowBarData: BarAreaData(
-                                    show: true,
-                                    color: Colors.amber.withOpacity(0.3)),
-                              ),
-                            ],
+                        width: 300, // or use a responsive value like 30.w
+                        height: 300,
+                        child: BarChart(
+                          BarChartData(
+                            barTouchData: barTouchData,
+                            titlesData: titlesData(context),
+                            borderData: borderData,
+                            barGroups: barGroups,
+                            gridData: const FlGridData(show: false),
+                            alignment: BarChartAlignment.spaceAround,
+                            maxY: 20,
                           ),
                         )),
+                    SizedBox(height: 2.h),
                     SizedBox(height: 50.h),
                   ],
                 ),

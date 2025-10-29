@@ -146,5 +146,12 @@
     "cancelButton": "Peruuta",
     "details": "Yksityiskohdat",
     "scoreTotal": "Pisteet yhteensä",
-    "hoursCounter": "t"
+    "hoursCounter": "t",
+    "monday": "Ma",
+    "tuesday": "Ti",
+    "wednesday": "Ke",
+    "thursday": "To",
+    "friday": "Pe",
+    "saturday": "La",
+    "sunday": "Su"
 }

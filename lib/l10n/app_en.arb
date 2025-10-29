@@ -122,5 +122,12 @@
     "cancelButton": "Cancel",
     "details": "Details",
     "scoreTotal": "Total score",
-    "hoursCounter": "h"
+    "hoursCounter": "h",
+    "monday": "Mon",
+    "tuesday": "Tue",
+    "wednesday": "Wed",
+    "thursday": "Thu",
+    "friday": "Fri",
+    "saturday": "Sat",
+    "sunday": "Sun"
 }

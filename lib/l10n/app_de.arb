@@ -123,5 +123,12 @@
     "cancelButton": "Cancel todo",
     "details": "Details todo",
     "scoreTotal": "Score total todo",
-    "hoursCounter": "h todo"
+    "hoursCounter": "h todo",
+    "monday": "Ma",
+    "tuesday": "Ti",
+    "wednesday": "Ke",
+    "thursday": "To",
+    "friday": "Pe",
+    "saturday": "La",
+    "sunday": "Su"
 }
