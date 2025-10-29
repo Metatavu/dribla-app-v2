@@ -120,5 +120,7 @@
     "weeklyActivity": "Weekly activity",
     "logoutButton": "Logout",
     "cancelButton": "Cancel",
-    "details": "Details"
+    "details": "Details",
+    "scoreTotal": "Total score",
+    "hoursCounter": "h"
 }

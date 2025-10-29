@@ -40,6 +40,7 @@ class MainPageScreen extends HookConsumerWidget {
     final outfitType = useState<int>(0);
     final shoesType = useState<int>(0);
     final gamesPlayed = useState<int>(0);
+    final timeSpent = useState<String>("");
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -65,6 +66,15 @@ class MainPageScreen extends HookConsumerWidget {
           print('Got game sessions:');
           print(gameSessions.length);
           gamesPlayed.value = gameSessions.length;
+          final totalGameSummary = await ref
+              .read(authNotifierProvider.notifier)
+              .getAllTimeGameSessionSummaryForUser(userProfileId);
+          if (totalGameSummary != null) {
+            int time = totalGameSummary.totalDuration ?? 0;
+            int hours = time ~/ 3600;
+            int minutes = (time % 3600) ~/ 60;
+            timeSpent.value = '${hours}${loc.hoursCounter} ${minutes}m';
+          }
         }
       }
 
@@ -120,7 +130,7 @@ class MainPageScreen extends HookConsumerWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          '35.6h',
+                          timeSpent.value,
                           style: theme.textTheme.bodyMedium,
                           textAlign: TextAlign.center,
                         ),

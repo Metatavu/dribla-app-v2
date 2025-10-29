@@ -37,7 +37,6 @@ class GameFinishedScreen extends HookConsumerWidget {
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
     String? userProfileId = auth.value?.accessToken.sub;
-    print(userProfileId);
 
     useEffect(() {
       if (!skipEndingFanfare) {

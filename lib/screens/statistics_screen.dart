@@ -30,13 +30,51 @@ class StatisticsScreen extends HookConsumerWidget {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
+    final auth = ref.watch(authNotifierProvider);
+    final gamesPlayed = useState<int>(0);
+    final latestGame = useState<String>("");
+    final timeSpent = useState<String>("");
+    final totalScore = useState<String>("");
+    String? username = auth.value?.accessToken.preferred_username ?? "";
 
     useEffect(() {
-      if (isAuthExpired) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacementNamed(context, '/login');
-        });
+      Future<void> fetchProfile() async {
+        if (isAuthExpired) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushReplacementNamed(context, '/login');
+          });
+        }
+        if (auth.hasValue && auth.value != null) {
+          final userProfileId = auth.value?.accessToken.sub;
+          final gameSessions = await ref
+              .read(authNotifierProvider.notifier)
+              .getWeeklyGameSessionsForUser(userProfileId!);
+          print('Got weekly game sessions:');
+          print(gameSessions.length);
+          gamesPlayed.value = gameSessions.length;
+          final latestSession = await ref
+              .read(authNotifierProvider.notifier)
+              .getLatestGameSessionForUser(userProfileId);
+          if (latestSession != null) {
+            latestGame.value = latestSession.game ?? "";
+          }
+          final weeklyGameSessionSummary = await ref
+              .read(authNotifierProvider.notifier)
+              .getWeeklyGameSessionsSummaryForUser(userProfileId);
+          print('Got weekly game session summary:');
+          print(weeklyGameSessionSummary);
+          int time = weeklyGameSessionSummary?.totalDuration ?? 0;
+          // convert time to hours and minutes (time is in seconds)
+          int hours = time ~/ 3600;
+          int minutes = (time % 3600) ~/ 60;
+          int seconds = time % 60;
+          timeSpent.value = "${hours}h ${minutes}m ${seconds}s";
+          int score = weeklyGameSessionSummary?.totalScore ?? 0;
+          totalScore.value = score.toString();
+        }
       }
+
+      fetchProfile();
       return null;
     }, [isAuthExpired]);
 
@@ -60,7 +98,9 @@ class StatisticsScreen extends HookConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(loc.statistics, style: theme.textTheme.headlineMedium),
-                    Text('Username2', style: theme.textTheme.bodyMedium),
+                    Text(username, style: theme.textTheme.bodyMedium),
+                    SizedBox(height: 3.h),
+                    Text(loc.weeklyActivity, style: theme.textTheme.bodyMedium),
                     SizedBox(height: 2.h),
                     Row(
                       children: [
@@ -73,7 +113,7 @@ class StatisticsScreen extends HookConsumerWidget {
                         ),
                         Expanded(
                           child: Text(
-                            '9001',
+                            gamesPlayed.value.toString(),
                             style: theme.textTheme.bodySmall,
                             textAlign: TextAlign.center,
                           ),
@@ -81,6 +121,64 @@ class StatisticsScreen extends HookConsumerWidget {
                         ),
                       ],
                     ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            loc.recentGame,
+                            style: theme.textTheme.bodySmall,
+                          ),
+                          flex: 1,
+                        ),
+                        Expanded(
+                          child: Text(
+                            latestGame.value,
+                            style: theme.textTheme.bodySmall,
+                            textAlign: TextAlign.center,
+                          ),
+                          flex: 1,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            loc.totalTimeSpent,
+                            style: theme.textTheme.bodySmall,
+                          ),
+                          flex: 1,
+                        ),
+                        Expanded(
+                          child: Text(
+                            timeSpent.value,
+                            style: theme.textTheme.bodySmall,
+                            textAlign: TextAlign.center,
+                          ),
+                          flex: 1,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            loc.scoreTotal,
+                            style: theme.textTheme.bodySmall,
+                          ),
+                          flex: 1,
+                        ),
+                        Expanded(
+                          child: Text(
+                            totalScore.value,
+                            style: theme.textTheme.bodySmall,
+                            textAlign: TextAlign.center,
+                          ),
+                          flex: 1,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4.h),
                     SizedBox(
                       width: 300, // or use a responsive value like 30.w
                       height: 300,

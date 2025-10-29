@@ -144,5 +144,7 @@
     "weeklyActivity": "Viikon toiminta",
     "logoutButton": "Kirjaudu ulos",
     "cancelButton": "Peruuta",
-    "details": "Yksityiskohdat"
+    "details": "Yksityiskohdat",
+    "scoreTotal": "Pisteet yhteensä",
+    "hoursCounter": "t"
 }

@@ -121,5 +121,7 @@
     "weeklyActivity": "Weekly activity todo",
     "logoutButton": "Logout button todo",
     "cancelButton": "Cancel todo",
-    "details": "Details todo"
+    "details": "Details todo",
+    "scoreTotal": "Score total todo",
+    "hoursCounter": "h todo"
 }

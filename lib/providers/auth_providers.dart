@@ -57,7 +57,6 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   Future<void> tryLoginWithStoredToken() async {
-    print('Trying to login with stored token');
     final storedRefreshToken = await _secureStore.read(
       SecureStoreService.keyAuthRefreshToken,
     );
@@ -66,7 +65,6 @@ class AuthNotifier extends _$AuthNotifier {
       return;
     }
 
-    print('Found stored refresh token, attempting to refresh auth');
     final authState = await AuthService.instance.refreshAuth(
       storedRefreshToken,
     );
@@ -109,18 +107,6 @@ class AuthNotifier extends _$AuthNotifier {
       driblaApi.setBearerAuth("bearerAuth", refreshedAuth.accessTokenRaw);
     } catch (error) {
       // Just log the error but don't clear the auth state
-    }
-  }
-
-  Future<void> tryTestPing() async {
-    try {
-      final response = await driblaApi.getSystemApi().ping();
-      if (response.data != null) {
-        print(response.data);
-      }
-    } catch (error) {
-      print('Ping failed, but we tried');
-      // Just log the error
     }
   }
 
@@ -185,7 +171,7 @@ class AuthNotifier extends _$AuthNotifier {
     return [];
   }
 
-  Future<GameSession?> getLatestGameSession(String userProfileId) async {
+  Future<GameSession?> getLatestGameSessionForUser(String userProfileId) async {
     try {
       final response = await driblaApi
           .getGameSessionsApi()
@@ -196,6 +182,67 @@ class AuthNotifier extends _$AuthNotifier {
       }
     } catch (error) {
       print('Failed to get latest game session');
+    }
+    return null;
+  }
+
+  Future<List<GameSession>> getWeeklyGameSessionsForUser(
+      String userProfileId) async {
+    try {
+      final oneWeekAgo = DateTime.now().subtract(const Duration(days: 7));
+      final response = await driblaApi.getGameSessionsApi().listgameSessions(
+          userId: userProfileId,
+          createdAfter:
+              DateTime(oneWeekAgo.year, oneWeekAgo.month, oneWeekAgo.day)
+                  .toUtc());
+      if (response.data != null) {
+        final gameSessions = response.data?.toList() ?? [];
+        return gameSessions;
+      }
+    } catch (error) {
+      print('Failed to get weekly game sessions for user');
+    }
+    return [];
+  }
+
+  Future<GameSessionSummary?> getWeeklyGameSessionsSummaryForUser(
+      String userProfileId) async {
+    try {
+      final oneWeekAgo = DateTime.now().subtract(const Duration(days: 7));
+      final response = await driblaApi
+          .getGameSessionsApi()
+          .getGameSessionsSummary(
+              userId: userProfileId,
+              createdBefore: DateTime.now().toUtc(),
+              createdAfter:
+                  DateTime(oneWeekAgo.year, oneWeekAgo.month, oneWeekAgo.day)
+                      .toUtc());
+      if (response.data != null) {
+        final summary = response.data;
+        return summary;
+      }
+    } catch (error) {
+      print('Failed to get weekly game session summary for user');
+    }
+    return null;
+  }
+
+  Future<GameSessionSummary?> getAllTimeGameSessionSummaryForUser(
+      String userProfileId) async {
+    try {
+      final startTime = DateTime.fromMillisecondsSinceEpoch(0);
+      final response = await driblaApi
+          .getGameSessionsApi()
+          .getGameSessionsSummary(
+              userId: userProfileId,
+              createdBefore: DateTime.now().toUtc(),
+              createdAfter: startTime.toUtc());
+      if (response.data != null) {
+        final summary = response.data;
+        return summary;
+      }
+    } catch (error) {
+      print('Failed to get all time game session summary for user');
     }
     return null;
   }
