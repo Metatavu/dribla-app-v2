@@ -322,7 +322,7 @@ class StatisticsScreen extends HookConsumerWidget {
                   children: [
                     Text(loc.statistics, style: theme.textTheme.headlineMedium),
                     Text(username, style: theme.textTheme.bodyMedium),
-                    SizedBox(height: 3.h),
+                    SizedBox(height: 2.h),
                     Text(loc.weeklyActivity, style: theme.textTheme.bodyMedium),
                     SizedBox(height: 2.h),
                     Row(
@@ -382,25 +382,6 @@ class StatisticsScreen extends HookConsumerWidget {
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            loc.scoreTotal,
-                            style: theme.textTheme.bodySmall,
-                          ),
-                          flex: 1,
-                        ),
-                        Expanded(
-                          child: Text(
-                            totalScore.value,
-                            style: theme.textTheme.bodySmall,
-                            textAlign: TextAlign.center,
-                          ),
-                          flex: 1,
-                        ),
-                      ],
-                    ),
                     SizedBox(height: 3.h),
                     Row(
                       children: [
@@ -413,10 +394,10 @@ class StatisticsScreen extends HookConsumerWidget {
                         )
                       ],
                     ),
-                    SizedBox(height: 1.h),
+                    SizedBox(height: 20.h),
                     SizedBox(
                         width: 300, // or use a responsive value like 30.w
-                        height: 300,
+                        height: 150,
                         child: BarChart(
                           BarChartData(
                             barTouchData: barTouchData,
