@@ -106,79 +106,6 @@ class StatisticsScreen extends HookConsumerWidget {
         end: Alignment.topCenter,
       );
 
-  List<BarChartGroupData> get barGroups => [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(
-              toY: 8,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 2,
-          barRods: [
-            BarChartRodData(
-              toY: 14,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 3,
-          barRods: [
-            BarChartRodData(
-              toY: 15,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 4,
-          barRods: [
-            BarChartRodData(
-              toY: 13,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 5,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 6,
-          barRods: [
-            BarChartRodData(
-              toY: 16,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-      ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -190,6 +117,14 @@ class StatisticsScreen extends HookConsumerWidget {
     final timeSpent = useState<String>("");
     final totalScore = useState<String>("");
     String? username = auth.value?.accessToken.preferred_username ?? "";
+
+    final mondayDuration = useState<double>(0);
+    final tuesdayDuration = useState<double>(0);
+    final wednesdayDuration = useState<double>(0);
+    final thursdayDuration = useState<double>(0);
+    final fridayDuration = useState<double>(0);
+    final saturdayDuration = useState<double>(0);
+    final sundayDuration = useState<double>(0);
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -226,12 +161,145 @@ class StatisticsScreen extends HookConsumerWidget {
               "${hours}${loc.hoursCounter} ${minutes}m ${seconds}s";
           int score = weeklyGameSessionSummary?.totalScore ?? 0;
           totalScore.value = score.toString();
+          DateTime monday = DateTime.now()
+              .subtract(Duration(days: DateTime.now().weekday - 1));
+          DateTime tuesday = monday.add(const Duration(days: 1));
+          DateTime wednesday = monday.add(const Duration(days: 2));
+          DateTime thursday = monday.add(const Duration(days: 3));
+          DateTime friday = monday.add(const Duration(days: 4));
+          DateTime saturday = monday.add(const Duration(days: 5));
+          DateTime sunday = monday.add(const Duration(days: 6));
+          final mondayGameSessionSummary = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayGameSessionSummaryForUser(userProfileId, monday);
+          print('Got Monday game session summary:');
+          print(mondayGameSessionSummary);
+          final tuesdayGameSessionSummary = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayGameSessionSummaryForUser(userProfileId, tuesday);
+          print('Got Tuesday game session summary:');
+          print(tuesdayGameSessionSummary);
+          final wednesdayGameSessionSummary = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayGameSessionSummaryForUser(
+                  userProfileId, wednesday);
+          print('Got Wednesday game session summary:');
+          print(wednesdayGameSessionSummary);
+          final thursdayGameSessionSummary = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayGameSessionSummaryForUser(userProfileId, thursday);
+          print('Got Thursday game session summary:');
+          print(thursdayGameSessionSummary);
+          final fridayGameSessionSummary = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayGameSessionSummaryForUser(userProfileId, friday);
+          print('Got Friday game session summary:');
+          print(fridayGameSessionSummary);
+          final saturdayGameSessionSummary = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayGameSessionSummaryForUser(userProfileId, saturday);
+          print('Got Saturday game session summary:');
+          print(saturdayGameSessionSummary);
+          final sundayGameSessionSummary = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayGameSessionSummaryForUser(userProfileId, sunday);
+          print('Got Sunday game session summary:');
+          print(sundayGameSessionSummary);
+          mondayDuration.value =
+              (mondayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          tuesdayDuration.value =
+              (tuesdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          wednesdayDuration.value =
+              (wednesdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          thursdayDuration.value =
+              (thursdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          fridayDuration.value =
+              (fridayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          saturdayDuration.value =
+              (saturdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          sundayDuration.value =
+              (sundayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
         }
       }
 
       fetchProfile();
       return null;
     }, [isAuthExpired]);
+
+    List<BarChartGroupData> barGroups() {
+      return [
+        BarChartGroupData(
+          x: 0,
+          barRods: [
+            BarChartRodData(
+              toY: mondayDuration.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 1,
+          barRods: [
+            BarChartRodData(
+              toY: tuesdayDuration.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 2,
+          barRods: [
+            BarChartRodData(
+              toY: wednesdayDuration.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 3,
+          barRods: [
+            BarChartRodData(
+              toY: thursdayDuration.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 4,
+          barRods: [
+            BarChartRodData(
+              toY: fridayDuration.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 5,
+          barRods: [
+            BarChartRodData(
+              toY: saturdayDuration.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 6,
+          barRods: [
+            BarChartRodData(
+              toY: sundayDuration.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        )
+      ];
+    }
 
     return Scaffold(
       extendBodyBehindAppBar: false,
@@ -333,7 +401,19 @@ class StatisticsScreen extends HookConsumerWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 4.h),
+                    SizedBox(height: 3.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Viikon peliaika minuutteina:',
+                            style: theme.textTheme.bodySmall,
+                          ),
+                          flex: 1,
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 1.h),
                     SizedBox(
                         width: 300, // or use a responsive value like 30.w
                         height: 300,
@@ -342,7 +422,7 @@ class StatisticsScreen extends HookConsumerWidget {
                             barTouchData: barTouchData,
                             titlesData: titlesData(context),
                             borderData: borderData,
-                            barGroups: barGroups,
+                            barGroups: barGroups(),
                             gridData: const FlGridData(show: false),
                             alignment: BarChartAlignment.spaceAround,
                             maxY: 20,

@@ -205,6 +205,27 @@ class AuthNotifier extends _$AuthNotifier {
     return [];
   }
 
+  Future<GameSessionSummary?> getSpecificDayGameSessionSummaryForUser(
+      String userProfileId, DateTime day) async {
+    try {
+      final startOfDay = DateTime(day.year, day.month, day.day);
+      final endOfDay = startOfDay.add(const Duration(days: 1));
+      final response = await driblaApi
+          .getGameSessionsApi()
+          .getGameSessionsSummary(
+              userId: userProfileId,
+              createdBefore: endOfDay.toUtc(),
+              createdAfter: startOfDay.toUtc());
+      if (response.data != null) {
+        final summary = response.data;
+        return summary;
+      }
+    } catch (error) {
+      print('Failed to get specific day game session summary for user');
+    }
+    return null;
+  }
+
   Future<GameSessionSummary?> getWeeklyGameSessionsSummaryForUser(
       String userProfileId) async {
     try {
