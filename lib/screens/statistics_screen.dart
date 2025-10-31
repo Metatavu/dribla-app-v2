@@ -25,7 +25,6 @@ import 'package:dribla_app_v2/providers/auth_providers.dart';
 class StatisticsScreen extends HookConsumerWidget {
   const StatisticsScreen({super.key});
 
-  // Move these getters outside the build method, as class-level getters
   BarTouchData get barTouchData => BarTouchData(
         enabled: false,
         touchTooltipData: BarTouchTooltipData(
@@ -126,6 +125,17 @@ class StatisticsScreen extends HookConsumerWidget {
     final saturdayDuration = useState<double>(0);
     final sundayDuration = useState<double>(0);
 
+    // highscores for each day
+    final mondayScore = useState<double>(0);
+    final tuesdayScore = useState<double>(0);
+    final wednesdayScore = useState<double>(0);
+    final thursdayScore = useState<double>(0);
+    final fridayScore = useState<double>(0);
+    final saturdayScore = useState<double>(0);
+    final sundayScore = useState<double>(0);
+
+    final allTimeWormGameHighscore = useState<int>(0);
+
     useEffect(() {
       Future<void> fetchProfile() async {
         if (isAuthExpired) {
@@ -138,8 +148,6 @@ class StatisticsScreen extends HookConsumerWidget {
           final gameSessions = await ref
               .read(authNotifierProvider.notifier)
               .getWeeklyGameSessionsForUser(userProfileId!);
-          print('Got weekly game sessions:');
-          print(gameSessions.length);
           gamesPlayed.value = gameSessions.length;
           final latestSession = await ref
               .read(authNotifierProvider.notifier)
@@ -150,8 +158,6 @@ class StatisticsScreen extends HookConsumerWidget {
           final weeklyGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getWeeklyGameSessionsSummaryForUser(userProfileId);
-          print('Got weekly game session summary:');
-          print(weeklyGameSessionSummary);
           int time = weeklyGameSessionSummary?.totalDuration ?? 0;
           // convert time to hours and minutes (time is in seconds)
           int hours = time ~/ 3600;
@@ -169,42 +175,30 @@ class StatisticsScreen extends HookConsumerWidget {
           DateTime friday = monday.add(const Duration(days: 4));
           DateTime saturday = monday.add(const Duration(days: 5));
           DateTime sunday = monday.add(const Duration(days: 6));
+          // get game session summaries for each day
           final mondayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, monday);
-          print('Got Monday game session summary:');
-          print(mondayGameSessionSummary);
           final tuesdayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, tuesday);
-          print('Got Tuesday game session summary:');
-          print(tuesdayGameSessionSummary);
           final wednesdayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(
                   userProfileId, wednesday);
-          print('Got Wednesday game session summary:');
-          print(wednesdayGameSessionSummary);
           final thursdayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, thursday);
-          print('Got Thursday game session summary:');
-          print(thursdayGameSessionSummary);
           final fridayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, friday);
-          print('Got Friday game session summary:');
-          print(fridayGameSessionSummary);
           final saturdayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, saturday);
-          print('Got Saturday game session summary:');
-          print(saturdayGameSessionSummary);
           final sundayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, sunday);
-          print('Got Sunday game session summary:');
-          print(sundayGameSessionSummary);
+          // set durations for each day (in minutes)
           mondayDuration.value =
               (mondayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
           tuesdayDuration.value =
@@ -219,6 +213,47 @@ class StatisticsScreen extends HookConsumerWidget {
               (saturdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
           sundayDuration.value =
               (sundayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          // get Worm game sessions for each day
+          final mondayWormGameSession = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayWormGameSessionForUser(userProfileId, monday);
+          final tuesdayWormGameSession = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayWormGameSessionForUser(userProfileId, tuesday);
+          final wednesdayWormGameSession = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayWormGameSessionForUser(userProfileId, wednesday);
+          final thursdayWormGameSession = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayWormGameSessionForUser(userProfileId, thursday);
+          final fridayWormGameSession = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayWormGameSessionForUser(userProfileId, friday);
+          final saturdayWormGameSession = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayWormGameSessionForUser(userProfileId, saturday);
+          final sundayWormGameSession = await ref
+              .read(authNotifierProvider.notifier)
+              .getSpecificDayWormGameSessionForUser(userProfileId, sunday);
+          // set highscores for each day
+          mondayScore.value = (mondayWormGameSession?.score ?? 0).toDouble();
+          tuesdayScore.value = (tuesdayWormGameSession?.score ?? 0).toDouble();
+          wednesdayScore.value =
+              (wednesdayWormGameSession?.score ?? 0).toDouble();
+          thursdayScore.value =
+              (thursdayWormGameSession?.score ?? 0).toDouble();
+          fridayScore.value = (fridayWormGameSession?.score ?? 0).toDouble();
+          saturdayScore.value =
+              (saturdayWormGameSession?.score ?? 0).toDouble();
+          sundayScore.value = (sundayWormGameSession?.score ?? 0).toDouble();
+          // get all-time Worm game highscore
+          final latestWormGameHighscoreSession = await ref
+              .read(authNotifierProvider.notifier)
+              .getAllTimeWormGameHighscoreForUser(userProfileId);
+          if (latestWormGameHighscoreSession != null) {
+            allTimeWormGameHighscore.value =
+                latestWormGameHighscoreSession.score ?? 0;
+          }
         }
       }
 
@@ -293,6 +328,81 @@ class StatisticsScreen extends HookConsumerWidget {
           barRods: [
             BarChartRodData(
               toY: sundayDuration.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        )
+      ];
+    }
+
+    List<BarChartGroupData> barGroupsWormGame() {
+      return [
+        BarChartGroupData(
+          x: 0,
+          barRods: [
+            BarChartRodData(
+              toY: mondayScore.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 1,
+          barRods: [
+            BarChartRodData(
+              toY: tuesdayScore.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 2,
+          barRods: [
+            BarChartRodData(
+              toY: wednesdayScore.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 3,
+          barRods: [
+            BarChartRodData(
+              toY: thursdayScore.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 4,
+          barRods: [
+            BarChartRodData(
+              toY: fridayScore.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 5,
+          barRods: [
+            BarChartRodData(
+              toY: saturdayScore.value,
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 6,
+          barRods: [
+            BarChartRodData(
+              toY: sundayScore.value,
               gradient: _barsGradient,
             )
           ],
@@ -387,7 +497,7 @@ class StatisticsScreen extends HookConsumerWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            'Viikon peliaika minuutteina:',
+                            loc.weeklyPlaytimeMinutes,
                             style: theme.textTheme.bodySmall,
                           ),
                           flex: 1,
@@ -396,7 +506,7 @@ class StatisticsScreen extends HookConsumerWidget {
                     ),
                     SizedBox(height: 20.h),
                     SizedBox(
-                        width: 300, // or use a responsive value like 30.w
+                        width: 300,
                         height: 150,
                         child: BarChart(
                           BarChartData(
@@ -410,6 +520,51 @@ class StatisticsScreen extends HookConsumerWidget {
                           ),
                         )),
                     SizedBox(height: 2.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            loc.wormGameBestHighscore,
+                            style: theme.textTheme.bodySmall,
+                          ),
+                          flex: 1,
+                        ),
+                        Expanded(
+                          child: Text(
+                            allTimeWormGameHighscore.value.toString(),
+                            style: theme.textTheme.bodySmall,
+                          ),
+                          flex: 1,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 2.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            loc.wormGameWeeklyHighscores,
+                            style: theme.textTheme.bodySmall,
+                          ),
+                          flex: 1,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    SizedBox(
+                        width: 300,
+                        height: 150,
+                        child: BarChart(
+                          BarChartData(
+                            barTouchData: barTouchData,
+                            titlesData: titlesData(context),
+                            borderData: borderData,
+                            barGroups: barGroupsWormGame(),
+                            gridData: const FlGridData(show: false),
+                            alignment: BarChartAlignment.spaceAround,
+                            maxY: 20,
+                          ),
+                        )),
                     SizedBox(height: 50.h),
                   ],
                 ),

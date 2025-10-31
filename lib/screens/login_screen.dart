@@ -20,9 +20,6 @@ class LoginScreen extends HookConsumerWidget {
     // navigate back to app on successful login
     useEffect(() {
       if (authAsync.hasValue && authAsync.value != null) {
-        print('User logged in: ${authAsync.value.toString()}');
-        // userProfileId = accesstoken.sub
-        //driblaApi.getUserProfilesApi().findUserProfile(userProfileId: authAsync.value!.userProfileId);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.of(context).pushReplacementNamed('/main');
         });

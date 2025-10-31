@@ -129,5 +129,8 @@
     "thursday": "Thu",
     "friday": "Fri",
     "saturday": "Sat",
-    "sunday": "Sun"
+    "sunday": "Sun",
+    "weeklyPlaytimeMinutes": "Weekly playtime in minutes:",
+    "wormGameBestHighscore": "All time record for Worm Game:",
+    "wormGameWeeklyHighscores": "Worm game highscores for this week:"
 }

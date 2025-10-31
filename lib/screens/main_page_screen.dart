@@ -50,7 +50,6 @@ class MainPageScreen extends HookConsumerWidget {
           });
         }
         if (auth.hasValue && auth.value != null) {
-          // print('User in main screen: ${auth.value.toString()}');
           final userProfileId = auth.value?.accessToken.sub;
           final profile = await ref
               .read(authNotifierProvider.notifier)
@@ -63,8 +62,6 @@ class MainPageScreen extends HookConsumerWidget {
           final gameSessions = await ref
               .read(authNotifierProvider.notifier)
               .getGameSessionsForUser(userProfileId);
-          print('Got game sessions:');
-          print(gameSessions.length);
           gamesPlayed.value = gameSessions.length;
           final totalGameSummary = await ref
               .read(authNotifierProvider.notifier)
@@ -175,19 +172,6 @@ class MainPageScreen extends HookConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // SizedBox(
-                  //   width: double.infinity,
-                  //   child: ElevatedButton(
-                  //     onPressed: () {
-                  //       // try test ping from auth notifier
-                  //       ref.read(authNotifierProvider.notifier).tryTestPing();
-                  //     },
-                  //     child: Text(
-                  //       'Test pinging server',
-                  //       style: theme.textTheme.bodyMedium,
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ),

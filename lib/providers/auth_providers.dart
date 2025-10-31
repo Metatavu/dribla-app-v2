@@ -116,8 +116,6 @@ class AuthNotifier extends _$AuthNotifier {
           .getUserProfilesApi()
           .findUserProfile(userProfileId: userProfileId);
       if (response.data != null) {
-        print('Fetched user profile:');
-        print(response.data);
         return response.data;
       }
     } catch (error) {
@@ -147,7 +145,6 @@ class AuthNotifier extends _$AuthNotifier {
       final response = await driblaApi.getUserProfilesApi().upsertUserProfile(
           userProfileId: userProfileId, userProfile: userProfile);
       if (response.data != null) {
-        print('Updated user profile: ${response.data}');
         return response.data;
       }
     } catch (error) {
@@ -160,7 +157,7 @@ class AuthNotifier extends _$AuthNotifier {
     try {
       final response = await driblaApi
           .getGameSessionsApi()
-          .listgameSessions(userId: userProfileId);
+          .listgameSessions(userId: userProfileId, pageSize: 1000);
       if (response.data != null) {
         final gameSessions = response.data?.toList() ?? [];
         return gameSessions;
@@ -171,11 +168,30 @@ class AuthNotifier extends _$AuthNotifier {
     return [];
   }
 
-  Future<GameSession?> getLatestGameSessionForUser(String userProfileId) async {
+  Future<GameSession?> getAllTimeWormGameHighscoreForUser(
+      String userProfileId) async {
     try {
-      final response = await driblaApi
-          .getGameSessionsApi()
-          .listgameSessions(userId: userProfileId);
+      final response = await driblaApi.getGameSessionsApi().listgameSessions(
+          userId: userProfileId,
+          game: 'Matopeli',
+          pageSize: 1,
+          sortBy: 'score',
+          sortOrder: 'desc');
+      if (response.data != null) {
+        final gameSessions = response.data?.toList() ?? [];
+        return gameSessions.last;
+      }
+    } catch (error) {
+      print('Failed to get latest worm game highscore session');
+    }
+    return null;
+  }
+
+  Future<GameSession?> getLatestGameSessionForUser(String userProfileId) async {
+    // defaults to sortBy: 'created_at',
+    try {
+      final response = await driblaApi.getGameSessionsApi().listgameSessions(
+          userId: userProfileId, pageSize: 1, sortOrder: 'desc');
       if (response.data != null) {
         final gameSessions = response.data?.toList() ?? [];
         return gameSessions.last;
@@ -194,7 +210,9 @@ class AuthNotifier extends _$AuthNotifier {
           userId: userProfileId,
           createdAfter:
               DateTime(oneWeekAgo.year, oneWeekAgo.month, oneWeekAgo.day)
-                  .toUtc());
+                  .toUtc(),
+          pageSize: 1000,
+          sortOrder: 'desc');
       if (response.data != null) {
         final gameSessions = response.data?.toList() ?? [];
         return gameSessions;
@@ -222,6 +240,30 @@ class AuthNotifier extends _$AuthNotifier {
       }
     } catch (error) {
       print('Failed to get specific day game session summary for user');
+    }
+    return null;
+  }
+
+  Future<GameSession?> getSpecificDayWormGameSessionForUser(
+      String userProfileId, DateTime day) async {
+    // todo game names need to be localized, maybe change api to return an id
+    try {
+      final startOfDay = DateTime(day.year, day.month, day.day);
+      final endOfDay = startOfDay.add(const Duration(days: 1));
+      final response = await driblaApi.getGameSessionsApi().listgameSessions(
+          userId: userProfileId,
+          game: 'Matopeli',
+          createdBefore: endOfDay.toUtc(),
+          createdAfter: startOfDay.toUtc(),
+          pageSize: 1,
+          sortBy: 'score',
+          sortOrder: 'desc');
+      if (response.data != null) {
+        final session = response.data?.toList() ?? [];
+        return session.isNotEmpty ? session.first : null;
+      }
+    } catch (error) {
+      print('Failed to get specific day worm game session for user');
     }
     return null;
   }

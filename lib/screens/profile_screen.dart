@@ -65,8 +65,6 @@ class ProfileScreen extends HookConsumerWidget {
           final gameSessions = await ref
               .read(authNotifierProvider.notifier)
               .getGameSessionsForUser(userProfileId);
-          print('Got game sessions:');
-          print(gameSessions.length);
           gamesPlayed.value = gameSessions.length;
           final latestSession = await ref
               .read(authNotifierProvider.notifier)
@@ -205,7 +203,6 @@ class ProfileScreen extends HookConsumerWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        print('Logging out');
                         ref.read(authNotifierProvider.notifier).logout();
                       },
                       child: Text(
