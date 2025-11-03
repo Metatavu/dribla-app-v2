@@ -8,8 +8,8 @@ import "package:dribla_app_v2/components/styled_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/screens/character_creation_screen.dart";
-import "package:dribla_app_v2/screens/codes_screen.dart";
 import "package:dribla_app_v2/screens/outfit_selection_screen.dart";
+import "package:dribla_app_v2/screens/profile_screen.dart";
 import "package:dribla_app_v2/services/api.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/game_utils.dart";
@@ -18,6 +18,7 @@ import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
 import "package:sizer/sizer.dart";
+import 'package:share_plus/share_plus.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -25,12 +26,10 @@ import 'package:dribla_app_v2/providers/auth_providers.dart';
 
 import "package:dribla_api/src/model/user_profile.dart";
 
-class ProfileScreen extends HookConsumerWidget {
-  const ProfileScreen({super.key});
+class CodesScreen extends HookConsumerWidget {
+  const CodesScreen({super.key, required this.fromPurchase});
 
-  static String getFinalAsset(int character, int outfit, int shoes) {
-    return "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_0${shoes + 1}.png";
-  }
+  final bool fromPurchase;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,9 +38,6 @@ class ProfileScreen extends HookConsumerWidget {
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
     String? username = auth.value?.accessToken.preferred_username ?? "";
-    final characterType = useState<int>(0);
-    final outfitType = useState<int>(0);
-    final shoesType = useState<int>(0);
     final gamesPlayed = useState<int>(0);
     final latestGame = useState<String>("");
     final totalTimeSpent = useState<String>("");
@@ -59,9 +55,7 @@ class ProfileScreen extends HookConsumerWidget {
               .read(authNotifierProvider.notifier)
               .getOrUpsertUserProfile(userProfileId!);
           if (profile != null) {
-            characterType.value = (profile.characterType ?? 0);
-            outfitType.value = (profile.characterOutfitType ?? 0);
-            shoesType.value = (profile.characterShoesType ?? 0);
+            // Do something with the profile if needed
           }
           final gameSessions = await ref
               .read(authNotifierProvider.notifier)
@@ -110,68 +104,75 @@ class ProfileScreen extends HookConsumerWidget {
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(loc.profile, style: theme.textTheme.headlineMedium),
+                  Text(loc.codes, style: theme.textTheme.headlineMedium),
                   Text(username, style: theme.textTheme.bodyMedium),
-                  Image.asset(
-                      getFinalAsset(characterType.value, outfitType.value,
-                          shoesType.value),
-                      width: 40.w,
-                      height: 40.w),
                   SizedBox(height: 2.h),
-                  Text(loc.details, style: theme.textTheme.bodyMedium),
+                  Text('Here you can find your purchased player codes:',
+                      style: theme.textTheme.bodyMedium),
                   SizedBox(height: 2.h),
                   Row(
                     children: [
                       Expanded(
                         child: Text(
-                          loc.gamesPlayed,
+                          'F2165954-0628-45A0-8164-B12217871A08',
                           style: theme.textTheme.bodySmall,
                         ),
                         flex: 1,
                       ),
                       Expanded(
-                        child: Text(
-                          gamesPlayed.value.toString(),
-                          style: theme.textTheme.bodySmall,
-                          textAlign: TextAlign.center,
-                        ),
-                        flex: 1,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          loc.recentGame,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: Text(
-                          latestGame.value,
-                          style: theme.textTheme.bodySmall,
-                          textAlign: TextAlign.center,
+                        child: IconButton(
+                          color: Colors.white,
+                          icon: Icon(Icons.share),
+                          onPressed: () {
+                            SharePlus.instance.share(ShareParams(
+                                text: 'F2165954-0628-45A0-8164-B12217871A08'));
+                          },
                         ),
                         flex: 1,
                       ),
                     ],
                   ),
+                  SizedBox(height: 2.h),
                   Row(
                     children: [
                       Expanded(
                         child: Text(
-                          loc.totalTimeSpent,
+                          'DAB6BB3B-2C8C-48F4-9E39-5A1A9913F9AE',
                           style: theme.textTheme.bodySmall,
                         ),
                         flex: 1,
                       ),
                       Expanded(
+                        child: IconButton(
+                          color: Colors.white,
+                          icon: Icon(Icons.share),
+                          onPressed: () {
+                            SharePlus.instance.share(ShareParams(
+                                text: 'DAB6BB3B-2C8C-48F4-9E39-5A1A9913F9AE'));
+                          },
+                        ),
+                        flex: 1,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 2.h),
+                  Row(
+                    children: [
+                      Expanded(
                         child: Text(
-                          totalTimeSpent.value,
+                          'DD172171-5AA6-4591-B399-EDF043C88113',
                           style: theme.textTheme.bodySmall,
-                          textAlign: TextAlign.center,
+                        ),
+                        flex: 1,
+                      ),
+                      Expanded(
+                        child: IconButton(
+                          color: Colors.white,
+                          icon: Icon(Icons.share),
+                          onPressed: () {
+                            SharePlus.instance.share(ShareParams(
+                                text: 'DD172171-5AA6-4591-B399-EDF043C88113'));
+                          },
                         ),
                         flex: 1,
                       ),
@@ -187,50 +188,17 @@ class ProfileScreen extends HookConsumerWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  const CharacterCreationScreen()),
+                              builder: (context) => const ProfileScreen()),
                         );
                       },
                       child: Text(
-                        loc.editAvatar,
+                        'Back to profile',
                         style: theme.textTheme.bodyMedium,
                       ),
                     ),
                   ),
                   SizedBox(
                     height: 3.h,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const CodesScreen(fromPurchase: false)),
-                        );
-                      },
-                      child: Text(
-                        loc.codes,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 3.h,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        ref.read(authNotifierProvider.notifier).logout();
-                      },
-                      child: Text(
-                        loc.logoutButton,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ),
                   ),
                   SizedBox(height: 50.h),
                 ],

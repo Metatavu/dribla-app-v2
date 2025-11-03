@@ -4,6 +4,7 @@ import "package:dribla_app_v2/providers/auth_providers.dart";
 import "package:dribla_app_v2/screens/account_creation_screen.dart";
 import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
+import "package:dribla_app_v2/screens/codes_screen.dart";
 import "package:dribla_app_v2/screens/login_screen.dart";
 import "package:dribla_app_v2/screens/main_page_screen.dart";
 import "package:dribla_app_v2/screens/payments_screen.dart";
@@ -85,12 +86,11 @@ class DriblaApp extends HookConsumerWidget {
             '/main': (context) => const MainPageScreen(),
             '/character': (context) => const CharacterCreationScreen(),
             '/games': (context) => const ChooseGameScreen(),
-            '/signin': (context) => const SignInScreen(),
-            '/create_account': (context) => const AccountCreationScreen(),
             '/profile': (context) => const ProfileScreen(),
             '/payments': (context) => PaymentsScreen(),
             '/login': (context) => const LoginScreen(),
             '/statistics': (context) => const StatisticsScreen(),
+            '/codes': (context) => const CodesScreen(fromPurchase: false),
           },
         );
       },

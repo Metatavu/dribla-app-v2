@@ -64,6 +64,7 @@ dependencies:
   dribla_api:
     path: packages/dribla_api
   fl_chart: 1.0.0
+  share_plus: ^12.0.1
 
 dev_dependencies:
   flutter_test:
