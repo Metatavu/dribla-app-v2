@@ -202,6 +202,28 @@ class AuthNotifier extends _$AuthNotifier {
     return null;
   }
 
+  Future<GameSession?> getSpecificWeekLatestGameSessionForUser(
+      String userProfileId, DateTime weekStart) async {
+    try {
+      final startOfWeek =
+          DateTime(weekStart.year, weekStart.month, weekStart.day);
+      final endOfWeek = startOfWeek.add(const Duration(days: 7));
+      final response = await driblaApi.getGameSessionsApi().listgameSessions(
+          userId: userProfileId,
+          createdBefore: endOfWeek.toUtc(),
+          createdAfter: startOfWeek.toUtc(),
+          pageSize: 1,
+          sortOrder: 'desc');
+      if (response.data != null) {
+        final gameSessions = response.data?.toList() ?? [];
+        return gameSessions.isNotEmpty ? gameSessions.first : null;
+      }
+    } catch (error) {
+      print('Failed to get specific week latest game session for user');
+    }
+    return null;
+  }
+
   Future<List<GameSession>> getWeeklyGameSessionsForUser(
       String userProfileId) async {
     try {
@@ -219,6 +241,28 @@ class AuthNotifier extends _$AuthNotifier {
       }
     } catch (error) {
       print('Failed to get weekly game sessions for user');
+    }
+    return [];
+  }
+
+  Future<List<GameSession>> getSpecificWeekGameSessionsForUser(
+      String userProfileId, DateTime weekStart) async {
+    try {
+      final startOfWeek =
+          DateTime(weekStart.year, weekStart.month, weekStart.day);
+      final endOfWeek = startOfWeek.add(const Duration(days: 7));
+      final response = await driblaApi.getGameSessionsApi().listgameSessions(
+          userId: userProfileId,
+          createdBefore: endOfWeek.toUtc(),
+          createdAfter: startOfWeek.toUtc(),
+          pageSize: 1000,
+          sortOrder: 'desc');
+      if (response.data != null) {
+        final gameSessions = response.data?.toList() ?? [];
+        return gameSessions;
+      }
+    } catch (error) {
+      print('Failed to get specific week game sessions for user');
     }
     return [];
   }
@@ -264,6 +308,28 @@ class AuthNotifier extends _$AuthNotifier {
       }
     } catch (error) {
       print('Failed to get specific day worm game session for user');
+    }
+    return null;
+  }
+
+  Future<GameSessionSummary?> getSpecificWeekGameSessionsSummaryForUser(
+      String userProfileId, DateTime weekStart) async {
+    try {
+      final startOfWeek =
+          DateTime(weekStart.year, weekStart.month, weekStart.day);
+      final endOfWeek = startOfWeek.add(const Duration(days: 7));
+      final response = await driblaApi
+          .getGameSessionsApi()
+          .getGameSessionsSummary(
+              userId: userProfileId,
+              createdBefore: endOfWeek.toUtc(),
+              createdAfter: startOfWeek.toUtc());
+      if (response.data != null) {
+        final summary = response.data;
+        return summary;
+      }
+    } catch (error) {
+      print('Failed to get specific week game session summary for user');
     }
     return null;
   }

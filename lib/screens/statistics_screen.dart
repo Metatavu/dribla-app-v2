@@ -21,6 +21,7 @@ import "package:fl_chart/fl_chart.dart";
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:dribla_app_v2/providers/auth_providers.dart';
+import 'package:intl/intl.dart';
 
 class StatisticsScreen extends HookConsumerWidget {
   const StatisticsScreen({super.key});
@@ -111,11 +112,17 @@ class StatisticsScreen extends HookConsumerWidget {
     final loc = AppLocalizations.of(context)!;
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
+
     final gamesPlayed = useState<int>(0);
     final latestGame = useState<String>("");
     final timeSpent = useState<String>("");
     final totalScore = useState<String>("");
     String? username = auth.value?.accessToken.preferred_username ?? "";
+
+    // Track the currently displayed week (Monday)
+    final currentWeekStart = useState<DateTime>(
+      DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1)),
+    );
 
     final mondayDuration = useState<double>(0);
     final tuesdayDuration = useState<double>(0);
@@ -147,19 +154,21 @@ class StatisticsScreen extends HookConsumerWidget {
           final userProfileId = auth.value?.accessToken.sub;
           final gameSessions = await ref
               .read(authNotifierProvider.notifier)
-              .getWeeklyGameSessionsForUser(userProfileId!);
+              .getSpecificWeekGameSessionsForUser(
+                  userProfileId!, currentWeekStart.value);
           gamesPlayed.value = gameSessions.length;
           final latestSession = await ref
               .read(authNotifierProvider.notifier)
-              .getLatestGameSessionForUser(userProfileId);
+              .getSpecificWeekLatestGameSessionForUser(
+                  userProfileId!, currentWeekStart.value);
           if (latestSession != null) {
             latestGame.value = latestSession.game ?? "";
           }
           final weeklyGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
-              .getWeeklyGameSessionsSummaryForUser(userProfileId);
+              .getSpecificWeekGameSessionsSummaryForUser(
+                  userProfileId, currentWeekStart.value);
           int time = weeklyGameSessionSummary?.totalDuration ?? 0;
-          // convert time to hours and minutes (time is in seconds)
           int hours = time ~/ 3600;
           int minutes = (time % 3600) ~/ 60;
           int seconds = time % 60;
@@ -167,14 +176,16 @@ class StatisticsScreen extends HookConsumerWidget {
               "${hours}${loc.hoursCounter} ${minutes}m ${seconds}s";
           int score = weeklyGameSessionSummary?.totalScore ?? 0;
           totalScore.value = score.toString();
-          DateTime monday = DateTime.now()
-              .subtract(Duration(days: DateTime.now().weekday - 1));
+
+          // Use currentWeekStart for week navigation
+          DateTime monday = currentWeekStart.value;
           DateTime tuesday = monday.add(const Duration(days: 1));
           DateTime wednesday = monday.add(const Duration(days: 2));
           DateTime thursday = monday.add(const Duration(days: 3));
           DateTime friday = monday.add(const Duration(days: 4));
           DateTime saturday = monday.add(const Duration(days: 5));
           DateTime sunday = monday.add(const Duration(days: 6));
+
           // get game session summaries for each day
           final mondayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
@@ -259,7 +270,13 @@ class StatisticsScreen extends HookConsumerWidget {
 
       fetchProfile();
       return null;
-    }, [isAuthExpired]);
+    }, [
+      isAuthExpired,
+      currentWeekStart.value,
+      gamesPlayed.value,
+      latestGame.value,
+      timeSpent.value,
+    ]);
 
     List<BarChartGroupData> barGroups() {
       return [
@@ -433,6 +450,32 @@ class StatisticsScreen extends HookConsumerWidget {
                     Text(loc.statistics, style: theme.textTheme.headlineMedium),
                     Text(username, style: theme.textTheme.bodyMedium),
                     SizedBox(height: 2.h),
+                    // Week navigation row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          color: DriblaColors.orange,
+                          onPressed: () {
+                            currentWeekStart.value = currentWeekStart.value
+                                .subtract(const Duration(days: 7));
+                          },
+                        ),
+                        Text(
+                          "${DateFormat('dd.MM.yyyy').format(currentWeekStart.value)} - ${DateFormat('dd.MM.yyyy').format(currentWeekStart.value.add(const Duration(days: 6)))}",
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_forward),
+                          color: DriblaColors.orange,
+                          onPressed: () {
+                            currentWeekStart.value = currentWeekStart.value
+                                .add(const Duration(days: 7));
+                          },
+                        ),
+                      ],
+                    ),
                     Text(loc.weeklyActivity, style: theme.textTheme.bodyMedium),
                     SizedBox(height: 2.h),
                     Row(
