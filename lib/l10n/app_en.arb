@@ -133,5 +133,9 @@
     "weeklyPlaytimeMinutes": "Weekly playtime in minutes:",
     "wormGameBestHighscore": "All time record for Worm Game:",
     "wormGameWeeklyHighscores": "Worm game highscores for this week:",
-    "codes": "Codes"
+    "codes": "Codes",
+    "loggingInWithCode": "Log in with app code",
+    "enterAppCode": "Enter an app code",
+    "backToProfile": "Back to profile",
+    "appCodeExplanation": "Enter an app code here (for shared users)"
 }

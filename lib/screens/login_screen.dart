@@ -40,7 +40,8 @@ class LoginScreen extends HookConsumerWidget {
             ),
             child: Padding(
                 padding: EdgeInsets.all(16.0),
-                child: Column(
+                child: SingleChildScrollView(
+                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
@@ -79,8 +80,9 @@ class LoginScreen extends HookConsumerWidget {
                     SizedBox(height: 2.h),
                     if (authAsync.hasError)
                       Text(loc.loginError, style: TextStyle(color: Colors.red)),
+                    SizedBox(height: 50.h),
                   ],
-                )),
+                ))),
           ),
         ])));
   }

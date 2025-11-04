@@ -134,5 +134,9 @@
     "weeklyPlaytimeMinutes": "Viikon peliaika minuutteina:",
     "wormGameBestHighscore": "Matopelin kaikkien aikojen ennätys:",
     "wormGameWeeklyHighscores": "Matopelin ennätykset tällä viikolla:",
-    "codes": "Codes"
+    "codes": "Codes",
+    "loggingInWithCode": "Käyttökoodilla kirjautuminen",
+    "enterAppCode": "Syötä käyttökoodi",
+    "backToProfile": "Takaisin profiiliin",
+    "appCodeExplanation": "Syötä tähän käyttökoodisi (jaetuille käyttäjille)"
 }

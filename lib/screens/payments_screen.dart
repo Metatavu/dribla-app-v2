@@ -3,6 +3,7 @@ import "package:dribla_app_v2/components/app_drawer.dart";
 import "package:dribla_app_v2/components/app_footer.dart";
 import "package:dribla_app_v2/components/app_header_appbar.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
+import "package:dribla_app_v2/screens/codes_screen.dart";
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import "package:sizer/sizer.dart";
@@ -102,6 +103,12 @@ class PaymentsScreen extends HookConsumerWidget {
       final purchaseParam = PurchaseParam(productDetails: productDetails);
       try {
         iap.buyNonConsumable(purchaseParam: purchaseParam);
+        // navigate to codes screen after purchase
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CodesScreen(fromPurchase: true)),
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error during purchase attempt: $e')),

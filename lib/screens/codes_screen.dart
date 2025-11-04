@@ -38,6 +38,7 @@ class CodesScreen extends HookConsumerWidget {
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
     String? username = auth.value?.accessToken.preferred_username ?? "";
+    final userProfileId = auth.value?.accessToken.sub ?? "";
     final gamesPlayed = useState<int>(0);
     final latestGame = useState<String>("");
     final totalTimeSpent = useState<String>("");
@@ -107,8 +108,8 @@ class CodesScreen extends HookConsumerWidget {
                   Text(loc.codes, style: theme.textTheme.headlineMedium),
                   Text(username, style: theme.textTheme.bodyMedium),
                   SizedBox(height: 2.h),
-                  Text('Here you can find your purchased player codes:',
-                      style: theme.textTheme.bodyMedium),
+                  Text(fromPurchase ? loc.thanksForPurchase : ''),
+                  Text(loc.herePlayerCodes, style: theme.textTheme.bodyMedium),
                   SizedBox(height: 2.h),
                   Row(
                     children: [
@@ -181,6 +182,10 @@ class CodesScreen extends HookConsumerWidget {
                   SizedBox(
                     height: 3.h,
                   ),
+                  Text(fromPurchase ? loc.findCodesLater : ''),
+                  SizedBox(
+                    height: 2.h,
+                  ),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -192,7 +197,7 @@ class CodesScreen extends HookConsumerWidget {
                         );
                       },
                       child: Text(
-                        'Back to profile',
+                        loc.backToProfile,
                         style: theme.textTheme.bodyMedium,
                       ),
                     ),
@@ -200,6 +205,23 @@ class CodesScreen extends HookConsumerWidget {
                   SizedBox(
                     height: 3.h,
                   ),
+                  fromPurchase ? Text('') : Text(loc.appCodeExplanation),
+                  SizedBox(height: 2.h),
+                  fromPurchase
+                      ? Text('')
+                      : TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: loc.enterAppCode,
+                          ),
+                          style: const TextStyle(color: Colors.white),
+                          onSubmitted: (value) async {
+                            // save the app code to userprofile
+                            await ref
+                                .read(authNotifierProvider.notifier)
+                                .updateUserProfileAppCode(userProfileId, value);
+                          },
+                        ),
                   SizedBox(height: 50.h),
                 ],
               )),

@@ -351,6 +351,38 @@ class AuthNotifier extends _$AuthNotifier {
     return null;
   }
 
+  Future<UserProfile?> updateUserProfileAppCode(
+      String userProfileId, String appCode) async {
+    try {
+      final existingProfile = await getOrUpsertUserProfile(userProfileId);
+      if (existingProfile == null) return null;
+
+      final updatedProfile =
+          existingProfile.rebuild((b) => b..appCode = appCode);
+
+      return await updateUserProfile(userProfileId, updatedProfile);
+    } catch (error) {
+      print('Failed to update user profile app code');
+    }
+    return null;
+  }
+
+  Future<UserProfile?> updateUserProfileSubscriptionStatus(
+      String userProfileId, bool subscriptionStatus) async {
+    try {
+      final existingProfile = await getOrUpsertUserProfile(userProfileId);
+      if (existingProfile == null) return null;
+
+      final updatedProfile = existingProfile
+          .rebuild((b) => b..subscriptionStatus = subscriptionStatus);
+
+      return await updateUserProfile(userProfileId, updatedProfile);
+    } catch (error) {
+      print('Failed to update user profile subscription status');
+    }
+    return null;
+  }
+
   Future<void> login() async {
     try {
       state = const AsyncLoading();
