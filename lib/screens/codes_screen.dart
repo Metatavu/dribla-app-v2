@@ -1,30 +1,17 @@
 import "package:dribla_app_v2/components/app_drawer.dart";
 import "package:dribla_app_v2/components/app_footer.dart";
-import "package:dribla_app_v2/components/app_header_appbar.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
-import "package:dribla_app_v2/components/game_icon.dart";
-import "package:dribla_app_v2/components/game_settings_dialog.dart";
-import "package:dribla_app_v2/components/styled_dialog.dart";
-import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
-import "package:dribla_app_v2/screens/character_creation_screen.dart";
-import "package:dribla_app_v2/screens/outfit_selection_screen.dart";
 import "package:dribla_app_v2/screens/profile_screen.dart";
-import "package:dribla_app_v2/services/api.dart";
 import "package:dribla_app_v2/theme/theme.dart";
-import "package:dribla_app_v2/game_utils.dart";
-import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
 import "package:sizer/sizer.dart";
 import 'package:share_plus/share_plus.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:dribla_app_v2/providers/auth_providers.dart';
-
-import "package:dribla_api/src/model/user_profile.dart";
 
 class CodesScreen extends HookConsumerWidget {
   const CodesScreen({super.key, required this.fromPurchase});
@@ -39,9 +26,7 @@ class CodesScreen extends HookConsumerWidget {
     final auth = ref.watch(authNotifierProvider);
     String? username = auth.value?.accessToken.preferred_username ?? "";
     final userProfileId = auth.value?.accessToken.sub ?? "";
-    final gamesPlayed = useState<int>(0);
-    final latestGame = useState<String>("");
-    final totalTimeSpent = useState<String>("");
+    final subscriptionStatus = useState<bool>(false);
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -57,27 +42,7 @@ class CodesScreen extends HookConsumerWidget {
               .getOrUpsertUserProfile(userProfileId!);
           if (profile != null) {
             // Do something with the profile if needed
-          }
-          final gameSessions = await ref
-              .read(authNotifierProvider.notifier)
-              .getGameSessionsForUser(userProfileId);
-          gamesPlayed.value = gameSessions.length;
-          final latestSession = await ref
-              .read(authNotifierProvider.notifier)
-              .getLatestGameSessionForUser(userProfileId);
-          if (latestSession != null) {
-            latestGame.value = latestSession.game ?? "";
-          }
-          final totalGameSummary = await ref
-              .read(authNotifierProvider.notifier)
-              .getAllTimeGameSessionSummaryForUser(userProfileId);
-          if (totalGameSummary != null) {
-            int time = totalGameSummary.totalDuration ?? 0;
-            int hours = time ~/ 3600;
-            int minutes = (time % 3600) ~/ 60;
-            int seconds = time % 60;
-            totalTimeSpent.value =
-                '${hours}${loc.hoursCounter} ${minutes}m ${seconds}s';
+            subscriptionStatus.value = profile.subscriptionStatus ?? false;
           }
         }
       }

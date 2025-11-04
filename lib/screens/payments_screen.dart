@@ -1,7 +1,6 @@
 import 'dart:async';
 import "package:dribla_app_v2/components/app_drawer.dart";
 import "package:dribla_app_v2/components/app_footer.dart";
-import "package:dribla_app_v2/components/app_header_appbar.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
 import "package:dribla_app_v2/screens/codes_screen.dart";
 import 'package:flutter/material.dart';

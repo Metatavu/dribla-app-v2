@@ -1,22 +1,12 @@
 import "package:dribla_app_v2/components/app_drawer.dart";
 import "package:dribla_app_v2/components/app_footer.dart";
-import "package:dribla_app_v2/components/app_header_appbar.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
-import "package:dribla_app_v2/components/game_icon.dart";
-import "package:dribla_app_v2/components/game_settings_dialog.dart";
-import "package:dribla_app_v2/components/styled_dialog.dart";
-import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/codes_screen.dart";
-import "package:dribla_app_v2/screens/outfit_selection_screen.dart";
-import "package:dribla_app_v2/services/api.dart";
 import "package:dribla_app_v2/theme/theme.dart";
-import "package:dribla_app_v2/game_utils.dart";
-import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
 import "package:sizer/sizer.dart";
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';

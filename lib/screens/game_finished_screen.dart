@@ -47,8 +47,6 @@ class GameFinishedScreen extends HookConsumerWidget {
         }
       }
       DeviceConnection.setAllLedColors(LedColors.red);
-      print('Final score is');
-      print(finalScore);
       int? convertedScore = int.tryParse(finalScore ?? "0");
       // duration in ms, rounded to seconds
       int? duration = elapsedTime ~/ 1000;
