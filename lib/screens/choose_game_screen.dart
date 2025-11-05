@@ -93,141 +93,153 @@ class ChooseGameScreen extends HookConsumerWidget {
     }, [isAuthExpired]);
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: false,
       appBar: const ConnectionStatusAppBar(),
       drawer: const AppDrawer(),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/dribla_new_background.jpg"),
-              fit: BoxFit.cover,
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/dribla_new_background.jpg"),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  child: Swiper(
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Padding(padding: EdgeInsets.only(top: 5.h)),
-                          GameIcon(
-                              animationSpeedMs:
-                                  GameUtils.getIconAnimationSpeed(index),
-                              colorSequency: GameUtils.getIconAnimation(index)),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
+            child: SingleChildScrollView(
+                child: Container(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                            width: double.infinity,
+                            height: 50.h,
+                            child: Swiper(
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    Padding(padding: EdgeInsets.only(top: 5.h)),
+                                    GameIcon(
+                                        animationSpeedMs:
+                                            GameUtils.getIconAnimationSpeed(
+                                                index),
+                                        colorSequency:
+                                            GameUtils.getIconAnimation(index)),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10.0),
+                                      child: Text(
+                                        getLocalizedTitle(index, loc),
+                                        style: theme.textTheme.headlineMedium,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                              itemCount: 9,
+                              loop: false,
+                              onIndexChanged: (index) =>
+                                  chosenGame.value = index,
+                              control: const SwiperControl(
+                                  color: DriblaColors.white),
+                              pagination: SwiperPagination(
+                                alignment: Alignment.bottomCenter,
+                                margin: const EdgeInsets.only(bottom: 22.0),
+                                builder: DotSwiperPaginationBuilder(
+                                    activeColor: DriblaColors.orange,
+                                    color: DriblaColors.white,
+                                    size: 15.0.sp,
+                                    activeSize: 15.0.sp,
+                                    space: 7.sp),
+                              ),
+                            )),
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 15.0),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              launchUrlString(getLocalizedInstructionUrl(
+                                  chosenGame.value, loc));
+                            },
                             child: Text(
-                              getLocalizedTitle(index, loc),
-                              style: theme.textTheme.headlineMedium,
-                              textAlign: TextAlign.center,
+                              loc.instructionsButtonText,
+                              style: theme.textTheme.bodyMedium,
                             ),
                           ),
-                        ],
-                      );
-                    },
-                    itemCount: 9,
-                    loop: false,
-                    onIndexChanged: (index) => chosenGame.value = index,
-                    control: const SwiperControl(color: DriblaColors.white),
-                    pagination: SwiperPagination(
-                      alignment: Alignment.bottomCenter,
-                      margin: const EdgeInsets.only(bottom: 22.0),
-                      builder: DotSwiperPaginationBuilder(
-                          activeColor: DriblaColors.orange,
-                          color: DriblaColors.white,
-                          size: 15.0.sp,
-                          activeSize: 15.0.sp,
-                          space: 7.sp),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 15.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    launchUrlString(
-                        getLocalizedInstructionUrl(chosenGame.value, loc));
-                  },
-                  child: Text(
-                    loc.instructionsButtonText,
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 15.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    var data = await showDialog<Map<String, String?>>(
-                      context: context,
-                      builder: (context) =>
-                          GameSettingsDialog(gameIndex: chosenGame.value),
-                    );
-                    if (data != null) {
-                      GameUtils.setGameSettings(chosenGame.value, data);
-                    }
-                  },
-                  child: Text(
-                    loc.settingsButtonText,
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 15.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (DeviceConnection.connectionStatus ==
-                            ConnectionStatus.bleConnected &&
-                        GameUtils.isAllowed(chosenGame.value,
-                            DeviceConnection.connectedSensorsCount)) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PlayGameScreen(
-                            selectedGame:
-                                GameUtils.selectGame(chosenGame.value),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 15.0),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              var data = await showDialog<Map<String, String?>>(
+                                context: context,
+                                builder: (context) => GameSettingsDialog(
+                                    gameIndex: chosenGame.value),
+                              );
+                              if (data != null) {
+                                GameUtils.setGameSettings(
+                                    chosenGame.value, data);
+                              }
+                            },
+                            child: Text(
+                              loc.settingsButtonText,
+                              style: theme.textTheme.bodyMedium,
+                            ),
                           ),
                         ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            GameUtils.isAllowed(chosenGame.value,
-                                    DeviceConnection.connectedSensorsCount)
-                                ? loc.noConnection
-                                : loc.gameNotAvailable,
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 15.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (DeviceConnection.connectionStatus ==
+                                      ConnectionStatus.bleConnected &&
+                                  GameUtils.isAllowed(chosenGame.value,
+                                      DeviceConnection.connectedSensorsCount)) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PlayGameScreen(
+                                      selectedGame: GameUtils.selectGame(
+                                          chosenGame.value),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      GameUtils.isAllowed(
+                                              chosenGame.value,
+                                              DeviceConnection
+                                                  .connectedSensorsCount)
+                                          ? loc.noConnection
+                                          : loc.gameNotAvailable,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(width: 5),
+                                Text(
+                                  loc.startGameButton,
+                                  style: theme.textTheme.bodyMedium,
+                                ),
+                                const SizedBox(width: 5),
+                                const Icon(
+                                  Icons.arrow_forward,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      );
-                    }
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(width: 5),
-                      Text(
-                        loc.startGameButton,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                      const SizedBox(width: 5),
-                      const Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const AppFooter(),
-            ],
+                        SizedBox(height: 25.h),
+                      ],
+                    ))),
           ),
-        ),
+          const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
+        ],
       ),
     );
   }

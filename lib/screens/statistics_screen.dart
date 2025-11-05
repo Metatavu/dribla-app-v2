@@ -270,6 +270,7 @@ class StatisticsScreen extends HookConsumerWidget {
           final latestWormGameHighscoreSession = await ref
               .read(authNotifierProvider.notifier)
               .getAllTimeWormGameHighscoreForUser(userProfileId);
+          if (!context.mounted) return;
           if (latestWormGameHighscoreSession != null) {
             allTimeWormGameHighscore.value =
                 latestWormGameHighscoreSession.score ?? 0;
