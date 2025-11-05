@@ -45,6 +45,7 @@ class ProfileScreen extends HookConsumerWidget {
         }
         if (auth.hasValue && auth.value != null) {
           final userProfileId = auth.value?.accessToken.sub;
+          if (!context.mounted) return;
           final profile = await ref
               .read(authNotifierProvider.notifier)
               .getOrUpsertUserProfile(userProfileId!);
@@ -53,16 +54,19 @@ class ProfileScreen extends HookConsumerWidget {
             outfitType.value = (profile.characterOutfitType ?? 0);
             shoesType.value = (profile.characterShoesType ?? 0);
           }
+          if (!context.mounted) return;
           final gameSessions = await ref
               .read(authNotifierProvider.notifier)
               .getGameSessionsForUser(userProfileId);
           gamesPlayed.value = gameSessions.length;
+          if (!context.mounted) return;
           final latestSession = await ref
               .read(authNotifierProvider.notifier)
               .getLatestGameSessionForUser(userProfileId);
           if (latestSession != null) {
             latestGame.value = latestSession.game ?? "";
           }
+          if (!context.mounted) return;
           final totalGameSummary = await ref
               .read(authNotifierProvider.notifier)
               .getAllTimeGameSessionSummaryForUser(userProfileId);

@@ -143,11 +143,13 @@ class StatisticsScreen extends HookConsumerWidget {
         }
         if (auth.hasValue && auth.value != null) {
           final userProfileId = auth.value?.accessToken.sub;
+          if (!context.mounted) return;
           final gameSessions = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificWeekGameSessionsForUser(
                   userProfileId!, currentWeekStart.value);
           gamesPlayed.value = gameSessions.length;
+          if (!context.mounted) return;
           final latestSession = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificWeekLatestGameSessionForUser(
@@ -155,6 +157,7 @@ class StatisticsScreen extends HookConsumerWidget {
           if (latestSession != null) {
             latestGame.value = latestSession.game ?? "";
           }
+          if (!context.mounted) return;
           final weeklyGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificWeekGameSessionsSummaryForUser(
@@ -178,25 +181,32 @@ class StatisticsScreen extends HookConsumerWidget {
           DateTime sunday = monday.add(const Duration(days: 6));
 
           // get game session summaries for each day
+          if (!context.mounted) return;
           final mondayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, monday);
+          if (!context.mounted) return;
           final tuesdayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, tuesday);
+          if (!context.mounted) return;
           final wednesdayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(
                   userProfileId, wednesday);
+          if (!context.mounted) return;
           final thursdayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, thursday);
+          if (!context.mounted) return;
           final fridayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, friday);
+          if (!context.mounted) return;
           final saturdayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, saturday);
+          if (!context.mounted) return;
           final sundayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, sunday);
@@ -216,24 +226,31 @@ class StatisticsScreen extends HookConsumerWidget {
           sundayDuration.value =
               (sundayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
           // get Worm game sessions for each day
+          if (!context.mounted) return;
           final mondayWormGameSession = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayWormGameSessionForUser(userProfileId, monday);
+          if (!context.mounted) return;
           final tuesdayWormGameSession = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayWormGameSessionForUser(userProfileId, tuesday);
+          if (!context.mounted) return;
           final wednesdayWormGameSession = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayWormGameSessionForUser(userProfileId, wednesday);
+          if (!context.mounted) return;
           final thursdayWormGameSession = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayWormGameSessionForUser(userProfileId, thursday);
+          if (!context.mounted) return;
           final fridayWormGameSession = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayWormGameSessionForUser(userProfileId, friday);
+          if (!context.mounted) return;
           final saturdayWormGameSession = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayWormGameSessionForUser(userProfileId, saturday);
+          if (!context.mounted) return;
           final sundayWormGameSession = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayWormGameSessionForUser(userProfileId, sunday);
@@ -249,6 +266,7 @@ class StatisticsScreen extends HookConsumerWidget {
               (saturdayWormGameSession?.score ?? 0).toDouble();
           sundayScore.value = (sundayWormGameSession?.score ?? 0).toDouble();
           // get all-time Worm game highscore
+          if (!context.mounted) return;
           final latestWormGameHighscoreSession = await ref
               .read(authNotifierProvider.notifier)
               .getAllTimeWormGameHighscoreForUser(userProfileId);

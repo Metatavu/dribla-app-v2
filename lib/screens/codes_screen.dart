@@ -37,6 +37,7 @@ class CodesScreen extends HookConsumerWidget {
         }
         if (auth.hasValue && auth.value != null) {
           final userProfileId = auth.value?.accessToken.sub;
+          if (!context.mounted) return;
           final profile = await ref
               .read(authNotifierProvider.notifier)
               .getOrUpsertUserProfile(userProfileId!);
