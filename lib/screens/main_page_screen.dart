@@ -46,6 +46,7 @@ class MainPageScreen extends HookConsumerWidget {
               .read(authNotifierProvider.notifier)
               .getOrUpsertUserProfile(userProfileId!);
           if (profile != null) {
+            if (!context.mounted) return;
             characterType.value = (profile.characterType ?? 0);
             outfitType.value = (profile.characterOutfitType ?? 0);
             shoesType.value = (profile.characterShoesType ?? 0);
@@ -60,6 +61,7 @@ class MainPageScreen extends HookConsumerWidget {
               .read(authNotifierProvider.notifier)
               .getAllTimeGameSessionSummaryForUser(userProfileId);
           if (totalGameSummary != null) {
+            if (!context.mounted) return;
             int time = totalGameSummary.totalDuration ?? 0;
             int hours = time ~/ 3600;
             int minutes = (time % 3600) ~/ 60;

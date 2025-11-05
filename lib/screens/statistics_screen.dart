@@ -5,7 +5,6 @@ import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
 import "package:sizer/sizer.dart";
 import "package:fl_chart/fl_chart.dart";
 

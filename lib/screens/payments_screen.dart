@@ -32,26 +32,28 @@ class PaymentsScreen extends HookConsumerWidget {
     useEffect(() {
       subscription.value = iap.purchaseStream.listen((purchaseDetailsList) {
         for (final purchaseDetails in purchaseDetailsList) {
-          if (purchaseDetails.status == PurchaseStatus.pending) {
-            // Show pending UI if needed
-          } else {
-            if (purchaseDetails.status == PurchaseStatus.error) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text(
-                        'Purchase error: ${purchaseDetails.error?.message ?? "Unknown error"}')),
-              );
-            } else if (purchaseDetails.status == PurchaseStatus.purchased ||
-                purchaseDetails.status == PurchaseStatus.restored) {
-              // For simplicity, assume all purchases are valid
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text(
-                        'Product delivered: ${purchaseDetails.productID}')),
-              );
-            }
-            if (purchaseDetails.pendingCompletePurchase) {
-              InAppPurchase.instance.completePurchase(purchaseDetails);
+          if (purchaseDetails.productID == 'basic_test_sub') {
+            if (purchaseDetails.status == PurchaseStatus.pending) {
+              // Show pending UI if needed
+            } else {
+              if (purchaseDetails.status == PurchaseStatus.error) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text(
+                          'Purchase error: ${purchaseDetails.error?.message ?? "Unknown error"}')),
+                );
+              } else if (purchaseDetails.status == PurchaseStatus.purchased ||
+                  purchaseDetails.status == PurchaseStatus.restored) {
+                // For simplicity, assume all purchases are valid
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text(
+                          'Product delivered: ${purchaseDetails.productID}')),
+                );
+              }
+              if (purchaseDetails.pendingCompletePurchase) {
+                InAppPurchase.instance.completePurchase(purchaseDetails);
+              }
             }
           }
         }
@@ -70,11 +72,6 @@ class PaymentsScreen extends HookConsumerWidget {
           return;
         }
         const Set<String> _kIds = {
-          'sample_product_1',
-          'sample_product_2',
-          'sample_product_3',
-          'sample_product_4',
-          'sample_product_5',
           'basic_test_sub',
         };
         final response = await iap.queryProductDetails(_kIds);
