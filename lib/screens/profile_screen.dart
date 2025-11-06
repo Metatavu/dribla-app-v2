@@ -66,7 +66,37 @@ class ProfileScreen extends HookConsumerWidget {
               .getLatestGameSessionForUser(userProfileId);
           if (latestSession != null) {
             if (!context.mounted) return;
-            latestGame.value = latestSession.game ?? "";
+            switch (latestSession.game) {
+              case 'game_snake':
+                latestGame.value = loc.snake;
+                break;
+              case 'game_tengame':
+                latestGame.value = loc.tengame;
+                break;
+              case 'game_tengame_multiplayer':
+                latestGame.value = loc.tengameMultiplayer;
+                break;
+              case 'game_tenturns':
+                latestGame.value = loc.tenturns;
+                break;
+              case 'game_pick_berries':
+                latestGame.value = loc.pickBerries;
+                break;
+              case 'game_envelope':
+                latestGame.value = loc.envelope;
+                break;
+              case 'game_zigzag':
+                latestGame.value = loc.zigzag;
+                break;
+              case 'game_star_game':
+                latestGame.value = loc.starGameText;
+                break;
+              case 'game_memory_game':
+                latestGame.value = loc.memoryGame;
+                break;
+              default:
+                latestGame.value = latestSession.game ?? "";
+            }
           }
           if (!context.mounted) return;
           final totalGameSummary = await ref

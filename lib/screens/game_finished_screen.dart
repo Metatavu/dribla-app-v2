@@ -50,37 +50,37 @@ class GameFinishedScreen extends HookConsumerWidget {
       int? convertedScore = int.tryParse(finalScore ?? "0");
       // duration in ms, rounded to seconds
       int? duration = elapsedTime ~/ 1000;
-      String game = "Unknown game";
+      String game = "game_unknown";
       switch (gameIndex) {
         case 1:
-          game = loc.envelope;
+          game = 'game_envelope';
           break;
         case 2:
-          game = loc.zigzag;
+          game = 'game_zigzag';
           break;
         case 3:
-          game = loc.pickBerries;
+          game = 'game_pick_berries';
           break;
         case 4:
-          game = loc.tengame;
+          game = 'game_tengame';
           break;
         case 5:
-          game = loc.tengameMultiplayer;
+          game = 'game_tengame_multiplayer';
           break;
         case 6:
-          game = loc.tenturns;
+          game = 'game_tenturns';
           break;
         case 7:
-          game = loc.snake;
+          game = 'game_snake';
           break;
         case 8:
-          game = loc.starGameText;
+          game = 'game_star_game';
           break;
         case 9:
-          game = loc.memoryGame;
+          game = 'game_memory_game';
           break;
         default:
-          game = "Unknown Game";
+          game = "game_unknown";
       }
       ref
           .read(authNotifierProvider.notifier)

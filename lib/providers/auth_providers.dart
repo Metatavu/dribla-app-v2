@@ -173,7 +173,7 @@ class AuthNotifier extends _$AuthNotifier {
     try {
       final response = await driblaApi.getGameSessionsApi().listgameSessions(
           userId: userProfileId,
-          game: 'Matopeli',
+          game: 'game_snake',
           pageSize: 1,
           sortBy: 'score',
           sortOrder: 'desc');
@@ -290,13 +290,12 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<GameSession?> getSpecificDayWormGameSessionForUser(
       String userProfileId, DateTime day) async {
-    // todo game names need to be localized, maybe change api to return an id
     try {
       final startOfDay = DateTime(day.year, day.month, day.day);
       final endOfDay = startOfDay.add(const Duration(days: 1));
       final response = await driblaApi.getGameSessionsApi().listgameSessions(
           userId: userProfileId,
-          game: 'Matopeli',
+          game: 'game_snake',
           createdBefore: endOfDay.toUtc(),
           createdAfter: startOfDay.toUtc(),
           pageSize: 1,
