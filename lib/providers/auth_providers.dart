@@ -153,6 +153,20 @@ class AuthNotifier extends _$AuthNotifier {
     return null;
   }
 
+  Future<bool> getUserSubscriptionStatus(String userProfileId) async {
+    try {
+      final response = await driblaApi
+          .getUserProfilesApi()
+          .findUserProfile(userProfileId: userProfileId);
+      if (response.data != null) {
+        return response.data!.subscriptionStatus ?? false;
+      }
+    } catch (error) {
+      print('Failed to get user profile subscription status');
+    }
+    return false;
+  }
+
   Future<List<GameSession>> getGameSessionsForUser(String userProfileId) async {
     try {
       final response = await driblaApi
