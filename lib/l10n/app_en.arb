@@ -137,5 +137,10 @@
     "loggingInWithCode": "Log in with app code",
     "enterAppCode": "Enter an app code",
     "backToProfile": "Back to profile",
-    "appCodeExplanation": "Enter an app code here (for shared users)"
+    "appCodeExplanation": "Enter an app code here (for shared users)",
+    "subscriptionHandling": "Subscription management",
+    "subscriptionActive": "Your subscription is active",
+    "subscriptionEndDate": "Subscription end date:",
+    "renewSubscription": "Renew subscription",
+    "subscriptionInactive": "The subscription has ended"
 }

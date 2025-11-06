@@ -138,5 +138,10 @@
     "loggingInWithCode": "Käyttökoodilla kirjautuminen",
     "enterAppCode": "Syötä käyttökoodi",
     "backToProfile": "Takaisin profiiliin",
-    "appCodeExplanation": "Syötä tähän käyttökoodisi (jaetuille käyttäjille)"
+    "appCodeExplanation": "Syötä tähän käyttökoodisi (jaetuille käyttäjille)",
+    "subscriptionHandling": "Tilaustenhallinta",
+    "subscriptionActive": "Tilauksesi on voimassa",
+    "subscriptionEndDate": "Tilauksen päättymispäivä:",
+    "renewSubscription": "Uusi tilaus",
+    "subscriptionInactive": "Tilaus on päättynyt"
 }

@@ -72,6 +72,7 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
   Future<void> _checkBatteryLevel() async {
     final batteryLevel = await DeviceConnection.readBatteryLevel();
     //developer.log("Got battery level: " + batteryLevel.toString());
+    if (!mounted) return;
     setState(() {
       _batteryLevel = batteryLevel;
     });

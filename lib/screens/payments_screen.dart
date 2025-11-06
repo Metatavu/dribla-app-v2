@@ -27,6 +27,7 @@ class PaymentsScreen extends HookConsumerWidget {
     final loading = useState<bool>(true);
     final subscription =
         useRef<StreamSubscription<List<PurchaseDetails>>?>(null);
+    final isSubscribed = useState<bool>(false);
 
     // Listen to purchase updates
     useEffect(() {
@@ -42,14 +43,23 @@ class PaymentsScreen extends HookConsumerWidget {
                       content: Text(
                           'Purchase error: ${purchaseDetails.error?.message ?? "Unknown error"}')),
                 );
-              } else if (purchaseDetails.status == PurchaseStatus.purchased ||
-                  purchaseDetails.status == PurchaseStatus.restored) {
+              } else if (purchaseDetails.status == PurchaseStatus.purchased) {
                 // For simplicity, assume all purchases are valid
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text(
                           'Product delivered: ${purchaseDetails.productID}')),
                 );
+                isSubscribed.value = true;
+                print('Set isSubscribed to true from purchased');
+              } else if (purchaseDetails.status == PurchaseStatus.restored) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text(
+                          'Purchase restored: ${purchaseDetails.productID}')),
+                );
+                isSubscribed.value = true;
+                print('Set isSubscribed to true from restored purchase');
               }
               if (purchaseDetails.pendingCompletePurchase) {
                 InAppPurchase.instance.completePurchase(purchaseDetails);
@@ -71,10 +81,10 @@ class PaymentsScreen extends HookConsumerWidget {
           loading.value = false;
           return;
         }
-        const Set<String> _kIds = {
+        const Set<String> _productIds = {
           'basic_test_sub',
         };
-        final response = await iap.queryProductDetails(_kIds);
+        final response = await iap.queryProductDetails(_productIds);
         products.value = response.productDetails;
         defaultSubscription.value = response.productDetails
             .firstWhere((product) => product.id == 'basic_test_sub');
@@ -131,10 +141,11 @@ class PaymentsScreen extends HookConsumerWidget {
           ),
           child: Padding(
             padding: EdgeInsets.all(16.0),
-            child: Column(
+            child: SingleChildScrollView(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(loc.buySubscription,
+                Text(loc.subscriptionHandling,
                     style: theme.textTheme.headlineMedium),
                 Text(loc.earlyAccess, style: theme.textTheme.bodyMedium),
                 Image.asset('assets/promo_image_mat.jpg', height: 60.w),
@@ -144,18 +155,29 @@ class PaymentsScreen extends HookConsumerWidget {
                 SizedBox(
                   height: 3.h,
                 ),
+                Text(isSubscribed.value == true
+                    ? loc.subscriptionActive
+                    : loc.subscriptionInactive),
+                SizedBox(height: 2.h),
+                Text(loc.subscriptionEndDate),
+                SizedBox(height: 2.h),
+                Text('2024-12-31'),
+                SizedBox(height: 4.h),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: buySubscription,
                     child: Text(
-                      loc.subscribeNow,
+                      isSubscribed.value == true
+                          ? loc.renewSubscription
+                          : loc.subscribeNow,
                       style: theme.textTheme.bodyMedium,
                     ),
                   ),
                 ),
+                SizedBox(height: 25.h)
               ],
-            ),
+            )),
           ),
         ),
         const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
