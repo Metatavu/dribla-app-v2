@@ -106,7 +106,7 @@ class StatisticsScreen extends HookConsumerWidget {
     final gamesPlayed = useState<int>(0);
     final latestGame = useState<String>("");
     final timeSpent = useState<String>("");
-    final totalScore = useState<String>("");
+    // final totalScore = useState<String>("");
     String? username = auth.value?.accessToken.preferred_username ?? "";
 
     // Track the currently displayed week (Monday)
@@ -140,6 +140,7 @@ class StatisticsScreen extends HookConsumerWidget {
             Navigator.pushReplacementNamed(context, '/login');
           });
         }
+        // Could be optimized to fetch things in one call
         if (auth.hasValue && auth.value != null) {
           final userProfileId = auth.value?.accessToken.sub;
           if (!context.mounted) return;
@@ -148,58 +149,15 @@ class StatisticsScreen extends HookConsumerWidget {
               .getSpecificWeekGameSessionsForUser(
                   userProfileId!, currentWeekStart.value);
           if (!context.mounted) return;
-          gamesPlayed.value = gameSessions.length;
-          if (!context.mounted) return;
           final latestSession = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificWeekLatestGameSessionForUser(
                   userProfileId!, currentWeekStart.value);
-          if (latestSession != null) {
-            switch (latestSession.game) {
-              case 'game_snake':
-                latestGame.value = loc.snake;
-                break;
-              case 'game_tengame':
-                latestGame.value = loc.tengame;
-                break;
-              case 'game_tengame_multiplayer':
-                latestGame.value = loc.tengameMultiplayer;
-                break;
-              case 'game_tenturns':
-                latestGame.value = loc.tenturns;
-                break;
-              case 'game_pick_berries':
-                latestGame.value = loc.pickBerries;
-                break;
-              case 'game_envelope':
-                latestGame.value = loc.envelope;
-                break;
-              case 'game_zigzag':
-                latestGame.value = loc.zigzag;
-                break;
-              case 'game_star_game':
-                latestGame.value = loc.starGameText;
-                break;
-              case 'game_memory_game':
-                latestGame.value = loc.memoryGame;
-                break;
-              default:
-                latestGame.value = latestSession.game ?? "";
-            }
-          }
           if (!context.mounted) return;
           final weeklyGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificWeekGameSessionsSummaryForUser(
                   userProfileId, currentWeekStart.value);
-          int time = weeklyGameSessionSummary?.totalDuration ?? 0;
-          int hours = time ~/ 3600;
-          int minutes = (time % 3600) ~/ 60;
-          int seconds = time % 60;
-          timeSpent.value =
-              "${hours}${loc.hoursCounter} ${minutes}m ${seconds}s";
-          int score = weeklyGameSessionSummary?.totalScore ?? 0;
-          totalScore.value = score.toString();
 
           // Use currentWeekStart for week navigation
           DateTime monday = currentWeekStart.value;
@@ -240,21 +198,6 @@ class StatisticsScreen extends HookConsumerWidget {
           final sundayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, sunday);
-          // set durations for each day (in minutes)
-          mondayDuration.value =
-              (mondayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
-          tuesdayDuration.value =
-              (tuesdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
-          wednesdayDuration.value =
-              (wednesdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
-          thursdayDuration.value =
-              (thursdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
-          fridayDuration.value =
-              (fridayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
-          saturdayDuration.value =
-              (saturdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
-          sundayDuration.value =
-              (sundayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
           // get Worm game sessions for each day
           if (!context.mounted) return;
           final mondayWormGameSession = await ref
@@ -284,7 +227,76 @@ class StatisticsScreen extends HookConsumerWidget {
           final sundayWormGameSession = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayWormGameSessionForUser(userProfileId, sunday);
-          // set highscores for each day
+          // get all-time Worm game highscore
+          if (!context.mounted) return;
+          final latestWormGameHighscoreSession = await ref
+              .read(authNotifierProvider.notifier)
+              .getAllTimeWormGameHighscoreForUser(userProfileId);
+          if (!context.mounted) return;
+
+          // Set values after fetch is complete
+          // Total games played in week
+          gamesPlayed.value = gameSessions.length;
+          // Last game played
+          if (latestSession != null) {
+            switch (latestSession.game) {
+              case 'game_snake':
+                latestGame.value = loc.snake;
+                break;
+              case 'game_tengame':
+                latestGame.value = loc.tengame;
+                break;
+              case 'game_tengame_multiplayer':
+                latestGame.value = loc.tengameMultiplayer;
+                break;
+              case 'game_tenturns':
+                latestGame.value = loc.tenturns;
+                break;
+              case 'game_pick_berries':
+                latestGame.value = loc.pickBerries;
+                break;
+              case 'game_envelope':
+                latestGame.value = loc.envelope;
+                break;
+              case 'game_zigzag':
+                latestGame.value = loc.zigzag;
+                break;
+              case 'game_star_game':
+                latestGame.value = loc.starGameText;
+                break;
+              case 'game_memory_game':
+                latestGame.value = loc.memoryGame;
+                break;
+              default:
+                latestGame.value = latestSession.game ?? "";
+            }
+          }
+          // set weekly time spent
+          int time = weeklyGameSessionSummary?.totalDuration ?? 0;
+          int hours = time ~/ 3600;
+          int minutes = (time % 3600) ~/ 60;
+          int seconds = time % 60;
+          timeSpent.value =
+              "${hours}${loc.hoursCounter} ${minutes}m ${seconds}s";
+          // weekly total score is not used
+          // int score = weeklyGameSessionSummary?.totalScore ?? 0;
+          // totalScore.value = score.toString();
+          // set durations for each day (in minutes)
+          mondayDuration.value =
+              (mondayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          tuesdayDuration.value =
+              (tuesdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          wednesdayDuration.value =
+              (wednesdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          thursdayDuration.value =
+              (thursdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          fridayDuration.value =
+              (fridayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          saturdayDuration.value =
+              (saturdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          sundayDuration.value =
+              (sundayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
+          // set worm game highscores for each day
           mondayScore.value = (mondayWormGameSession?.score ?? 0).toDouble();
           tuesdayScore.value = (tuesdayWormGameSession?.score ?? 0).toDouble();
           wednesdayScore.value =
@@ -295,12 +307,7 @@ class StatisticsScreen extends HookConsumerWidget {
           saturdayScore.value =
               (saturdayWormGameSession?.score ?? 0).toDouble();
           sundayScore.value = (sundayWormGameSession?.score ?? 0).toDouble();
-          // get all-time Worm game highscore
-          if (!context.mounted) return;
-          final latestWormGameHighscoreSession = await ref
-              .read(authNotifierProvider.notifier)
-              .getAllTimeWormGameHighscoreForUser(userProfileId);
-          if (!context.mounted) return;
+          // all time worm game highscore
           if (latestWormGameHighscoreSession != null) {
             allTimeWormGameHighscore.value =
                 latestWormGameHighscoreSession.score ?? 0;
