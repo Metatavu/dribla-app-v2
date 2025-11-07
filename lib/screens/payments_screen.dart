@@ -31,9 +31,41 @@ class PaymentsScreen extends HookConsumerWidget {
     final auth = ref.watch(authNotifierProvider);
     final userProfileId = auth.value?.accessToken.sub ?? "";
 
+    Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
+      // TODO: Implement real purchase verification logic here
+      // final url = Uri.parse('http://$serverIp:8080/verifypurchase');
+      // const headers = {
+      //   'Content-type': 'application/json',
+      //   'Accept': 'application/json',
+      // };
+      // final response = await http.post(
+      //   url,
+      //   body: jsonEncode({
+      //     'source': purchaseDetails.verificationData.source,
+      //     'productId': purchaseDetails.productID,
+      //     'verificationData':
+      //         purchaseDetails.verificationData.serverVerificationData,
+      //     'userId': firebaseNotifier.user?.uid,
+      //   }),
+      //   headers: headers,
+      // );
+      // if (response.statusCode == 200) {
+      //   return true;
+      // } else {
+      //   return false;
+      // }
+      await Future.delayed(const Duration(seconds: 1));
+      return true;
+    }
+
     // Listen to purchase updates
     useEffect(() {
-      subscription.value = iap.purchaseStream.listen((purchaseDetailsList) {
+      subscription.value =
+          iap.purchaseStream.listen((purchaseDetailsList) async {
+        /*
+          When the [PurchaseDetails.status] is [PurchaseStatus.purchased], [PurchaseStatus.restored] or [PurchaseStatus.error]
+          you should deliver the content or handle the error, then call [completePurchase] to finish the purchasing process.
+        */
         for (final purchaseDetails in purchaseDetailsList) {
           if (purchaseDetails.productID == 'basic_test_sub') {
             if (purchaseDetails.status == PurchaseStatus.pending) {
@@ -47,13 +79,32 @@ class PaymentsScreen extends HookConsumerWidget {
                 );
               } else if (purchaseDetails.status == PurchaseStatus.purchased) {
                 // For simplicity, assume all purchases are valid
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(
-                          'Product delivered: ${purchaseDetails.productID}')),
-                );
+                final isValid = await _verifyPurchase(purchaseDetails);
+                if (isValid) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                            'Product delivered: ${purchaseDetails.productID}')),
+                  );
+                  // iap.completePurchase(purchaseDetails);
+                  ref
+                      .read(authNotifierProvider.notifier)
+                      .updateUserProfileSubscriptionStatus(userProfileId, true);
+                  // navigate to codes screen after purchase
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CodesScreen(fromPurchase: true)),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                            'Purchase verification failed: ${purchaseDetails.productID}')),
+                  );
+                }
               } else if (purchaseDetails.status == PurchaseStatus.restored) {
-                // when user comes back to the page (one time)
+                // if purchase is not completed
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text(
@@ -113,17 +164,11 @@ class PaymentsScreen extends HookConsumerWidget {
       if (productDetails == null) return;
       final purchaseParam = PurchaseParam(productDetails: productDetails);
       try {
+        // will set purchaseStatus.restored if it was already purchased
         iap.buyNonConsumable(purchaseParam: purchaseParam);
-        // update subscription status in user profile
-        ref
-            .read(authNotifierProvider.notifier)
-            .updateUserProfileSubscriptionStatus(userProfileId, true);
-        // navigate to codes screen after purchase
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CodesScreen(fromPurchase: true)),
-        );
+        // TODO purchase should be completed by calling completePurchase in the listener above
+        // TODO purchase verification in listener above
+        // TODO move subscription status update and user redirect to listener above after verifying purchase
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error during purchase attempt: $e')),
@@ -132,7 +177,7 @@ class PaymentsScreen extends HookConsumerWidget {
     }
 
     void removeSubscription() {
-      // debug function to remove subscription
+      // debug function to remove subscription only from user profile
       ref
           .read(authNotifierProvider.notifier)
           .updateUserProfileSubscriptionStatus(userProfileId, false);
