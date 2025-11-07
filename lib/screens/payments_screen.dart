@@ -28,6 +28,8 @@ class PaymentsScreen extends HookConsumerWidget {
     final subscription =
         useRef<StreamSubscription<List<PurchaseDetails>>?>(null);
     final isSubscribed = useState<bool>(false);
+    final auth = ref.watch(authNotifierProvider);
+    final userProfileId = auth.value?.accessToken.sub ?? "";
 
     // Listen to purchase updates
     useEffect(() {
@@ -50,16 +52,13 @@ class PaymentsScreen extends HookConsumerWidget {
                       content: Text(
                           'Product delivered: ${purchaseDetails.productID}')),
                 );
-                isSubscribed.value = true;
-                print('Set isSubscribed to true from purchased');
               } else if (purchaseDetails.status == PurchaseStatus.restored) {
+                // when user comes back to the page (one time)
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text(
                           'Purchase restored: ${purchaseDetails.productID}')),
                 );
-                isSubscribed.value = true;
-                print('Set isSubscribed to true from restored purchase');
               }
               if (purchaseDetails.pendingCompletePurchase) {
                 InAppPurchase.instance.completePurchase(purchaseDetails);
@@ -73,9 +72,15 @@ class PaymentsScreen extends HookConsumerWidget {
       };
     }, []);
 
-    // Initialize products
+    // Initialize products and subscription status
     useEffect(() {
       Future.microtask(() async {
+        final profile = await ref
+            .read(authNotifierProvider.notifier)
+            .getOrUpsertUserProfile(userProfileId!);
+        if (profile != null) {
+          isSubscribed.value = profile.subscriptionStatus ?? false;
+        }
         final available = await iap.isAvailable();
         if (!available) {
           loading.value = false;
@@ -109,6 +114,10 @@ class PaymentsScreen extends HookConsumerWidget {
       final purchaseParam = PurchaseParam(productDetails: productDetails);
       try {
         iap.buyNonConsumable(purchaseParam: purchaseParam);
+        // update subscription status in user profile
+        ref
+            .read(authNotifierProvider.notifier)
+            .updateUserProfileSubscriptionStatus(userProfileId, true);
         // navigate to codes screen after purchase
         Navigator.push(
           context,
@@ -120,6 +129,17 @@ class PaymentsScreen extends HookConsumerWidget {
           SnackBar(content: Text('Error during purchase attempt: $e')),
         );
       }
+    }
+
+    void removeSubscription() {
+      // debug function to remove subscription
+      ref
+          .read(authNotifierProvider.notifier)
+          .updateUserProfileSubscriptionStatus(userProfileId, false);
+      isSubscribed.value = false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Subscription removed (debug)')),
+      );
     }
 
     if (loading.value) {
@@ -171,6 +191,17 @@ class PaymentsScreen extends HookConsumerWidget {
                       isSubscribed.value == true
                           ? loc.renewSubscription
                           : loc.subscribeNow,
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: removeSubscription,
+                    child: Text(
+                      'Remove subscription (debug)',
                       style: theme.textTheme.bodyMedium,
                     ),
                   ),

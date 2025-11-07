@@ -26,7 +26,7 @@ class CodesScreen extends HookConsumerWidget {
     final auth = ref.watch(authNotifierProvider);
     String? username = auth.value?.accessToken.preferred_username ?? "";
     final userProfileId = auth.value?.accessToken.sub ?? "";
-    final subscriptionStatus = useState<bool>(false);
+    final isSubscribed = useState<bool>(false);
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -42,8 +42,7 @@ class CodesScreen extends HookConsumerWidget {
               .read(authNotifierProvider.notifier)
               .getOrUpsertUserProfile(userProfileId!);
           if (profile != null) {
-            // Do something with the profile if needed
-            subscriptionStatus.value = profile.subscriptionStatus ?? false;
+            isSubscribed.value = profile.subscriptionStatus ?? false;
           }
         }
       }
@@ -171,9 +170,11 @@ class CodesScreen extends HookConsumerWidget {
                   SizedBox(
                     height: 3.h,
                   ),
-                  fromPurchase ? Text('') : Text(loc.appCodeExplanation),
+                  isSubscribed.value == true
+                      ? Text('')
+                      : Text(loc.appCodeExplanation),
                   SizedBox(height: 2.h),
-                  fromPurchase
+                  isSubscribed.value == true
                       ? Text('')
                       : TextField(
                           decoration: InputDecoration(
