@@ -143,5 +143,6 @@
     "subscriptionActive": "Tilauksesi on voimassa",
     "subscriptionEndDate": "Tilauksen päättymispäivä:",
     "renewSubscription": "Uusi tilaus",
-    "subscriptionInactive": "Tilaus on päättynyt"
+    "subscriptionInactive": "Tilaus on päättynyt",
+    "noScoresThisWeek": "Ei ennätyksiä tällä viikolla"
 }

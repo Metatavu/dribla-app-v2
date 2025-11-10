@@ -8,7 +8,7 @@
     "unableToConnectBody": "Device may be offline, or then the app isn't allowed to access bluetooth devices.\nPlease make sure the device is online, and your mobile device permits bluetooth access for the application.",
     "backButtonText": "Back",
     "retryButtonText": "Try again",
-    "startGameText": "LET`S START",
+    "startGameText": "LET'S START",
     "tapsLeft": "Left",
     "gameEnded": "Game ended",
     "gameTime": "Game time: ",
@@ -117,7 +117,7 @@
     "herePlayerCodes": "Here are your player codes:",
     "findCodesLater": "You can find these later from the player management.",
     "continueButton": "Continue",
-    "weeklyActivity": "Weekly activity",
+    "weeklyActivity": "Weekly playtime",
     "logoutButton": "Logout",
     "cancelButton": "Cancel",
     "details": "Details",
@@ -142,5 +142,6 @@
     "subscriptionActive": "Your subscription is active",
     "subscriptionEndDate": "Subscription end date:",
     "renewSubscription": "Renew subscription",
-    "subscriptionInactive": "The subscription has ended"
+    "subscriptionInactive": "The subscription has ended",
+    "noScoresThisWeek": "Ei ennätyksiä tällä viikolla"
 }

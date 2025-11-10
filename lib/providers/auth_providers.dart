@@ -238,6 +238,30 @@ class AuthNotifier extends _$AuthNotifier {
     return null;
   }
 
+  Future<List<GameSession>> getWeeklySnakeGameSessionsForUser(
+      String userProfileId, DateTime weekStart) async {
+    try {
+      final startOfWeek =
+          DateTime(weekStart.year, weekStart.month, weekStart.day);
+      final endOfWeek = startOfWeek.add(const Duration(days: 7));
+      final response = await driblaApi.getGameSessionsApi().listgameSessions(
+          userId: userProfileId,
+          createdBefore: endOfWeek.toUtc(),
+          createdAfter: startOfWeek.toUtc(),
+          pageSize: 10,
+          game: 'game_snake',
+          sortBy: 'score',
+          sortOrder: 'desc');
+      if (response.data != null) {
+        final gameSessions = response.data?.toList() ?? [];
+        return gameSessions;
+      }
+    } catch (error) {
+      print('Failed to get weekly snake game sessions for user');
+    }
+    return [];
+  }
+
   Future<List<GameSession>> getWeeklyGameSessionsForUser(
       String userProfileId) async {
     try {

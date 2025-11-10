@@ -31,7 +31,7 @@ class StatisticsScreen extends HookConsumerWidget {
             return BarTooltipItem(
               rod.toY.round().toString(),
               const TextStyle(
-                color: DriblaColors.greenAccent,
+                color: Color.fromARGB(255, 255, 164, 118),
                 fontWeight: FontWeight.bold,
               ),
             );
@@ -41,7 +41,7 @@ class StatisticsScreen extends HookConsumerWidget {
 
   Widget getTitles(BuildContext context, double value, TitleMeta meta) {
     final style = TextStyle(
-      color: DriblaColors.greenbg,
+      color: DriblaColors.orange,
       fontWeight: FontWeight.bold,
       fontSize: 14,
     );
@@ -100,14 +100,18 @@ class StatisticsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toLanguageTag();
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
 
     final gamesPlayed = useState<int>(0);
     final latestGame = useState<String>("");
     final timeSpent = useState<String>("");
-    // final totalScore = useState<String>("");
     String? username = auth.value?.accessToken.preferred_username ?? "";
+
+    final DateFormat localDateFormat = DateFormat(
+      locale == 'fi' ? 'dd.MM.yyyy' : 'MM/dd/yyyy',
+    );
 
     // Track the currently displayed week (Monday)
     final currentWeekStart = useState<DateTime>(
@@ -132,6 +136,71 @@ class StatisticsScreen extends HookConsumerWidget {
     final sundayScore = useState<double>(0);
 
     final allTimeWormGameHighscore = useState<int>(0);
+
+    // snake game highscores
+    final firstScore = useState<int>(0);
+    final firstScoreWeekday = useState<String>("");
+    final firstScoreDisplay = useState<String>("");
+    final secondScore = useState<int>(0);
+    final secondScoreWeekday = useState<String>("");
+    final secondScoreDisplay = useState<String>("");
+    final thirdScore = useState<int>(0);
+    final thirdScoreWeekday = useState<String>("");
+    final thirdScoreDisplay = useState<String>("");
+    final fourthScore = useState<int>(0);
+    final fourthScoreWeekday = useState<String>("");
+    final fourthScoreDisplay = useState<String>("");
+    final fifthScore = useState<int>(0);
+    final fifthScoreWeekday = useState<String>("");
+    final fifthScoreDisplay = useState<String>("");
+    final sixthScore = useState<int>(0);
+    final sixthScoreWeekday = useState<String>("");
+    final sixthScoreDisplay = useState<String>("");
+    final seventhScore = useState<int>(0);
+    final seventhScoreWeekday = useState<String>("");
+    final seventhScoreDisplay = useState<String>("");
+    final eighthScore = useState<int>(0);
+    final eighthScoreWeekday = useState<String>("");
+    final eighthScoreDisplay = useState<String>("");
+    final ninthScore = useState<int>(0);
+    final ninthScoreWeekday = useState<String>("");
+    final ninthScoreDisplay = useState<String>("");
+    final tenthScore = useState<int>(0);
+    final tenthScoreWeekday = useState<String>("");
+    final tenthScoreDisplay = useState<String>("");
+
+    void resetScores() {
+      firstScore.value = 0;
+      firstScoreWeekday.value = "";
+      firstScoreDisplay.value = loc.noScoresThisWeek;
+      secondScore.value = 0;
+      secondScoreWeekday.value = "";
+      secondScoreDisplay.value = "";
+      thirdScore.value = 0;
+      thirdScoreWeekday.value = "";
+      thirdScoreDisplay.value = "";
+      fourthScore.value = 0;
+      fourthScoreWeekday.value = "";
+      fourthScoreDisplay.value = "";
+      fifthScore.value = 0;
+      fifthScoreWeekday.value = "";
+      fifthScoreDisplay.value = "";
+      sixthScore.value = 0;
+      sixthScoreWeekday.value = "";
+      sixthScoreDisplay.value = "";
+      seventhScore.value = 0;
+      seventhScoreWeekday.value = "";
+      seventhScoreDisplay.value = "";
+      eighthScore.value = 0;
+      eighthScoreWeekday.value = "";
+      eighthScoreDisplay.value = "";
+      ninthScore.value = 0;
+      ninthScoreWeekday.value = "";
+      ninthScoreDisplay.value = "";
+      tenthScore.value = 0;
+      tenthScoreWeekday.value = "";
+      tenthScoreDisplay.value = "";
+    }
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -198,40 +267,94 @@ class StatisticsScreen extends HookConsumerWidget {
           final sundayGameSessionSummary = await ref
               .read(authNotifierProvider.notifier)
               .getSpecificDayGameSessionSummaryForUser(userProfileId, sunday);
-          // get Worm game sessions for each day
-          if (!context.mounted) return;
-          final mondayWormGameSession = await ref
-              .read(authNotifierProvider.notifier)
-              .getSpecificDayWormGameSessionForUser(userProfileId, monday);
-          if (!context.mounted) return;
-          final tuesdayWormGameSession = await ref
-              .read(authNotifierProvider.notifier)
-              .getSpecificDayWormGameSessionForUser(userProfileId, tuesday);
-          if (!context.mounted) return;
-          final wednesdayWormGameSession = await ref
-              .read(authNotifierProvider.notifier)
-              .getSpecificDayWormGameSessionForUser(userProfileId, wednesday);
-          if (!context.mounted) return;
-          final thursdayWormGameSession = await ref
-              .read(authNotifierProvider.notifier)
-              .getSpecificDayWormGameSessionForUser(userProfileId, thursday);
-          if (!context.mounted) return;
-          final fridayWormGameSession = await ref
-              .read(authNotifierProvider.notifier)
-              .getSpecificDayWormGameSessionForUser(userProfileId, friday);
-          if (!context.mounted) return;
-          final saturdayWormGameSession = await ref
-              .read(authNotifierProvider.notifier)
-              .getSpecificDayWormGameSessionForUser(userProfileId, saturday);
-          if (!context.mounted) return;
-          final sundayWormGameSession = await ref
-              .read(authNotifierProvider.notifier)
-              .getSpecificDayWormGameSessionForUser(userProfileId, sunday);
           // get all-time Worm game highscore
           if (!context.mounted) return;
           final latestWormGameHighscoreSession = await ref
               .read(authNotifierProvider.notifier)
               .getAllTimeWormGameHighscoreForUser(userProfileId);
+          if (!context.mounted) return;
+          resetScores();
+          if (!context.mounted) return;
+          final weeklySnakeGameSessions = await ref
+              .read(authNotifierProvider.notifier)
+              .getWeeklySnakeGameSessionsForUser(
+                  userProfileId, currentWeekStart.value);
+
+          for (int i = 0; i < weeklySnakeGameSessions.length; i++) {
+            switch (i) {
+              case 0:
+                firstScore.value = weeklySnakeGameSessions[i].score ?? 0;
+                firstScoreWeekday.value = localDateFormat
+                    .format(weeklySnakeGameSessions[i].createdAt!);
+                firstScoreDisplay.value =
+                    '${firstScore.value} - ${firstScoreWeekday.value}';
+                break;
+              case 1:
+                secondScore.value = weeklySnakeGameSessions[i].score ?? 0;
+                secondScoreWeekday.value = localDateFormat
+                    .format(weeklySnakeGameSessions[i].createdAt!);
+                secondScoreDisplay.value =
+                    '${secondScore.value} - ${secondScoreWeekday.value}';
+                break;
+              case 2:
+                thirdScore.value = weeklySnakeGameSessions[i].score ?? 0;
+                thirdScoreWeekday.value = localDateFormat
+                    .format(weeklySnakeGameSessions[i].createdAt!);
+                thirdScoreDisplay.value =
+                    '${thirdScore.value} - ${thirdScoreWeekday.value}';
+                break;
+              case 3:
+                fourthScore.value = weeklySnakeGameSessions[i].score ?? 0;
+                fourthScoreWeekday.value = localDateFormat
+                    .format(weeklySnakeGameSessions[i].createdAt!);
+                fourthScoreDisplay.value =
+                    '${fourthScore.value} - ${fourthScoreWeekday.value}';
+                break;
+              case 4:
+                fifthScore.value = weeklySnakeGameSessions[i].score ?? 0;
+                fifthScoreWeekday.value = localDateFormat
+                    .format(weeklySnakeGameSessions[i].createdAt!);
+                fifthScoreDisplay.value =
+                    '${fifthScore.value} - ${fifthScoreWeekday.value}';
+                break;
+              case 5:
+                sixthScore.value = weeklySnakeGameSessions[i].score ?? 0;
+                sixthScoreWeekday.value = localDateFormat
+                    .format(weeklySnakeGameSessions[i].createdAt!);
+                sixthScoreDisplay.value =
+                    '${sixthScore.value} - ${sixthScoreWeekday.value}';
+                break;
+              case 6:
+                seventhScore.value = weeklySnakeGameSessions[i].score ?? 0;
+                seventhScoreWeekday.value = localDateFormat
+                    .format(weeklySnakeGameSessions[i].createdAt!);
+                seventhScoreDisplay.value =
+                    '${seventhScore.value} - ${seventhScoreWeekday.value}';
+                break;
+              case 7:
+                eighthScore.value = weeklySnakeGameSessions[i].score ?? 0;
+                eighthScoreWeekday.value = localDateFormat
+                    .format(weeklySnakeGameSessions[i].createdAt!);
+                eighthScoreDisplay.value =
+                    '${eighthScore.value} - ${eighthScoreWeekday.value}';
+                break;
+              case 8:
+                ninthScore.value = weeklySnakeGameSessions[i].score ?? 0;
+                ninthScoreWeekday.value = localDateFormat
+                    .format(weeklySnakeGameSessions[i].createdAt!);
+                ninthScoreDisplay.value =
+                    '${ninthScore.value} - ${ninthScoreWeekday.value}';
+                break;
+              case 9:
+                tenthScore.value = weeklySnakeGameSessions[i].score ?? 0;
+                tenthScoreWeekday.value = localDateFormat
+                    .format(weeklySnakeGameSessions[i].createdAt!);
+                tenthScoreDisplay.value =
+                    '${tenthScore.value} - ${tenthScoreWeekday.value}';
+                break;
+              default:
+            }
+          }
           if (!context.mounted) return;
 
           // Set values after fetch is complete
@@ -278,9 +401,6 @@ class StatisticsScreen extends HookConsumerWidget {
           int seconds = time % 60;
           timeSpent.value =
               "${hours}${loc.hoursCounter} ${minutes}m ${seconds}s";
-          // weekly total score is not used
-          // int score = weeklyGameSessionSummary?.totalScore ?? 0;
-          // totalScore.value = score.toString();
           // set durations for each day (in minutes)
           mondayDuration.value =
               (mondayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
@@ -296,17 +416,6 @@ class StatisticsScreen extends HookConsumerWidget {
               (saturdayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
           sundayDuration.value =
               (sundayGameSessionSummary?.totalDuration ?? 0).toDouble() / 60;
-          // set worm game highscores for each day
-          mondayScore.value = (mondayWormGameSession?.score ?? 0).toDouble();
-          tuesdayScore.value = (tuesdayWormGameSession?.score ?? 0).toDouble();
-          wednesdayScore.value =
-              (wednesdayWormGameSession?.score ?? 0).toDouble();
-          thursdayScore.value =
-              (thursdayWormGameSession?.score ?? 0).toDouble();
-          fridayScore.value = (fridayWormGameSession?.score ?? 0).toDouble();
-          saturdayScore.value =
-              (saturdayWormGameSession?.score ?? 0).toDouble();
-          sundayScore.value = (sundayWormGameSession?.score ?? 0).toDouble();
           // all time worm game highscore
           if (latestWormGameHighscoreSession != null) {
             allTimeWormGameHighscore.value =
@@ -510,7 +619,7 @@ class StatisticsScreen extends HookConsumerWidget {
                           },
                         ),
                         Text(
-                          "${DateFormat('dd.MM.yyyy').format(currentWeekStart.value)} - ${DateFormat('dd.MM.yyyy').format(currentWeekStart.value.add(const Duration(days: 6)))}",
+                          "${localDateFormat.format(currentWeekStart.value)} - ${localDateFormat.format(currentWeekStart.value.add(const Duration(days: 6)))}",
                           style: theme.textTheme.bodyMedium,
                         ),
                         IconButton(
@@ -640,21 +749,107 @@ class StatisticsScreen extends HookConsumerWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20.h),
-                    SizedBox(
-                        width: 300,
-                        height: 150,
-                        child: BarChart(
-                          BarChartData(
-                            barTouchData: barTouchData,
-                            titlesData: titlesData(context),
-                            borderData: borderData,
-                            barGroups: barGroupsWormGame(),
-                            gridData: const FlGridData(show: false),
-                            alignment: BarChartAlignment.spaceAround,
-                            maxY: 20,
-                          ),
-                        )),
+                    SizedBox(height: 2.h),
+                    Column(
+                      children: [
+                        Text(
+                          firstScore.value != 0
+                              ? firstScoreDisplay.value
+                              : loc.noScoresThisWeek,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        SizedBox(height: 1.h),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          secondScore.value != 0
+                              ? secondScoreDisplay.value
+                              : '',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        SizedBox(height: 1.h),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          thirdScore.value != 0 ? thirdScoreDisplay.value : '',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        SizedBox(height: 1.h),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          fourthScore.value != 0
+                              ? fourthScoreDisplay.value
+                              : '',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        SizedBox(height: 1.h),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          fifthScore.value != 0 ? fifthScoreDisplay.value : '',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        SizedBox(height: 1.h),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          sixthScore.value != 0 ? sixthScoreDisplay.value : '',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        SizedBox(height: 1.h),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          seventhScore.value != 0
+                              ? seventhScoreDisplay.value
+                              : '',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        SizedBox(height: 1.h),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          eighthScore.value != 0
+                              ? eighthScoreDisplay.value
+                              : '',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        SizedBox(height: 1.h),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          ninthScore.value != 0 ? ninthScoreDisplay.value : '',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        SizedBox(height: 1.h),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          tenthScore.value != 0 ? tenthScoreDisplay.value : '',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        SizedBox(height: 1.h),
+                      ],
+                    ),
                     SizedBox(height: 50.h),
                   ],
                 ),

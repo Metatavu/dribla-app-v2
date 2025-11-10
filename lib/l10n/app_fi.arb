@@ -141,7 +141,7 @@
     "herePlayerCodes": "Tässä pelaajakoodisi:",
     "findCodesLater": "Voit löytää nämä koodit myöhemmin pelaajahallinnasta.",
     "continueButton": "Jatka",
-    "weeklyActivity": "Viikon toiminta",
+    "weeklyActivity": "Viikon peliaika",
     "logoutButton": "Kirjaudu ulos",
     "cancelButton": "Peruuta",
     "details": "Yksityiskohdat",
@@ -166,5 +166,6 @@
     "subscriptionActive": "Tilauksesi on voimassa",
     "subscriptionEndDate": "Tilauksen päättymispäivä:",
     "renewSubscription": "Uusi tilaus",
-    "subscriptionInactive": "Tilaus on päättynyt"
+    "subscriptionInactive": "Tilaus on päättynyt",
+    "noScoresThisWeek": "Ei ennätyksiä tällä viikolla"
 }
