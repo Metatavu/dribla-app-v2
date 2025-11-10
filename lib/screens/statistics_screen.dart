@@ -29,10 +29,11 @@ class StatisticsScreen extends HookConsumerWidget {
             int rodIndex,
           ) {
             return BarTooltipItem(
-              rod.toY.round().toString(),
+              '${rod.toY.round()}m',
               const TextStyle(
                 color: Color.fromARGB(255, 255, 164, 118),
                 fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             );
           },
@@ -125,15 +126,6 @@ class StatisticsScreen extends HookConsumerWidget {
     final fridayDuration = useState<double>(0);
     final saturdayDuration = useState<double>(0);
     final sundayDuration = useState<double>(0);
-
-    // highscores for each day
-    final mondayScore = useState<double>(0);
-    final tuesdayScore = useState<double>(0);
-    final wednesdayScore = useState<double>(0);
-    final thursdayScore = useState<double>(0);
-    final fridayScore = useState<double>(0);
-    final saturdayScore = useState<double>(0);
-    final sundayScore = useState<double>(0);
 
     final allTimeWormGameHighscore = useState<int>(0);
 
@@ -501,81 +493,6 @@ class StatisticsScreen extends HookConsumerWidget {
           barRods: [
             BarChartRodData(
               toY: sundayDuration.value,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        )
-      ];
-    }
-
-    List<BarChartGroupData> barGroupsWormGame() {
-      return [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(
-              toY: mondayScore.value,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: tuesdayScore.value,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 2,
-          barRods: [
-            BarChartRodData(
-              toY: wednesdayScore.value,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 3,
-          barRods: [
-            BarChartRodData(
-              toY: thursdayScore.value,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 4,
-          barRods: [
-            BarChartRodData(
-              toY: fridayScore.value,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 5,
-          barRods: [
-            BarChartRodData(
-              toY: saturdayScore.value,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 6,
-          barRods: [
-            BarChartRodData(
-              toY: sundayScore.value,
               gradient: _barsGradient,
             )
           ],
