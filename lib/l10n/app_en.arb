@@ -35,7 +35,7 @@
     "noConnection": "No connection with the mat, ensure that Bluetooth is enabled and the device is turned on.",
     "gameNotAvailable": "The game is not available on the connected device",
     "results": "Results 🏆",
-    "betterLuckNextTime": "Better luck next time 🙁",
+    "betterLuckNextTime": "Game ended! Results:",
     "retryingConnection": "Connection lost, attempting to reconnect...",
     "bluetoothDisabled": "Bluetooth disabled. Enable bluetooth on your phone and give the app permission to use bluetooth.",
     "lookingForDevice": "Looking for device...",

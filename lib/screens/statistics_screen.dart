@@ -272,6 +272,7 @@ class StatisticsScreen extends HookConsumerWidget {
               .getWeeklySnakeGameSessionsForUser(
                   userProfileId, currentWeekStart.value);
 
+          if (!context.mounted) return;
           for (int i = 0; i < weeklySnakeGameSessions.length; i++) {
             switch (i) {
               case 0:
