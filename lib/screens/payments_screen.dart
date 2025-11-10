@@ -78,7 +78,6 @@ class PaymentsScreen extends HookConsumerWidget {
                           'Purchase error: ${purchaseDetails.error?.message ?? "Unknown error"}')),
                 );
               } else if (purchaseDetails.status == PurchaseStatus.purchased) {
-                // For simplicity, assume all purchases are valid
                 final isValid = await _verifyPurchase(purchaseDetails);
                 if (isValid) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -86,11 +85,11 @@ class PaymentsScreen extends HookConsumerWidget {
                         content: Text(
                             'Product delivered: ${purchaseDetails.productID}')),
                   );
-                  // iap.completePurchase(purchaseDetails);
+                  await Future.delayed(const Duration(seconds: 1));
                   ref
                       .read(authNotifierProvider.notifier)
                       .updateUserProfileSubscriptionStatus(userProfileId, true);
-                  // navigate to codes screen after purchase
+                  iap.completePurchase(purchaseDetails);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -104,15 +103,27 @@ class PaymentsScreen extends HookConsumerWidget {
                   );
                 }
               } else if (purchaseDetails.status == PurchaseStatus.restored) {
-                // if purchase is not completed
+                // if purchase is not completed or user hits buy button again
+                // check if user is already subscribed, otherwise will resubscribe on retry
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text(
-                          'Purchase restored: ${purchaseDetails.productID}')),
+                          'Purchase restored/delivered: ${purchaseDetails.productID}')),
+                );
+                await Future.delayed(const Duration(seconds: 1));
+                ref
+                    .read(authNotifierProvider.notifier)
+                    .updateUserProfileSubscriptionStatus(userProfileId, true);
+                iap.completePurchase(purchaseDetails);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CodesScreen(fromPurchase: true)),
                 );
               }
               if (purchaseDetails.pendingCompletePurchase) {
-                InAppPurchase.instance.completePurchase(purchaseDetails);
+                print('Completing purchase for ${purchaseDetails.productID}');
+                iap.completePurchase(purchaseDetails);
               }
             }
           }
@@ -164,11 +175,7 @@ class PaymentsScreen extends HookConsumerWidget {
       if (productDetails == null) return;
       final purchaseParam = PurchaseParam(productDetails: productDetails);
       try {
-        // will set purchaseStatus.restored if it was already purchased
         iap.buyNonConsumable(purchaseParam: purchaseParam);
-        // TODO purchase should be completed by calling completePurchase in the listener above
-        // TODO purchase verification in listener above
-        // TODO move subscription status update and user redirect to listener above after verifying purchase
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error during purchase attempt: $e')),
@@ -228,18 +235,20 @@ class PaymentsScreen extends HookConsumerWidget {
                 SizedBox(height: 2.h),
                 Text('2024-12-31'),
                 SizedBox(height: 4.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: buySubscription,
-                    child: Text(
-                      isSubscribed.value == true
-                          ? loc.renewSubscription
-                          : loc.subscribeNow,
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                  ),
-                ),
+                isSubscribed.value == false
+                    ? SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: buySubscription,
+                          child: Text(
+                            isSubscribed.value == true
+                                ? loc.renewSubscription
+                                : loc.subscribeNow,
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                        ),
+                      )
+                    : Text('Already subscribed'),
                 SizedBox(height: 2.h),
                 SizedBox(
                   width: double.infinity,
