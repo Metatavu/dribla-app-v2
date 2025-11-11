@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **characterOutfitType** | **int** |  | [optional] 
 **characterShoesType** | **int** |  | [optional] 
 **subscriptionStatus** | **bool** | Updated by background payment system | [optional] 
+**ownedAppCodes** | **BuiltList&lt;String&gt;** | List of user owned app codes | [optional] 
 **appCode** | **String** |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) | Created date | [optional] 
 **modifiedAt** | [**DateTime**](DateTime.md) | Date modified | [optional] 

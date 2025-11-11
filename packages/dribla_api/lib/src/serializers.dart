@@ -14,6 +14,8 @@ import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:dribla_api/src/date_serializer.dart';
 import 'package:dribla_api/src/model/date.dart';
 
+import 'package:dribla_api/src/model/app_code_creation_request.dart';
+import 'package:dribla_api/src/model/app_code_registration_request.dart';
 import 'package:dribla_api/src/model/error.dart';
 import 'package:dribla_api/src/model/game_session.dart';
 import 'package:dribla_api/src/model/game_session_summary.dart';
@@ -22,6 +24,8 @@ import 'package:dribla_api/src/model/user_profile.dart';
 part 'serializers.g.dart';
 
 @SerializersFor([
+  AppCodeCreationRequest,
+  AppCodeRegistrationRequest,
   Error,
   GameSession,
   GameSessionSummary,

@@ -10,10 +10,13 @@ export 'package:dribla_api/src/auth/oauth.dart';
 export 'package:dribla_api/src/serializers.dart';
 export 'package:dribla_api/src/model/date.dart';
 
+export 'package:dribla_api/src/api/app_codes_api.dart';
 export 'package:dribla_api/src/api/game_sessions_api.dart';
 export 'package:dribla_api/src/api/system_api.dart';
 export 'package:dribla_api/src/api/user_profiles_api.dart';
 
+export 'package:dribla_api/src/model/app_code_creation_request.dart';
+export 'package:dribla_api/src/model/app_code_registration_request.dart';
 export 'package:dribla_api/src/model/error.dart';
 export 'package:dribla_api/src/model/game_session.dart';
 export 'package:dribla_api/src/model/game_session_summary.dart';

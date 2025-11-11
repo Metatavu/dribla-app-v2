@@ -47,14 +47,15 @@ Please follow the [installation procedure](#installation--usage) and then run th
 import 'package:dribla_api/dribla_api.dart';
 
 
-final api = DriblaApi().getGameSessionsApi();
-final GameSession gameSession = ; // GameSession | Payload
+final api = DriblaApi().getAppCodesApi();
+final String userProfileId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | Users keycloak id
+final AppCodeCreationRequest appCodeCreationRequest = ; // AppCodeCreationRequest | Payload
 
 try {
-    final response = await api.creategameSession(gameSession);
+    final response = await api.createAppCodes(userProfileId, appCodeCreationRequest);
     print(response);
 } catch on DioException (e) {
-    print("Exception when calling GameSessionsApi->creategameSession: $e\n");
+    print("Exception when calling AppCodesApi->createAppCodes: $e\n");
 }
 
 ```
@@ -65,6 +66,8 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+[*AppCodesApi*](doc/AppCodesApi.md) | [**createAppCodes**](doc/AppCodesApi.md#createappcodes) | **POST** /v1/appCodes/{userProfileId}/create | Create app codes using subscription id
+[*AppCodesApi*](doc/AppCodesApi.md) | [**registerAppCode**](doc/AppCodesApi.md#registerappcode) | **POST** /v1/appCodes/{userProfileId}/register | Registers app code for user
 [*GameSessionsApi*](doc/GameSessionsApi.md) | [**creategameSession**](doc/GameSessionsApi.md#creategamesession) | **POST** /v1/gameSessions | Create a gameSession.
 [*GameSessionsApi*](doc/GameSessionsApi.md) | [**getGameSessionsSummary**](doc/GameSessionsApi.md#getgamesessionssummary) | **GET** /v1/gameSessions/summary | Creates summary of game sessions
 [*GameSessionsApi*](doc/GameSessionsApi.md) | [**listgameSessions**](doc/GameSessionsApi.md#listgamesessions) | **GET** /v1/gameSessions | Lists gameSessions.
@@ -75,6 +78,8 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AppCodeCreationRequest](doc/AppCodeCreationRequest.md)
+ - [AppCodeRegistrationRequest](doc/AppCodeRegistrationRequest.md)
  - [Error](doc/Error.md)
  - [GameSession](doc/GameSession.md)
  - [GameSessionSummary](doc/GameSessionSummary.md)

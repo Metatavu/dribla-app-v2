@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -16,6 +17,7 @@ part 'user_profile.g.dart';
 /// * [characterOutfitType]
 /// * [characterShoesType]
 /// * [subscriptionStatus] - Updated by background payment system
+/// * [ownedAppCodes] - List of user owned app codes
 /// * [appCode]
 /// * [createdAt] - Created date
 /// * [modifiedAt] - Date modified
@@ -37,6 +39,10 @@ abstract class UserProfile implements Built<UserProfile, UserProfileBuilder> {
   /// Updated by background payment system
   @BuiltValueField(wireName: r'subscriptionStatus')
   bool? get subscriptionStatus;
+
+  /// List of user owned app codes
+  @BuiltValueField(wireName: r'ownedAppCodes')
+  BuiltList<String>? get ownedAppCodes;
 
   @BuiltValueField(wireName: r'appCode')
   String? get appCode;
@@ -105,6 +111,13 @@ class _$UserProfileSerializer implements PrimitiveSerializer<UserProfile> {
       yield serializers.serialize(
         object.subscriptionStatus,
         specifiedType: const FullType(bool),
+      );
+    }
+    if (object.ownedAppCodes != null) {
+      yield r'ownedAppCodes';
+      yield serializers.serialize(
+        object.ownedAppCodes,
+        specifiedType: const FullType(BuiltList, [FullType(String)]),
       );
     }
     if (object.appCode != null) {
@@ -187,6 +200,13 @@ class _$UserProfileSerializer implements PrimitiveSerializer<UserProfile> {
             specifiedType: const FullType(bool),
           ) as bool;
           result.subscriptionStatus = valueDes;
+          break;
+        case r'ownedAppCodes':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(String)]),
+          ) as BuiltList<String>;
+          result.ownedAppCodes.replace(valueDes);
           break;
         case r'appCode':
           final valueDes = serializers.deserialize(

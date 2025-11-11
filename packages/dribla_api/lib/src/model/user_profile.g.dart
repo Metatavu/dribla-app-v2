@@ -18,6 +18,8 @@ class _$UserProfile extends UserProfile {
   @override
   final bool? subscriptionStatus;
   @override
+  final BuiltList<String>? ownedAppCodes;
+  @override
   final String? appCode;
   @override
   final DateTime? createdAt;
@@ -33,6 +35,7 @@ class _$UserProfile extends UserProfile {
       this.characterOutfitType,
       this.characterShoesType,
       this.subscriptionStatus,
+      this.ownedAppCodes,
       this.appCode,
       this.createdAt,
       this.modifiedAt})
@@ -53,6 +56,7 @@ class _$UserProfile extends UserProfile {
         characterOutfitType == other.characterOutfitType &&
         characterShoesType == other.characterShoesType &&
         subscriptionStatus == other.subscriptionStatus &&
+        ownedAppCodes == other.ownedAppCodes &&
         appCode == other.appCode &&
         createdAt == other.createdAt &&
         modifiedAt == other.modifiedAt;
@@ -66,6 +70,7 @@ class _$UserProfile extends UserProfile {
     _$hash = $jc(_$hash, characterOutfitType.hashCode);
     _$hash = $jc(_$hash, characterShoesType.hashCode);
     _$hash = $jc(_$hash, subscriptionStatus.hashCode);
+    _$hash = $jc(_$hash, ownedAppCodes.hashCode);
     _$hash = $jc(_$hash, appCode.hashCode);
     _$hash = $jc(_$hash, createdAt.hashCode);
     _$hash = $jc(_$hash, modifiedAt.hashCode);
@@ -81,6 +86,7 @@ class _$UserProfile extends UserProfile {
           ..add('characterOutfitType', characterOutfitType)
           ..add('characterShoesType', characterShoesType)
           ..add('subscriptionStatus', subscriptionStatus)
+          ..add('ownedAppCodes', ownedAppCodes)
           ..add('appCode', appCode)
           ..add('createdAt', createdAt)
           ..add('modifiedAt', modifiedAt))
@@ -115,6 +121,12 @@ class UserProfileBuilder implements Builder<UserProfile, UserProfileBuilder> {
   set subscriptionStatus(bool? subscriptionStatus) =>
       _$this._subscriptionStatus = subscriptionStatus;
 
+  ListBuilder<String>? _ownedAppCodes;
+  ListBuilder<String> get ownedAppCodes =>
+      _$this._ownedAppCodes ??= ListBuilder<String>();
+  set ownedAppCodes(ListBuilder<String>? ownedAppCodes) =>
+      _$this._ownedAppCodes = ownedAppCodes;
+
   String? _appCode;
   String? get appCode => _$this._appCode;
   set appCode(String? appCode) => _$this._appCode = appCode;
@@ -139,6 +151,7 @@ class UserProfileBuilder implements Builder<UserProfile, UserProfileBuilder> {
       _characterOutfitType = $v.characterOutfitType;
       _characterShoesType = $v.characterShoesType;
       _subscriptionStatus = $v.subscriptionStatus;
+      _ownedAppCodes = $v.ownedAppCodes?.toBuilder();
       _appCode = $v.appCode;
       _createdAt = $v.createdAt;
       _modifiedAt = $v.modifiedAt;
@@ -161,17 +174,31 @@ class UserProfileBuilder implements Builder<UserProfile, UserProfileBuilder> {
   UserProfile build() => _build();
 
   _$UserProfile _build() {
-    final _$result = _$v ??
-        _$UserProfile._(
-          id: id,
-          characterType: characterType,
-          characterOutfitType: characterOutfitType,
-          characterShoesType: characterShoesType,
-          subscriptionStatus: subscriptionStatus,
-          appCode: appCode,
-          createdAt: createdAt,
-          modifiedAt: modifiedAt,
-        );
+    _$UserProfile _$result;
+    try {
+      _$result = _$v ??
+          _$UserProfile._(
+            id: id,
+            characterType: characterType,
+            characterOutfitType: characterOutfitType,
+            characterShoesType: characterShoesType,
+            subscriptionStatus: subscriptionStatus,
+            ownedAppCodes: _ownedAppCodes?.build(),
+            appCode: appCode,
+            createdAt: createdAt,
+            modifiedAt: modifiedAt,
+          );
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'ownedAppCodes';
+        _ownedAppCodes?.build();
+      } catch (e) {
+        throw BuiltValueNestedFieldError(
+            r'UserProfile', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

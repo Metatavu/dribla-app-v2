@@ -9,6 +9,7 @@ import 'package:dribla_api/src/auth/api_key_auth.dart';
 import 'package:dribla_api/src/auth/basic_auth.dart';
 import 'package:dribla_api/src/auth/bearer_auth.dart';
 import 'package:dribla_api/src/auth/oauth.dart';
+import 'package:dribla_api/src/api/app_codes_api.dart';
 import 'package:dribla_api/src/api/game_sessions_api.dart';
 import 'package:dribla_api/src/api/system_api.dart';
 import 'package:dribla_api/src/api/user_profiles_api.dart';
@@ -76,6 +77,12 @@ class DriblaApi {
               as ApiKeyAuthInterceptor)
           .apiKeys[name] = apiKey;
     }
+  }
+
+  /// Get AppCodesApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  AppCodesApi getAppCodesApi() {
+    return AppCodesApi(dio, serializers);
   }
 
   /// Get GameSessionsApi instance, base route and serializer can be overridden by a given but be careful,
