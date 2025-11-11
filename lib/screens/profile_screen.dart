@@ -35,6 +35,7 @@ class ProfileScreen extends HookConsumerWidget {
     final gamesPlayed = useState<int>(0);
     final latestGame = useState<String>("");
     final totalTimeSpent = useState<String>("");
+    final userAppCodes = useState<Iterable<String>>([]);
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -49,11 +50,13 @@ class ProfileScreen extends HookConsumerWidget {
           final profile = await ref
               .read(authNotifierProvider.notifier)
               .getOrUpsertUserProfile(userProfileId!);
+          print(profile);
           if (profile != null) {
             if (!context.mounted) return;
             characterType.value = (profile.characterType ?? 0);
             outfitType.value = (profile.characterOutfitType ?? 0);
             shoesType.value = (profile.characterShoesType ?? 0);
+            userAppCodes.value = profile.ownedAppCodes ?? [];
           }
           if (!context.mounted) return;
           final gameSessions = await ref
@@ -229,20 +232,22 @@ class ProfileScreen extends HookConsumerWidget {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const CodesScreen(fromPurchase: false)),
-                        );
-                      },
-                      child: Text(
-                        loc.codes,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ),
+                    child: userAppCodes.value.isNotEmpty
+                        ? ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CodesScreen(fromPurchase: false)),
+                              );
+                            },
+                            child: Text(
+                              loc.codes,
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                          )
+                        : Container(),
                   ),
                   SizedBox(
                     height: 3.h,

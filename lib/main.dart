@@ -1,12 +1,12 @@
 import "package:dribla_app_v2/audio_players.dart";
 import "package:dribla_app_v2/permission_utils.dart";
 import "package:dribla_app_v2/providers/auth_providers.dart";
-import "package:dribla_app_v2/screens/account_creation_screen.dart";
 import "package:dribla_app_v2/screens/character_creation_screen.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:dribla_app_v2/screens/codes_screen.dart";
 import "package:dribla_app_v2/screens/login_screen.dart";
 import "package:dribla_app_v2/screens/main_page_screen.dart";
+import "package:dribla_app_v2/screens/new_account_screen.dart";
 import "package:dribla_app_v2/screens/payments_screen.dart";
 import "package:dribla_app_v2/screens/permissions_screen.dart";
 import "package:dribla_app_v2/screens/profile_screen.dart";
@@ -80,7 +80,7 @@ class DriblaApp extends HookConsumerWidget {
           supportedLocales: AppLocalizations.supportedLocales,
           home: permissionStatuses.values
                   .every((permission) => permission.isGranted)
-              ? (isExpired ? const LoginScreen() : const ChooseGameScreen())
+              ? (isExpired ? const LoginScreen() : const NewAccountScreen())
               : const PermissionsScreen(),
           routes: {
             '/main': (context) => const MainPageScreen(),
@@ -91,6 +91,7 @@ class DriblaApp extends HookConsumerWidget {
             '/login': (context) => const LoginScreen(),
             '/statistics': (context) => const StatisticsScreen(),
             '/codes': (context) => const CodesScreen(fromPurchase: false),
+            '/new_user': (context) => const NewAccountScreen(),
           },
         );
       },

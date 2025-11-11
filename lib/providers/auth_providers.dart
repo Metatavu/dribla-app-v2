@@ -110,6 +110,13 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  Future<Response<UserProfile>> createUserProfileAppCodes(
+      String userProfileId, AppCodeCreationRequest appCodeCreationRequest) {
+    return driblaApi.getAppCodesApi().createAppCodes(
+        userProfileId: userProfileId,
+        appCodeCreationRequest: appCodeCreationRequest);
+  }
+
   Future<UserProfile?> getOrUpsertUserProfile(String userProfileId) async {
     try {
       final response = await driblaApi
@@ -454,20 +461,19 @@ class AuthNotifier extends _$AuthNotifier {
     return null;
   }
 
-  Future<UserProfile?> updateUserProfileAppCode(
-      String userProfileId, String appCode) async {
+  Future<bool> tryUpdateUserProfileAppCode(String userProfileId,
+      AppCodeRegistrationRequest appCodeRegistrationRequest) async {
     try {
-      final existingProfile = await getOrUpsertUserProfile(userProfileId);
-      if (existingProfile == null) return null;
-
-      final updatedProfile =
-          existingProfile.rebuild((b) => b..appCode = appCode);
-
-      return await updateUserProfile(userProfileId, updatedProfile);
+      final response = await driblaApi.getAppCodesApi().registerAppCode(
+          userProfileId: userProfileId,
+          appCodeRegistrationRequest: appCodeRegistrationRequest);
+      if (response.statusCode == 200) {
+        return true;
+      }
     } catch (error) {
       print('Failed to update user profile app code');
     }
-    return null;
+    return false;
   }
 
   Future<UserProfile?> updateUserProfileSubscriptionStatus(

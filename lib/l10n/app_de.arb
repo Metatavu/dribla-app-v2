@@ -143,6 +143,8 @@
     "subscriptionActive": "Tilauksesi on voimassa",
     "subscriptionEndDate": "Tilauksen päättymispäivä:",
     "renewSubscription": "Uusi tilaus",
-    "subscriptionInactive": "Tilaus on päättynyt",
-    "noScoresThisWeek": "Ei ennätyksiä tällä viikolla"
+    "subscriptionInactive": "Tilaus ei ole voimassa",
+    "noScoresThisWeek": "Ei ennätyksiä tällä viikolla",
+    "enterAppCodeOrSubscribe": "Syötä käyttökoodi tai luo uusi tilaus jatkaaksesi",
+    "createNewSub": "Luo uusi tilaus"
 }

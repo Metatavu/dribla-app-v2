@@ -21,7 +21,7 @@ class LoginScreen extends HookConsumerWidget {
     useEffect(() {
       if (authAsync.hasValue && authAsync.value != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.of(context).pushReplacementNamed('/main');
+          Navigator.of(context).pushReplacementNamed('/new_user');
         });
       }
       return null;

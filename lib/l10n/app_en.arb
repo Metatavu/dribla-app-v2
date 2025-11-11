@@ -142,6 +142,8 @@
     "subscriptionActive": "Your subscription is active",
     "subscriptionEndDate": "Subscription end date:",
     "renewSubscription": "Renew subscription",
-    "subscriptionInactive": "The subscription has ended",
-    "noScoresThisWeek": "Ei ennätyksiä tällä viikolla"
+    "subscriptionInactive": "Subscription is inactive",
+    "noScoresThisWeek": "No high scores this week",
+    "enterAppCodeOrSubscribe": "Enter an app code or subscribe to continue",
+    "createNewSub": "Create a new subscription"
 }

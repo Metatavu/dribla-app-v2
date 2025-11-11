@@ -1,8 +1,10 @@
 import 'dart:async';
+import "package:dribla_api/dribla_api.dart";
 import "package:dribla_app_v2/components/app_drawer.dart";
 import "package:dribla_app_v2/components/app_footer.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
 import "package:dribla_app_v2/screens/codes_screen.dart";
+import "package:dribla_app_v2/services/api.dart";
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import "package:sizer/sizer.dart";
@@ -10,6 +12,7 @@ import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:dribla_app_v2/providers/auth_providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'dart:io' show Platform;
 
 class PaymentsScreen extends HookConsumerWidget {
   const PaymentsScreen({super.key});
@@ -30,6 +33,7 @@ class PaymentsScreen extends HookConsumerWidget {
     final isSubscribed = useState<bool>(false);
     final auth = ref.watch(authNotifierProvider);
     final userProfileId = auth.value?.accessToken.sub ?? "";
+    final platform = Platform.isIOS ? 'app_store' : 'google_play';
 
     Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
       // TODO: Implement real purchase verification logic here
@@ -54,6 +58,7 @@ class PaymentsScreen extends HookConsumerWidget {
       // } else {
       //   return false;
       // }
+      //await driblaApi.getAppCodesApi().
       await Future.delayed(const Duration(seconds: 1));
       return true;
     }
@@ -86,9 +91,25 @@ class PaymentsScreen extends HookConsumerWidget {
                             'Product delivered: ${purchaseDetails.productID}')),
                   );
                   await Future.delayed(const Duration(seconds: 1));
-                  ref
-                      .read(authNotifierProvider.notifier)
-                      .updateUserProfileSubscriptionStatus(userProfileId, true);
+                  AppCodeCreationRequest appCodeCreationRequest =
+                      AppCodeCreationRequest((b) => b
+                        ..store = platform
+                        ..receipt = purchaseDetails
+                            .verificationData.serverVerificationData);
+                  print('creating request');
+
+                  await driblaApi.getAppCodesApi().createAppCodes(
+                      userProfileId: userProfileId,
+                      appCodeCreationRequest: appCodeCreationRequest);
+                  print('App codes created');
+                  // await ref
+                  //     .read(authNotifierProvider.notifier)
+                  //     .createUserProfileAppCodes(
+                  //         userProfileId, appCodeCreationRequest);
+                  // will be set in backend only
+                  // ref
+                  //     .read(authNotifierProvider.notifier)
+                  //     .updateUserProfileSubscriptionStatus(userProfileId, true);
                   iap.completePurchase(purchaseDetails);
                   Navigator.push(
                     context,
@@ -105,21 +126,34 @@ class PaymentsScreen extends HookConsumerWidget {
               } else if (purchaseDetails.status == PurchaseStatus.restored) {
                 // if purchase is not completed or user hits buy button again
                 // check if user is already subscribed, otherwise will resubscribe on retry
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(
-                          'Purchase restored/delivered: ${purchaseDetails.productID}')),
-                );
-                await Future.delayed(const Duration(seconds: 1));
-                ref
-                    .read(authNotifierProvider.notifier)
-                    .updateUserProfileSubscriptionStatus(userProfileId, true);
-                iap.completePurchase(purchaseDetails);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CodesScreen(fromPurchase: true)),
-                );
+                final isValid = await _verifyPurchase(purchaseDetails);
+                if (isValid) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                            'Product delivered/restored: ${purchaseDetails.productID}')),
+                  );
+                  await Future.delayed(const Duration(seconds: 1));
+                  AppCodeCreationRequest appCodeCreationRequest =
+                      AppCodeCreationRequest((b) => b
+                        ..store = platform
+                        ..receipt = purchaseDetails
+                            .verificationData.serverVerificationData);
+                  print('creating request');
+                  await driblaApi.getAppCodesApi().createAppCodes(
+                      userProfileId: userProfileId,
+                      appCodeCreationRequest: appCodeCreationRequest);
+                  print('App codes created');
+                  // ref
+                  //     .read(authNotifierProvider.notifier)
+                  //     .updateUserProfileSubscriptionStatus(userProfileId, true);
+                  iap.completePurchase(purchaseDetails);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CodesScreen(fromPurchase: true)),
+                  );
+                }
               }
               if (purchaseDetails.pendingCompletePurchase) {
                 print('Completing purchase for ${purchaseDetails.productID}');
@@ -194,6 +228,10 @@ class PaymentsScreen extends HookConsumerWidget {
       );
     }
 
+    void navigateBack() {
+      Navigator.pop(context);
+    }
+
     if (loading.value) {
       return Scaffold(
         appBar: AppBar(title: Text('Payments')),
@@ -201,8 +239,8 @@ class PaymentsScreen extends HookConsumerWidget {
       );
     }
     return Scaffold(
-      appBar: const ConnectionStatusAppBar(),
-      drawer: const AppDrawer(),
+      //appBar: const ConnectionStatusAppBar(),
+      //drawer: const AppDrawer(),
       body: Stack(children: [
         Container(
           decoration: BoxDecoration(
@@ -217,6 +255,7 @@ class PaymentsScreen extends HookConsumerWidget {
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 8.h),
                 Text(loc.subscriptionHandling,
                     style: theme.textTheme.headlineMedium),
                 Text(loc.earlyAccess, style: theme.textTheme.bodyMedium),
@@ -230,10 +269,6 @@ class PaymentsScreen extends HookConsumerWidget {
                 Text(isSubscribed.value == true
                     ? loc.subscriptionActive
                     : loc.subscriptionInactive),
-                SizedBox(height: 2.h),
-                Text(loc.subscriptionEndDate),
-                SizedBox(height: 2.h),
-                Text('2024-12-31'),
                 SizedBox(height: 4.h),
                 isSubscribed.value == false
                     ? SizedBox(
@@ -248,7 +283,7 @@ class PaymentsScreen extends HookConsumerWidget {
                           ),
                         ),
                       )
-                    : Text('Already subscribed'),
+                    : Text(''),
                 SizedBox(height: 2.h),
                 SizedBox(
                   width: double.infinity,
@@ -260,12 +295,23 @@ class PaymentsScreen extends HookConsumerWidget {
                     ),
                   ),
                 ),
+                SizedBox(height: 4.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: navigateBack,
+                    child: Text(
+                      loc.backButtonText,
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ),
+                ),
                 SizedBox(height: 25.h)
               ],
             )),
           ),
         ),
-        const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
+        //const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
       ]),
     );
   }

@@ -4,6 +4,7 @@ import "package:dribla_app_v2/components/connection_status_appbar.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/screens/profile_screen.dart";
 import "package:dribla_app_v2/theme/theme.dart";
+import "package:dribla_app_v2/widgets/shareable_code_widget.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:sizer/sizer.dart";
@@ -27,6 +28,7 @@ class CodesScreen extends HookConsumerWidget {
     String? username = auth.value?.accessToken.preferred_username ?? "";
     final userProfileId = auth.value?.accessToken.sub ?? "";
     final isSubscribed = useState<bool>(false);
+    final userAppCodes = useState<Iterable<String>>([]);
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -43,6 +45,7 @@ class CodesScreen extends HookConsumerWidget {
               .getOrUpsertUserProfile(userProfileId!);
           if (profile != null) {
             isSubscribed.value = profile.subscriptionStatus ?? false;
+            userAppCodes.value = profile.ownedAppCodes ?? [];
           }
         }
       }
@@ -74,75 +77,27 @@ class CodesScreen extends HookConsumerWidget {
                   Text(username, style: theme.textTheme.bodyMedium),
                   SizedBox(height: 2.h),
                   Text(fromPurchase ? loc.thanksForPurchase : ''),
-                  Text(loc.herePlayerCodes, style: theme.textTheme.bodyMedium),
+                  Text(userAppCodes.value.length > 0 ? loc.herePlayerCodes : '',
+                      style: theme.textTheme.bodyMedium),
                   SizedBox(height: 2.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'F2165954-0628-45A0-8164-B12217871A08',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          color: Colors.white,
-                          icon: Icon(Icons.share),
-                          onPressed: () {
-                            SharePlus.instance.share(ShareParams(
-                                text: 'F2165954-0628-45A0-8164-B12217871A08'));
-                          },
-                        ),
-                        flex: 1,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 2.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'DAB6BB3B-2C8C-48F4-9E39-5A1A9913F9AE',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          color: Colors.white,
-                          icon: Icon(Icons.share),
-                          onPressed: () {
-                            SharePlus.instance.share(ShareParams(
-                                text: 'DAB6BB3B-2C8C-48F4-9E39-5A1A9913F9AE'));
-                          },
-                        ),
-                        flex: 1,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 2.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'DD172171-5AA6-4591-B399-EDF043C88113',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          color: Colors.white,
-                          icon: Icon(Icons.share),
-                          onPressed: () {
-                            SharePlus.instance.share(ShareParams(
-                                text: 'DD172171-5AA6-4591-B399-EDF043C88113'));
-                          },
-                        ),
-                        flex: 1,
-                      ),
-                    ],
+                  SizedBox(
+                    height: 20.h,
+                    child: ListView.builder(
+                      itemCount: userAppCodes.value.length,
+                      itemBuilder: (context, index) {
+                        final code = userAppCodes.value.elementAt(index);
+                        return Column(children: [
+                          ShareableCodeWidget(
+                            appCode: code,
+                            onIconPressed: (appCode) {
+                              SharePlus.instance
+                                  .share(ShareParams(text: appCode));
+                            },
+                          ),
+                          SizedBox(height: 2.h),
+                        ]);
+                      },
+                    ),
                   ),
                   SizedBox(
                     height: 3.h,
@@ -176,19 +131,20 @@ class CodesScreen extends HookConsumerWidget {
                   SizedBox(height: 2.h),
                   isSubscribed.value == true
                       ? Text('')
-                      : TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: loc.enterAppCode,
-                          ),
-                          style: const TextStyle(color: Colors.white),
-                          onSubmitted: (value) async {
-                            // save the app code to userprofile
-                            await ref
-                                .read(authNotifierProvider.notifier)
-                                .updateUserProfileAppCode(userProfileId, value);
-                          },
-                        ),
+                      : Text('enter app code todo delete'),
+                  // : TextField(
+                  //     decoration: InputDecoration(
+                  //       border: OutlineInputBorder(),
+                  //       labelText: loc.enterAppCode,
+                  //     ),
+                  //     style: const TextStyle(color: Colors.white),
+                  //     onSubmitted: (value) async {
+                  //       // save the app code to userprofile
+                  //       await ref
+                  //           .read(authNotifierProvider.notifier)
+                  //           .tryUpdateUserProfileAppCode(userProfileId, value);
+                  //     },
+                  //   ),
                   SizedBox(height: 50.h),
                 ],
               )),
