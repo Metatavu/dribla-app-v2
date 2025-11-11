@@ -13,8 +13,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:dribla_app_v2/providers/auth_providers.dart';
 
-import "package:dribla_api/src/model/user_profile.dart";
-
 class ProfileScreen extends HookConsumerWidget {
   const ProfileScreen({super.key});
 
@@ -50,7 +48,6 @@ class ProfileScreen extends HookConsumerWidget {
           final profile = await ref
               .read(authNotifierProvider.notifier)
               .getOrUpsertUserProfile(userProfileId!);
-          print(profile);
           if (profile != null) {
             if (!context.mounted) return;
             characterType.value = (profile.characterType ?? 0);

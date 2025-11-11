@@ -35,28 +35,6 @@ class PaymentsScreen extends HookConsumerWidget {
 
     Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
       // TODO: Implement real purchase verification logic here
-      // final url = Uri.parse('http://$serverIp:8080/verifypurchase');
-      // const headers = {
-      //   'Content-type': 'application/json',
-      //   'Accept': 'application/json',
-      // };
-      // final response = await http.post(
-      //   url,
-      //   body: jsonEncode({
-      //     'source': purchaseDetails.verificationData.source,
-      //     'productId': purchaseDetails.productID,
-      //     'verificationData':
-      //         purchaseDetails.verificationData.serverVerificationData,
-      //     'userId': firebaseNotifier.user?.uid,
-      //   }),
-      //   headers: headers,
-      // );
-      // if (response.statusCode == 200) {
-      //   return true;
-      // } else {
-      //   return false;
-      // }
-      //await driblaApi.getAppCodesApi().
       await Future.delayed(const Duration(seconds: 1));
       return true;
     }
