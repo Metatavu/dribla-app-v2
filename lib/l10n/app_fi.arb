@@ -169,5 +169,8 @@
     "subscriptionInactive": "Tilaus ei ole voimassa",
     "noScoresThisWeek": "Ei ennätyksiä tällä viikolla",
     "enterAppCodeOrSubscribe": "Syötä käyttökoodi tai luo uusi tilaus jatkaaksesi",
-    "createNewSub": "Luo uusi tilaus"
+    "createNewSub": "Luo uusi tilaus",
+    "welcome": "Tervetuloa!",
+    "codeRegistrationSuccessful": "Koodin rekisteröinti onnistui!",
+    "codeRegistrationFailed": "Koodi on väärä tai sitä ei tunnistettu."
 }

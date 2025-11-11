@@ -145,5 +145,8 @@
     "subscriptionInactive": "Subscription is inactive",
     "noScoresThisWeek": "No high scores this week",
     "enterAppCodeOrSubscribe": "Enter an app code or subscribe to continue",
-    "createNewSub": "Create a new subscription"
+    "createNewSub": "Create a new subscription",
+    "welcome": "Welcome!",
+    "codeRegistrationSuccessful": "Code registration successful!",
+    "codeRegistrationFailed": "The code is wrong or not recognized."
 }

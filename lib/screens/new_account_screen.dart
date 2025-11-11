@@ -1,7 +1,6 @@
 import "package:dribla_api/dribla_api.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
 import "package:dribla_app_v2/device_connection.dart";
-import "package:dribla_app_v2/screens/codes_screen.dart";
 import "package:dribla_app_v2/screens/payments_screen.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:flutter/material.dart";
@@ -11,8 +10,6 @@ import "package:sizer/sizer.dart";
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:dribla_app_v2/providers/auth_providers.dart';
-
-import "package:dribla_api/src/model/user_profile.dart";
 
 class NewAccountScreen extends HookConsumerWidget {
   const NewAccountScreen({super.key});
@@ -25,7 +22,6 @@ class NewAccountScreen extends HookConsumerWidget {
     final auth = ref.watch(authNotifierProvider);
     String? username = auth.value?.accessToken.preferred_username ?? "";
     final userProfileId = auth.value?.accessToken.sub;
-    final characterType = useState<int>(0);
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -39,7 +35,6 @@ class NewAccountScreen extends HookConsumerWidget {
           final profile = await ref
               .read(authNotifierProvider.notifier)
               .getOrUpsertUserProfile(userProfileId!);
-          print(profile);
           if (profile != null) {
             if (profile.subscriptionStatus == true) {
               Navigator.pushReplacementNamed(context, '/main');
@@ -54,8 +49,6 @@ class NewAccountScreen extends HookConsumerWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: false,
-      //appBar: const ConnectionStatusAppBar(),
-      //drawer: const AppDrawer(),
       body: Stack(
         children: [
           Container(
@@ -72,7 +65,7 @@ class NewAccountScreen extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 10.h),
-                  Text('Welcome', style: theme.textTheme.headlineMedium),
+                  Text(loc.welcome, style: theme.textTheme.headlineMedium),
                   Text(username, style: theme.textTheme.bodyMedium),
                   Align(
                       alignment: Alignment.center,
@@ -99,7 +92,7 @@ class NewAccountScreen extends HookConsumerWidget {
                       if (isCodeRegistrationSuccessful) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Koodin rekisteröinti onnistui'),
+                            content: Text(loc.codeRegistrationSuccessful),
                           ),
                         );
                         Navigator.pushReplacementNamed(context, '/main');
@@ -107,7 +100,7 @@ class NewAccountScreen extends HookConsumerWidget {
                         // show error
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Invalid app code!'),
+                            content: Text(loc.codeRegistrationFailed),
                           ),
                         );
                       }
@@ -152,7 +145,6 @@ class NewAccountScreen extends HookConsumerWidget {
               )),
             ),
           ),
-          //const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
         ],
       ),
     );

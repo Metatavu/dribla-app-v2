@@ -26,7 +26,6 @@ class CodesScreen extends HookConsumerWidget {
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
     String? username = auth.value?.accessToken.preferred_username ?? "";
-    final userProfileId = auth.value?.accessToken.sub ?? "";
     final isSubscribed = useState<bool>(false);
     final userAppCodes = useState<Iterable<String>>([]);
 
@@ -77,7 +76,7 @@ class CodesScreen extends HookConsumerWidget {
                   Text(username, style: theme.textTheme.bodyMedium),
                   SizedBox(height: 2.h),
                   Text(fromPurchase ? loc.thanksForPurchase : ''),
-                  Text(userAppCodes.value.length > 0 ? loc.herePlayerCodes : '',
+                  Text(userAppCodes.value.isNotEmpty ? loc.herePlayerCodes : '',
                       style: theme.textTheme.bodyMedium),
                   SizedBox(height: 2.h),
                   SizedBox(
@@ -125,26 +124,6 @@ class CodesScreen extends HookConsumerWidget {
                   SizedBox(
                     height: 3.h,
                   ),
-                  isSubscribed.value == true
-                      ? Text('')
-                      : Text(loc.appCodeExplanation),
-                  SizedBox(height: 2.h),
-                  isSubscribed.value == true
-                      ? Text('')
-                      : Text('enter app code todo delete'),
-                  // : TextField(
-                  //     decoration: InputDecoration(
-                  //       border: OutlineInputBorder(),
-                  //       labelText: loc.enterAppCode,
-                  //     ),
-                  //     style: const TextStyle(color: Colors.white),
-                  //     onSubmitted: (value) async {
-                  //       // save the app code to userprofile
-                  //       await ref
-                  //           .read(authNotifierProvider.notifier)
-                  //           .tryUpdateUserProfileAppCode(userProfileId, value);
-                  //     },
-                  //   ),
                   SizedBox(height: 50.h),
                 ],
               )),

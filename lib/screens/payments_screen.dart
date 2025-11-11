@@ -1,7 +1,5 @@
 import 'dart:async';
 import "package:dribla_api/dribla_api.dart";
-import "package:dribla_app_v2/components/app_drawer.dart";
-import "package:dribla_app_v2/components/app_footer.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
 import "package:dribla_app_v2/screens/codes_screen.dart";
 import "package:dribla_app_v2/services/api.dart";
@@ -96,20 +94,10 @@ class PaymentsScreen extends HookConsumerWidget {
                         ..store = platform
                         ..receipt = purchaseDetails
                             .verificationData.serverVerificationData);
-                  print('creating request');
 
                   await driblaApi.getAppCodesApi().createAppCodes(
                       userProfileId: userProfileId,
                       appCodeCreationRequest: appCodeCreationRequest);
-                  print('App codes created');
-                  // await ref
-                  //     .read(authNotifierProvider.notifier)
-                  //     .createUserProfileAppCodes(
-                  //         userProfileId, appCodeCreationRequest);
-                  // will be set in backend only
-                  // ref
-                  //     .read(authNotifierProvider.notifier)
-                  //     .updateUserProfileSubscriptionStatus(userProfileId, true);
                   iap.completePurchase(purchaseDetails);
                   Navigator.push(
                     context,
@@ -139,14 +127,9 @@ class PaymentsScreen extends HookConsumerWidget {
                         ..store = platform
                         ..receipt = purchaseDetails
                             .verificationData.serverVerificationData);
-                  print('creating request');
                   await driblaApi.getAppCodesApi().createAppCodes(
                       userProfileId: userProfileId,
                       appCodeCreationRequest: appCodeCreationRequest);
-                  print('App codes created');
-                  // ref
-                  //     .read(authNotifierProvider.notifier)
-                  //     .updateUserProfileSubscriptionStatus(userProfileId, true);
                   iap.completePurchase(purchaseDetails);
                   Navigator.push(
                     context,
@@ -239,8 +222,6 @@ class PaymentsScreen extends HookConsumerWidget {
       );
     }
     return Scaffold(
-      //appBar: const ConnectionStatusAppBar(),
-      //drawer: const AppDrawer(),
       body: Stack(children: [
         Container(
           decoration: BoxDecoration(
@@ -311,7 +292,6 @@ class PaymentsScreen extends HookConsumerWidget {
             )),
           ),
         ),
-        //const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
       ]),
     );
   }
