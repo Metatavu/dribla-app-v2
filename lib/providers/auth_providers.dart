@@ -117,6 +117,20 @@ class AuthNotifier extends _$AuthNotifier {
         appCodeCreationRequest: appCodeCreationRequest);
   }
 
+  Future<UserProfile?> getUserProfile(String userProfileId) async {
+    try {
+      final response = await driblaApi
+          .getUserProfilesApi()
+          .findUserProfile(userProfileId: userProfileId);
+      if (response.data != null) {
+        return response.data;
+      }
+    } catch (error) {
+      print('Failed to get user profile');
+    }
+    return null;
+  }
+
   // bug: creating user causes multiple calls to create profile
   Future<UserProfile?> getOrUpsertUserProfile(String userProfileId) async {
     try {

@@ -44,7 +44,7 @@ class MainPageScreen extends HookConsumerWidget {
           if (!context.mounted) return;
           final profile = await ref
               .read(authNotifierProvider.notifier)
-              .getOrUpsertUserProfile(userProfileId!);
+              .getUserProfile(userProfileId!);
           if (profile != null) {
             if (!context.mounted) return;
             characterType.value = (profile.characterType ?? 0);
