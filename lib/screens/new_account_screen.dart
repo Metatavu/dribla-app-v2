@@ -22,6 +22,7 @@ class NewAccountScreen extends HookConsumerWidget {
     final auth = ref.watch(authNotifierProvider);
     String? username = auth.value?.accessToken.preferred_username ?? "";
     final userProfileId = auth.value?.accessToken.sub;
+    final isProfileLoaded = useState<bool>(false);
 
     useEffect(() {
       Future<void> fetchProfile() async {
@@ -36,6 +37,7 @@ class NewAccountScreen extends HookConsumerWidget {
               .read(authNotifierProvider.notifier)
               .getOrUpsertUserProfile(userProfileId!);
           if (profile != null) {
+            isProfileLoaded.value = true;
             if (profile.subscriptionStatus == true) {
               Navigator.pushReplacementNamed(context, '/main');
             }
@@ -46,6 +48,14 @@ class NewAccountScreen extends HookConsumerWidget {
       fetchProfile();
       return null;
     }, [isAuthExpired]);
+
+    if (isProfileLoaded.value == false) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     return Scaffold(
       extendBodyBehindAppBar: false,

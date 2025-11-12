@@ -647,10 +647,12 @@ class StatisticsScreen extends HookConsumerWidget {
                           flex: 1,
                         ),
                         Expanded(
-                          child: Text(
-                            allTimeWormGameHighscore.value.toString(),
-                            style: theme.textTheme.bodySmall,
-                          ),
+                          child: Padding(
+                              padding: EdgeInsets.only(left: 10.0),
+                              child: Text(
+                                allTimeWormGameHighscore.value.toString(),
+                                style: theme.textTheme.bodySmall,
+                              )),
                           flex: 1,
                         ),
                       ],

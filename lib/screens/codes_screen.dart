@@ -80,7 +80,7 @@ class CodesScreen extends HookConsumerWidget {
                       style: theme.textTheme.bodyMedium),
                   SizedBox(height: 2.h),
                   SizedBox(
-                    height: 20.h,
+                    height: 30.h,
                     child: ListView.builder(
                       itemCount: userAppCodes.value.length,
                       itemBuilder: (context, index) {
