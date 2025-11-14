@@ -19,10 +19,12 @@ class ConnectionStatusAppBar extends StatefulWidget
   const ConnectionStatusAppBar({
     super.key,
     this.onMenuPressed,
+    this.shouldShowMenu = true,
   }) : preferredSize = const Size.fromHeight(kToolbarHeight);
 
   @override
   final Size preferredSize; // default is 56.0
+  final bool shouldShowMenu;
 
   @override
   State<StatefulWidget> createState() => _ConnectionStatusAppBar();
@@ -283,13 +285,15 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
       foregroundColor: Colors.white,
       leading: Row(children: [
         SizedBox(width: 2.w),
-        IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: widget.onMenuPressed ??
-              () {
-                Scaffold.of(context).openDrawer();
-              },
-        ),
+        widget.shouldShowMenu
+            ? IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: widget.onMenuPressed ??
+                    () {
+                      Scaffold.of(context).openDrawer();
+                    },
+              )
+            : Container(),
       ]),
       title: Container(
         alignment: Alignment.center,

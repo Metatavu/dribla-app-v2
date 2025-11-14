@@ -58,6 +58,7 @@ class NewAccountScreen extends HookConsumerWidget {
     }
 
     return Scaffold(
+      appBar: const ConnectionStatusAppBar(shouldShowMenu: false),
       extendBodyBehindAppBar: false,
       body: Stack(
         children: [
@@ -74,13 +75,9 @@ class NewAccountScreen extends HookConsumerWidget {
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 1.h),
                   Text(loc.welcome, style: theme.textTheme.headlineMedium),
                   Text(username, style: theme.textTheme.bodyMedium),
-                  Align(
-                      alignment: Alignment.center,
-                      child: Image.asset('assets/dribla_logo.png',
-                          width: 40.w, height: 40.w)),
                   SizedBox(height: 2.h),
                   Text(loc.enterAppCodeOrSubscribe,
                       style: theme.textTheme.bodyMedium),

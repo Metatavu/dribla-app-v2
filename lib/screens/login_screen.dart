@@ -1,3 +1,4 @@
+import "package:dribla_app_v2/components/connection_status_appbar.dart";
 import "package:dribla_app_v2/services/api.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:flutter/material.dart";
@@ -28,6 +29,7 @@ class LoginScreen extends HookConsumerWidget {
     }, [authAsync.value]);
 
     return Scaffold(
+        appBar: const ConnectionStatusAppBar(shouldShowMenu: false),
         extendBodyBehindAppBar: false,
         body: SafeArea(
             child: Stack(children: [
@@ -44,10 +46,7 @@ class LoginScreen extends HookConsumerWidget {
                     child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                      child: Image.asset('assets/dribla_logo.png',
-                          width: 30.w, height: 30.w),
-                    ),
+                    SizedBox(height: 5.h),
                     Center(
                         child: Text(loc.login,
                             style: theme.textTheme.headlineMedium)),

@@ -204,6 +204,7 @@ class PaymentsScreen extends HookConsumerWidget {
       );
     }
     return Scaffold(
+      appBar: const ConnectionStatusAppBar(shouldShowMenu: false),
       body: Stack(children: [
         Container(
           decoration: BoxDecoration(
@@ -218,7 +219,7 @@ class PaymentsScreen extends HookConsumerWidget {
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 8.h),
+                SizedBox(height: 1.h),
                 Text(loc.subscriptionHandling,
                     style: theme.textTheme.headlineMedium),
                 Text(loc.earlyAccess, style: theme.textTheme.bodyMedium),

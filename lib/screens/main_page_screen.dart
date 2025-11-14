@@ -55,6 +55,7 @@ class MainPageScreen extends HookConsumerWidget {
           final gameSessions = await ref
               .read(authNotifierProvider.notifier)
               .getGameSessionsForUser(userProfileId);
+          if (!context.mounted) return;
           gamesPlayed.value = gameSessions.length;
           if (!context.mounted) return;
           final totalGameSummary = await ref
