@@ -190,7 +190,11 @@ class PaymentsScreen extends HookConsumerWidget {
     }
 
     void navigateBack() {
-      Navigator.pop(context);
+      if (!isSubscribed.value) {
+        Navigator.of(context).pushReplacementNamed('/new_user');
+      } else {
+        Navigator.of(context).pushReplacementNamed('/main');
+      }
     }
 
     if (loading.value) {
