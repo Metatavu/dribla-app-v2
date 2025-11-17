@@ -89,7 +89,7 @@ class MainPageScreen extends HookConsumerWidget {
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(40.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -99,16 +99,23 @@ class MainPageScreen extends HookConsumerWidget {
                       Text(username, style: theme.textTheme.headlineMedium),
                     ],
                   ),
+                  SizedBox(height: 2.h),
                   Container(
-                    padding: EdgeInsets.only(top: 2.h, bottom: 2.h),
-                    child: Center(
-                      child: Image.asset(
-                          getFinalAsset(characterType.value, outfitType.value,
-                              shoesType.value),
-                          width: 60.w,
-                          height: 60.w),
-                    ),
-                  ),
+                      height: 40.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.black.withOpacity(0.6),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.only(top: 2.h, bottom: 2.h),
+                        child: Center(
+                          child: Image.asset(
+                              getFinalAsset(characterType.value,
+                                  outfitType.value, shoesType.value),
+                              width: 60.w,
+                              height: 60.w),
+                        ),
+                      )),
                   SizedBox(height: 3.h),
                   Row(
                     children: [

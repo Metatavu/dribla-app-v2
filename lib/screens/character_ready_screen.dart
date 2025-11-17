@@ -35,6 +35,7 @@ class CharacterReadyScreen extends HookConsumerWidget {
     final isAuthExpired = ref.watch(isAuthExpiredProvider);
     final auth = ref.watch(authNotifierProvider);
     String? userProfileId = auth.value?.accessToken.sub;
+    String? username = auth.value?.accessToken.preferred_username ?? "";
 
     useEffect(() {
       if (isAuthExpired) {
@@ -49,123 +50,142 @@ class CharacterReadyScreen extends HookConsumerWidget {
       extendBodyBehindAppBar: false,
       appBar: const ConnectionStatusAppBar(),
       drawer: const AppDrawer(),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/dribla_new_background.jpg"),
-              fit: BoxFit.cover,
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/dribla_new_background.jpg"),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: Column(
-            children: [
-              Text('${loc.hello} username!',
-                  style: theme.textTheme.headlineMedium),
-              Text(
-                loc.lookingGood,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Expanded(
-                child: SizedBox(
-                  child: Container(
-                    child: Image.asset(
-                      getFinalAsset(chosenCharacter, chosenOutfit, chosenShoes),
-                      width: 50.w,
-                      height: 50.w,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 80.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            child: Padding(
+                padding: EdgeInsets.all(35.00),
+                child: SingleChildScrollView(
+                    child: Column(
                   children: [
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Text('${loc.hello} $username!',
+                            style: theme.textTheme.headlineMedium)),
+                    SizedBox(height: 1.h),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          loc.lookingGood,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )),
+                    SizedBox(height: 1.h),
                     Container(
-                      height: 12.w,
-                      width: 32.w,
-                      child: ElevatedButton(
-                        style: theme.elevatedButtonTheme.style,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ShoesSelectionScreen(
-                                chosenCharacter: chosenCharacter,
-                                chosenOutfit: chosenOutfit,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 5),
-                            const Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              loc.backButton,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16),
-                            ),
-                            const SizedBox(width: 5),
-                          ],
-                        ),
+                      width: double.infinity,
+                      height: 40.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.black.withOpacity(0.6),
+                      ),
+                      child: Image.asset(
+                        getFinalAsset(
+                            chosenCharacter, chosenOutfit, chosenShoes),
+                        height: 5.h,
                       ),
                     ),
-                    SizedBox(width: 5.w),
-                    SizedBox(width: 5.w),
-                    Container(
-                      height: 12.w,
-                      width: 32.w,
-                      child: ElevatedButton(
-                        style: theme.elevatedButtonTheme.style,
-                        onPressed: () {
-                          // Update user profile with saved character
-                          ref
-                              .read(authNotifierProvider.notifier)
-                              .updateUserProfileCharacters(
-                                userProfileId!,
-                                characterType: chosenCharacter,
-                                characterOutfitType: chosenOutfit,
-                                characterShoesType: chosenShoes,
-                              );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ChooseGameScreen()),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 5),
-                            Text(
-                              loc.save,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16),
-                            ),
-                            const SizedBox(width: 5),
-                            const Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 3.0),
+                      child: Container(
+                          height: 30.h,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 12.w,
+                                width: 32.w,
+                                margin: EdgeInsets.only(bottom: 10.h),
+                                child: ElevatedButton(
+                                  style: theme.elevatedButtonTheme.style,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ShoesSelectionScreen(
+                                          chosenCharacter: chosenCharacter,
+                                          chosenOutfit: chosenOutfit,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 5),
+                                      const Icon(
+                                        Icons.arrow_back,
+                                        color: Colors.white,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        loc.backButton,
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      ),
+                                      const SizedBox(width: 5),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 5.w),
+                              SizedBox(width: 5.w),
+                              Container(
+                                height: 12.w,
+                                width: 32.w,
+                                margin: EdgeInsets.only(bottom: 10.h),
+                                child: ElevatedButton(
+                                  style: theme.elevatedButtonTheme.style,
+                                  onPressed: () {
+                                    // Update user profile with saved character
+                                    ref
+                                        .read(authNotifierProvider.notifier)
+                                        .updateUserProfileCharacters(
+                                          userProfileId!,
+                                          characterType: chosenCharacter,
+                                          characterOutfitType: chosenOutfit,
+                                          characterShoesType: chosenShoes,
+                                        );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ChooseGameScreen()),
+                                    );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        loc.save,
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Icon(
+                                        Icons.arrow_forward,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
                     ),
                   ],
-                ),
-              ),
-              const AppFooter(),
-            ],
+                ))),
           ),
-        ),
+          const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
+        ],
       ),
     );
   }
