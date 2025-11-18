@@ -153,6 +153,7 @@ class ChooseGameScreen extends HookConsumerWidget {
                               ),
                             )),
                         Container(
+                          width: 50.w,
                           margin: const EdgeInsets.only(bottom: 15.0),
                           child: ElevatedButton(
                             onPressed: () async {
@@ -166,6 +167,7 @@ class ChooseGameScreen extends HookConsumerWidget {
                           ),
                         ),
                         Container(
+                          width: 50.w,
                           margin: const EdgeInsets.only(bottom: 15.0),
                           child: ElevatedButton(
                             onPressed: () async {
@@ -187,6 +189,7 @@ class ChooseGameScreen extends HookConsumerWidget {
                         ),
                         Container(
                           margin: const EdgeInsets.only(bottom: 15.0),
+                          width: 50.w,
                           child: ElevatedButton(
                             onPressed: () {
                               if (DeviceConnection.connectionStatus ==
