@@ -132,20 +132,27 @@ class ProfileScreen extends HookConsumerWidget {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.fromLTRB(32.0, 0, 32.0, 32.0),
               child: SingleChildScrollView(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(loc.profile, style: theme.textTheme.headlineMedium),
-                  Text(username, style: theme.textTheme.bodyMedium),
-                  Image.asset(
-                      getFinalAsset(characterType.value, outfitType.value,
-                          shoesType.value),
-                      width: 40.w,
-                      height: 40.w),
-                  SizedBox(height: 2.h),
-                  Text(loc.details, style: theme.textTheme.bodyMedium),
+                  Row(children: [
+                    Column(children: [
+                      Text(loc.profile, style: theme.textTheme.headlineMedium),
+                      SizedBox(height: 1.h),
+                      Text(username, style: theme.textTheme.bodyMedium),
+                    ]),
+                    Column(children: [
+                      SizedBox(height: 5.h),
+                      Container(
+                          margin: EdgeInsets.only(left: 25.w),
+                          child: Image.asset(
+                              getFinalAsset(characterType.value,
+                                  outfitType.value, shoesType.value),
+                              height: 28.h))
+                    ]),
+                  ]),
                   SizedBox(height: 2.h),
                   Row(
                     children: [
@@ -159,13 +166,20 @@ class ProfileScreen extends HookConsumerWidget {
                       Expanded(
                         child: Text(
                           gamesPlayed.value.toString(),
-                          style: theme.textTheme.bodySmall,
-                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            decoration: TextDecoration.none,
+                            fontFamily: "Urbanist",
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17.0.sp,
+                          ),
+                          textAlign: TextAlign.right,
                         ),
                         flex: 1,
                       ),
                     ],
                   ),
+                  SizedBox(height: 1.h),
                   Row(
                     children: [
                       Expanded(
@@ -178,13 +192,20 @@ class ProfileScreen extends HookConsumerWidget {
                       Expanded(
                         child: Text(
                           latestGame.value,
-                          style: theme.textTheme.bodySmall,
-                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            decoration: TextDecoration.none,
+                            fontFamily: "Urbanist",
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17.0.sp,
+                          ),
+                          textAlign: TextAlign.right,
                         ),
                         flex: 1,
                       ),
                     ],
                   ),
+                  SizedBox(height: 1.h),
                   Row(
                     children: [
                       Expanded(
@@ -197,8 +218,14 @@ class ProfileScreen extends HookConsumerWidget {
                       Expanded(
                         child: Text(
                           totalTimeSpent.value,
-                          style: theme.textTheme.bodySmall,
-                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            decoration: TextDecoration.none,
+                            fontFamily: "Urbanist",
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17.0.sp,
+                          ),
+                          textAlign: TextAlign.right,
                         ),
                         flex: 1,
                       ),
@@ -210,6 +237,14 @@ class ProfileScreen extends HookConsumerWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        side: const BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -225,12 +260,20 @@ class ProfileScreen extends HookConsumerWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 3.h,
+                    height: 2.h,
                   ),
                   SizedBox(
                     width: double.infinity,
                     child: userAppCodes.value.isNotEmpty
                         ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              side: const BorderSide(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                            ),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -247,7 +290,7 @@ class ProfileScreen extends HookConsumerWidget {
                         : Container(),
                   ),
                   SizedBox(
-                    height: 3.h,
+                    height: 2.h,
                   ),
                   SizedBox(
                     width: double.infinity,
@@ -261,7 +304,7 @@ class ProfileScreen extends HookConsumerWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 50.h),
+                  SizedBox(height: 20.h),
                 ],
               )),
             ),

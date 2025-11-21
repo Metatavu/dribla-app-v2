@@ -87,7 +87,7 @@ class DriblaApp extends HookConsumerWidget {
             '/character': (context) => const CharacterCreationScreen(),
             '/games': (context) => const ChooseGameScreen(),
             '/profile': (context) => const ProfileScreen(),
-            '/payments': (context) => PaymentsScreen(),
+            '/payments': (context) => const PaymentsScreen(),
             '/login': (context) => const LoginScreen(),
             '/statistics': (context) => const StatisticsScreen(),
             '/codes': (context) => const CodesScreen(fromPurchase: false),

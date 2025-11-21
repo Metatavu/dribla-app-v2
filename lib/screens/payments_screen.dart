@@ -214,26 +214,36 @@ class PaymentsScreen extends HookConsumerWidget {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(40.0),
             child: SingleChildScrollView(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 1.h),
-                Text(loc.subscriptionHandling,
-                    style: theme.textTheme.headlineMedium),
-                Text(loc.earlyAccess, style: theme.textTheme.bodyMedium),
-                Image.asset('assets/promo_image_mat.jpg', height: 60.w),
+                Text(loc.welcome, style: theme.textTheme.headlineMedium),
                 SizedBox(height: 2.h),
-                Text(loc.subscribeInfo, style: theme.textTheme.bodyMedium),
-                SizedBox(height: 2.h),
-                SizedBox(
-                  height: 3.h,
-                ),
-                Text(isSubscribed.value == true
-                    ? loc.subscriptionActive
-                    : loc.subscriptionInactive),
-                SizedBox(height: 4.h),
+                Text(loc.earlyAccess,
+                    style: TextStyle(
+                      color: Colors.white,
+                      decoration: TextDecoration.none,
+                      fontFamily: "Urbanist",
+                      fontWeight: FontWeight.w400,
+                      fontSize: 17.0.sp,
+                    )),
+                SizedBox(height: 1.h),
+                Image.asset('assets/promo_image_mat.jpg', height: 40.h),
+                SizedBox(height: 1.h),
+                Text(loc.subscribeInfo,
+                    style: TextStyle(
+                      color: Colors.white,
+                      decoration: TextDecoration.none,
+                      fontFamily: "Urbanist",
+                      fontWeight: FontWeight.w400,
+                      fontSize: 17.0.sp,
+                    )),
+                SizedBox(height: 3.h),
+                Text(isSubscribed.value == true ? loc.subscriptionActive : ''),
+                SizedBox(height: 1.h),
                 isSubscribed.value == false
                     ? SizedBox(
                         width: double.infinity,

@@ -54,21 +54,6 @@ ThemeData getTheme(final BuildContext context) {
         fontSize: 19.0.sp,
       ),
     ),
-    // elevatedButtonTheme: const ElevatedButtonThemeData(
-    //   style: ButtonStyle(
-    //     minimumSize: WidgetStatePropertyAll(Size(108, 54)),
-    //     shape: WidgetStatePropertyAll(ContinuousRectangleBorder()),
-    //     elevation: WidgetStatePropertyAll(0),
-    //     backgroundColor: WidgetStatePropertyAll(DriblaColors.orange),
-    //     foregroundColor: WidgetStatePropertyAll(DriblaColors.white),
-    //     textStyle: WidgetStatePropertyAll(TextStyle(
-    //       decoration: TextDecoration.none,
-    //       fontFamily: "Urbanist",
-    //       fontWeight: FontWeight.w900,
-    //       fontSize: 28.0,
-    //     )),
-    //   ),
-    // ),
     elevatedButtonTheme: const ElevatedButtonThemeData(
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(DriblaColors.newBtnColor),
@@ -145,22 +130,20 @@ ThemeData getTheme(final BuildContext context) {
     ),
   );
 
-  // todo fonts
   final themeWithFonts = baseTheme.copyWith();
 
   return themeWithFonts.copyWith(
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.deepPurple,
       ),
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        // leadingWidth: 60,
       ),
-      drawerTheme: DrawerThemeData(
+      drawerTheme: const DrawerThemeData(
         backgroundColor: Colors.black,
       ),
-      listTileTheme: ListTileThemeData(
+      listTileTheme: const ListTileThemeData(
         textColor: Colors.white,
         iconColor: Colors.white,
         tileColor: Colors.black,

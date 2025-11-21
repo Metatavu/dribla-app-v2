@@ -152,24 +152,33 @@ class ChooseGameScreen extends HookConsumerWidget {
                                     space: 7.sp),
                               ),
                             )),
+                        // Instructions no longer in use?
+                        // Container(
+                        //   width: 50.w,
+                        //   margin: const EdgeInsets.only(bottom: 15.0),
+                        //   child: ElevatedButton(
+                        //     onPressed: () async {
+                        //       launchUrlString(getLocalizedInstructionUrl(
+                        //           chosenGame.value, loc));
+                        //     },
+                        //     child: Text(
+                        //       loc.instructionsButtonText,
+                        //       style: theme.textTheme.bodyMedium,
+                        //     ),
+                        //   ),
+                        // ),
                         Container(
                           width: 50.w,
                           margin: const EdgeInsets.only(bottom: 15.0),
                           child: ElevatedButton(
-                            onPressed: () async {
-                              launchUrlString(getLocalizedInstructionUrl(
-                                  chosenGame.value, loc));
-                            },
-                            child: Text(
-                              loc.instructionsButtonText,
-                              style: theme.textTheme.bodyMedium,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              side: const BorderSide(
+                                color: Colors.white,
+                                width: 2,
+                              ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          width: 50.w,
-                          margin: const EdgeInsets.only(bottom: 15.0),
-                          child: ElevatedButton(
                             onPressed: () async {
                               var data = await showDialog<Map<String, String?>>(
                                 context: context,

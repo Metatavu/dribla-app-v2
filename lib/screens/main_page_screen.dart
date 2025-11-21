@@ -119,12 +119,12 @@ class MainPageScreen extends HookConsumerWidget {
                   SizedBox(height: 3.h),
                   Row(
                     children: [
-                      SizedBox(width: 5.w),
                       Expanded(
                         flex: 1,
                         child: Text(
                           loc.totalHours,
                           style: theme.textTheme.bodyMedium,
+                          textAlign: TextAlign.left,
                         ),
                       ),
                       Expanded(
@@ -132,19 +132,19 @@ class MainPageScreen extends HookConsumerWidget {
                         child: Text(
                           timeSpent.value,
                           style: theme.textTheme.bodyMedium,
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.right,
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      SizedBox(width: 5.w),
                       Expanded(
                         flex: 1,
                         child: Text(
                           loc.gamesPlayed,
                           style: theme.textTheme.bodyMedium,
+                          textAlign: TextAlign.left,
                         ),
                       ),
                       Expanded(
@@ -152,7 +152,7 @@ class MainPageScreen extends HookConsumerWidget {
                         child: Text(
                           gamesPlayed.value.toString(),
                           style: theme.textTheme.bodyMedium,
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.right,
                         ),
                       ),
                     ],
