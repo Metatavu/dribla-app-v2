@@ -18,19 +18,33 @@ class ShareableCodeWidget extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Text(
-            appCode,
-            style: theme.textTheme.bodySmall,
-          ),
           flex: 1,
+          child: TextButton(
+            onPressed: () => onIconPressed?.call(appCode),
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              padding: EdgeInsets.zero,
+              alignment: Alignment.centerLeft,
+            ),
+            child: Text(
+              appCode,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Colors.white,
+                decoration: TextDecoration.none,
+                fontFamily: "Urbanist",
+                fontWeight: FontWeight.w600,
+                fontSize: 14.0,
+              ),
+            ),
+          ),
         ),
         Expanded(
+          flex: 1,
           child: IconButton(
             color: Colors.white,
-            icon: Icon(Icons.share),
+            icon: const Icon(Icons.share),
             onPressed: () => onIconPressed?.call(appCode),
           ),
-          flex: 1,
         ),
       ],
     );

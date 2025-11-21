@@ -67,7 +67,7 @@ class CodesScreen extends HookConsumerWidget {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(40.0),
               child: SingleChildScrollView(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +77,13 @@ class CodesScreen extends HookConsumerWidget {
                   SizedBox(height: 2.h),
                   Text(fromPurchase ? loc.thanksForPurchase : ''),
                   Text(userAppCodes.value.isNotEmpty ? loc.herePlayerCodes : '',
-                      style: theme.textTheme.bodyMedium),
+                      style: TextStyle(
+                        color: Colors.white,
+                        decoration: TextDecoration.none,
+                        fontFamily: "Urbanist",
+                        fontWeight: FontWeight.w400,
+                        fontSize: 17.0.sp,
+                      )),
                   SizedBox(height: 2.h),
                   SizedBox(
                     height: 30.h,
@@ -101,7 +107,14 @@ class CodesScreen extends HookConsumerWidget {
                   SizedBox(
                     height: 3.h,
                   ),
-                  Text(fromPurchase ? loc.findCodesLater : ''),
+                  Text(fromPurchase ? loc.findCodesLater : '',
+                      style: TextStyle(
+                        color: Colors.white,
+                        decoration: TextDecoration.none,
+                        fontFamily: "Urbanist",
+                        fontWeight: FontWeight.w400,
+                        fontSize: 17.0.sp,
+                      )),
                   SizedBox(
                     height: 2.h,
                   ),
