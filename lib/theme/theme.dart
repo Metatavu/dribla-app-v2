@@ -21,13 +21,13 @@ ThemeData getTheme(final BuildContext context) {
         decoration: TextDecoration.none,
         fontFamily: "Urbanist",
         fontWeight: FontWeight.w900,
-        fontSize: 15.0.sp,
+        fontSize: 18.5.sp,
       ),
       headlineMedium: TextStyle(
         color: Colors.white,
         decoration: TextDecoration.none,
         fontFamily: "Urbanist",
-        fontWeight: FontWeight.w900,
+        fontWeight: FontWeight.w800,
         fontSize: 23.0.sp,
       ),
       headlineLarge: TextStyle(
@@ -51,7 +51,7 @@ ThemeData getTheme(final BuildContext context) {
         fontFamily: "Urbanist",
         fontWeight: FontWeight.w600,
         fontStyle: FontStyle.normal,
-        fontSize: 19.0.sp,
+        fontSize: 16.0.sp,
       ),
     ),
     elevatedButtonTheme: const ElevatedButtonThemeData(

@@ -93,7 +93,7 @@
     "startGameButton": "Start game",
     "mainPage": "Home page",
     "profile": "Profile",
-    "editAvatar": "Edit avatar",
+    "editAvatar": "Edit profile character",
     "editCharType": "Choose your character",
     "editCharOutfit": "Next choose your outfit",
     "editCharShoes": "Next choose your shoes",
@@ -148,5 +148,7 @@
     "createNewSub": "Create a new subscription",
     "welcome": "Welcome!",
     "codeRegistrationSuccessful": "Code registration successful!",
-    "codeRegistrationFailed": "The code is wrong or not recognized."
+    "codeRegistrationFailed": "The code is wrong or not recognized.",
+    "showCodes": "Show codes",
+    "character": "Character"
 }

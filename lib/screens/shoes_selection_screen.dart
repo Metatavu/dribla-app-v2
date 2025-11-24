@@ -86,10 +86,12 @@ class ShoesSelectionScreen extends HookConsumerWidget {
                                   alignment: Alignment.topLeft,
                                   child: Text(
                                     loc.editCharShoes,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.none,
+                                      fontFamily: "Urbanist",
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16.0.sp,
                                     ),
                                   )),
                               SizedBox(height: 1.h),
@@ -120,7 +122,7 @@ class ShoesSelectionScreen extends HookConsumerWidget {
                                   onIndexChanged: (index) =>
                                       chosenShoes.value = index,
                                   control: const SwiperControl(
-                                      color: DriblaColors.white),
+                                      color: DriblaColors.orange),
                                 ),
                               ),
                               SizedBox(
@@ -151,17 +153,16 @@ class ShoesSelectionScreen extends HookConsumerWidget {
                                             },
                                             child: Row(
                                               children: [
-                                                const SizedBox(width: 5),
                                                 const Icon(
                                                   Icons.arrow_back,
                                                   color: Colors.white,
                                                 ),
-                                                const SizedBox(width: 5),
+                                                SizedBox(width: 2.w),
                                                 Text(
                                                   loc.backButtonText,
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                       color: Colors.white,
-                                                      fontSize: 16),
+                                                      fontSize: 16.sp),
                                                 ),
                                                 const SizedBox(width: 5),
                                               ],
@@ -203,14 +204,14 @@ class ShoesSelectionScreen extends HookConsumerWidget {
                                             },
                                             child: Row(
                                               children: [
-                                                const SizedBox(width: 5),
+                                                SizedBox(width: 4.w),
                                                 Text(
                                                   loc.nextButton,
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                       color: Colors.white,
-                                                      fontSize: 16),
+                                                      fontSize: 16.sp),
                                                 ),
-                                                const SizedBox(width: 5),
+                                                SizedBox(width: 2.w),
                                                 const Icon(
                                                   Icons.arrow_forward,
                                                   color: Colors.white,

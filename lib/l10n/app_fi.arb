@@ -117,7 +117,7 @@
     "startGameButton": "Aloita peli",
     "mainPage": "Kotisivu",
     "profile": "Profiili",
-    "editAvatar": "Hahmon muokkaus",
+    "editAvatar": "Profiilihahmon muokkaus",
     "editCharType": "Valitse hahmosi",
     "editCharOutfit": "Seuraavaksi valitse asusi",
     "editCharShoes": "Seuraavaksi valitse kengät",
@@ -172,5 +172,7 @@
     "createNewSub": "Luo uusi tilaus",
     "welcome": "Tervetuloa!",
     "codeRegistrationSuccessful": "Koodin rekisteröinti onnistui!",
-    "codeRegistrationFailed": "Koodi on väärä tai sitä ei tunnistettu."
+    "codeRegistrationFailed": "Koodi on väärä tai sitä ei tunnistettu.",
+    "showCodes": "Näytä koodit",
+    "character": "Hahmo"
 }

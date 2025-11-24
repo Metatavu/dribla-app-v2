@@ -140,7 +140,7 @@ class ChooseGameScreen extends HookConsumerWidget {
                               onIndexChanged: (index) =>
                                   chosenGame.value = index,
                               control: const SwiperControl(
-                                  color: DriblaColors.white),
+                                  color: DriblaColors.orange),
                               pagination: SwiperPagination(
                                 alignment: Alignment.bottomCenter,
                                 margin: const EdgeInsets.only(bottom: 22.0),
@@ -229,20 +229,9 @@ class ChooseGameScreen extends HookConsumerWidget {
                                 );
                               }
                             },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(width: 5),
-                                Text(
-                                  loc.startGameButton,
-                                  style: theme.textTheme.bodyMedium,
-                                ),
-                                const SizedBox(width: 5),
-                                const Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.white,
-                                ),
-                              ],
+                            child: Text(
+                              loc.startGameButton,
+                              style: theme.textTheme.bodyMedium,
                             ),
                           ),
                         ),

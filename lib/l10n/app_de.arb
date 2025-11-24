@@ -149,5 +149,7 @@
     "createNewSub": "Luo uusi tilaus",
     "welcome": "Tervetuloa!",
     "codeRegistrationSuccessful": "Koodin rekisteröinti onnistui!",
-    "codeRegistrationFailed": "Koodi on väärä tai sitä ei tunnistettu."
+    "codeRegistrationFailed": "Koodi on väärä tai sitä ei tunnistettu.",
+    "showCodes": "Näytä koodit",
+    "character": "Character"
 }

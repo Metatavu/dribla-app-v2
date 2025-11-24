@@ -80,12 +80,33 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
     });
   }
 
-  Widget _getConnectionStatusIcon(ConnectionStatus connectionStatus) {
+  Widget _getConnectionStatusIcon(
+      ConnectionStatus connectionStatus, ThemeData theme) {
     return switch (connectionStatus) {
-      ConnectionStatus.bleDisabled => const Icon(Icons.bluetooth_disabled),
-      ConnectionStatus.bleDisconnected => const Icon(Icons.bluetooth_disabled),
-      ConnectionStatus.bleConnecting => const Icon(Icons.bluetooth_searching),
-      ConnectionStatus.bleConnected => const Icon(Icons.bluetooth_connected)
+      ConnectionStatus.bleDisabled => IconButton(
+          icon: const Icon(Icons.bluetooth_disabled, color: Colors.red),
+          onPressed: () {
+            _openConnectionStatusDialog(context, theme);
+          },
+        ),
+      ConnectionStatus.bleDisconnected => IconButton(
+          icon: const Icon(Icons.bluetooth_disabled, color: Colors.red),
+          onPressed: () {
+            _openConnectionStatusDialog(context, theme);
+          },
+        ),
+      ConnectionStatus.bleConnecting => IconButton(
+          icon: const Icon(Icons.bluetooth_searching, color: Colors.blue),
+          onPressed: () {
+            _openConnectionStatusDialog(context, theme);
+          },
+        ),
+      ConnectionStatus.bleConnected => IconButton(
+          icon: const Icon(Icons.bluetooth_connected, color: Colors.green),
+          onPressed: () {
+            _openConnectionStatusDialog(context, theme);
+          },
+        ),
     };
   }
 
@@ -320,16 +341,9 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
         StreamBuilder<ConnectionStatus>(
           stream: _connectionStatusStream,
           builder: (context, state) => _getConnectionStatusIcon(
-            state.data ?? DeviceConnection.connectionStatus,
-          ),
+              state.data ?? DeviceConnection.connectionStatus, theme),
         ),
         SizedBox(width: 2.w),
-        IconButton(
-          onPressed: () {
-            _openConnectionStatusDialog(context, theme);
-          },
-          icon: const Icon(Icons.settings),
-        )
       ],
     );
   }

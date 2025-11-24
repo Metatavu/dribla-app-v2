@@ -73,7 +73,7 @@ class CodesScreen extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(loc.codes, style: theme.textTheme.headlineMedium),
-                  Text(username, style: theme.textTheme.bodyMedium),
+                  Text(username, style: theme.textTheme.headlineSmall),
                   SizedBox(height: 2.h),
                   Text(fromPurchase ? loc.thanksForPurchase : ''),
                   Text(userAppCodes.value.isNotEmpty ? loc.herePlayerCodes : '',

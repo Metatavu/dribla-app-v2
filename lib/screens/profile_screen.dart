@@ -138,20 +138,28 @@ class ProfileScreen extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(children: [
-                    Column(children: [
-                      Text(loc.profile, style: theme.textTheme.headlineMedium),
-                      SizedBox(height: 1.h),
-                      Text(username, style: theme.textTheme.bodyMedium),
-                    ]),
-                    Column(children: [
-                      SizedBox(height: 5.h),
-                      Container(
-                          margin: EdgeInsets.only(left: 25.w),
-                          child: Image.asset(
-                              getFinalAsset(characterType.value,
-                                  outfitType.value, shoesType.value),
-                              height: 28.h))
-                    ]),
+                    Container(
+                        child: Column(children: [
+                          Text(loc.profile,
+                              style: theme.textTheme.headlineMedium),
+                          SizedBox(height: 1.h),
+                          Text(username, style: theme.textTheme.headlineSmall),
+                        ]),
+                        width: 25.w),
+                    Container(
+                      child: Column(children: [
+                        SizedBox(height: 5.h),
+                        Container(
+                            child: Image.asset(
+                          getFinalAsset(characterType.value, outfitType.value,
+                              shoesType.value),
+                          height: 28.h,
+                          fit: BoxFit.contain,
+                        ))
+                      ]),
+                      width: 45.w,
+                      margin: EdgeInsets.only(left: 13.w),
+                    ),
                   ]),
                   SizedBox(height: 2.h),
                   Row(
@@ -283,7 +291,7 @@ class ProfileScreen extends HookConsumerWidget {
                               );
                             },
                             child: Text(
-                              loc.codes,
+                              loc.showCodes,
                               style: theme.textTheme.bodyMedium,
                             ),
                           )
