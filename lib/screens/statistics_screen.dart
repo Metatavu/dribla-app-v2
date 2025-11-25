@@ -170,6 +170,8 @@ class StatisticsScreen extends HookConsumerWidget {
     final tenthScoreWeekday = useState<String>("");
     final tenthScoreDisplay = useState<String>("");
 
+    final snakeHighscoreDate = useState<String>("");
+
     void resetScores() {
       firstScore.value = 0;
       firstScoreWeekday.value = "";
@@ -422,6 +424,8 @@ class StatisticsScreen extends HookConsumerWidget {
           if (latestWormGameHighscoreSession != null) {
             allTimeWormGameHighscore.value =
                 latestWormGameHighscoreSession.score ?? 0;
+            snakeHighscoreDate.value = localDateFormat
+                .format(latestWormGameHighscoreSession.createdAt!);
           }
         }
       }
@@ -528,267 +532,401 @@ class StatisticsScreen extends HookConsumerWidget {
               padding: EdgeInsets.all(32.0),
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(loc.statistics, style: theme.textTheme.headlineMedium),
-                    Text(username, style: theme.textTheme.bodyMedium),
-                    SizedBox(height: 2.h),
-                    // Week navigation row
-                    Column(children: [
-                      Text(
-                        '${loc.week} ${getWeekNumber(currentWeekStart.value)}',
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.arrow_back),
-                            color: DriblaColors.orange,
-                            onPressed: () {
-                              currentWeekStart.value = currentWeekStart.value
-                                  .subtract(const Duration(days: 7));
-                            },
-                          ),
-                          Text(
-                            "${localDateFormat.format(currentWeekStart.value)} - ${localDateFormat.format(currentWeekStart.value.add(const Duration(days: 6)))}",
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.arrow_forward),
-                            color: DriblaColors.orange,
-                            onPressed: () {
-                              currentWeekStart.value = currentWeekStart.value
-                                  .add(const Duration(days: 7));
-                            },
-                          ),
-                        ],
-                      )
-                    ]),
-                    Text(loc.weeklyActivity, style: theme.textTheme.bodyMedium),
-                    SizedBox(height: 2.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            loc.gamesPlayed,
-                            style: theme.textTheme.bodySmall,
-                          ),
-                          flex: 1,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(loc.statistics,
+                          style: theme.textTheme.headlineMedium),
+                      Text(username, style: theme.textTheme.bodyMedium),
+                      SizedBox(height: 2.h),
+                      // Week navigation row
+                      Container(
+                          child: Column(children: [
+                        Text(
+                          '${loc.week} ${getWeekNumber(currentWeekStart.value)}',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold, fontSize: 20.sp),
                         ),
-                        Expanded(
-                          child: Text(
-                            gamesPlayed.value.toString(),
-                            style: theme.textTheme.bodySmall,
-                            textAlign: TextAlign.center,
-                          ),
-                          flex: 1,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            loc.recentGame,
-                            style: theme.textTheme.bodySmall,
-                          ),
-                          flex: 1,
-                        ),
-                        Expanded(
-                          child: Text(
-                            latestGame.value,
-                            style: theme.textTheme.bodySmall,
-                            textAlign: TextAlign.center,
-                          ),
-                          flex: 1,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            loc.totalTimeSpent,
-                            style: theme.textTheme.bodySmall,
-                          ),
-                          flex: 1,
-                        ),
-                        Expanded(
-                          child: Text(
-                            timeSpent.value,
-                            style: theme.textTheme.bodySmall,
-                            textAlign: TextAlign.center,
-                          ),
-                          flex: 1,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 3.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            loc.weeklyPlaytimeMinutes,
-                            style: theme.textTheme.bodySmall,
-                          ),
-                          flex: 1,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.arrow_back),
+                              color: DriblaColors.orange,
+                              onPressed: () {
+                                currentWeekStart.value = currentWeekStart.value
+                                    .subtract(const Duration(days: 7));
+                              },
+                            ),
+                            Text(
+                              "${localDateFormat.format(currentWeekStart.value)} - ${localDateFormat.format(currentWeekStart.value.add(const Duration(days: 6)))}",
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.bold, fontSize: 17.sp),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.arrow_forward),
+                              color: DriblaColors.orange,
+                              onPressed: () {
+                                currentWeekStart.value = currentWeekStart.value
+                                    .add(const Duration(days: 7));
+                              },
+                            ),
+                          ],
                         )
-                      ],
-                    ),
-                    SizedBox(height: 20.h),
-                    SizedBox(
-                        width: 300,
-                        height: 150,
-                        child: BarChart(
-                          BarChartData(
-                            barTouchData: barTouchData,
-                            titlesData: titlesData(context),
-                            borderData: borderData,
-                            barGroups: barGroups(),
-                            gridData: const FlGridData(show: false),
-                            alignment: BarChartAlignment.spaceAround,
-                            maxY: 20,
+                      ])),
+                      Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                        )),
-                    SizedBox(height: 2.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            loc.wormGameBestHighscore,
-                            style: theme.textTheme.bodySmall,
-                          ),
-                          flex: 1,
-                        ),
-                        Expanded(
                           child: Padding(
-                              padding: EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                allTimeWormGameHighscore.value.toString(),
-                                style: theme.textTheme.bodySmall,
-                              )),
-                          flex: 1,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 2.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            loc.wormGameWeeklyHighscores,
-                            style: theme.textTheme.bodySmall,
+                              padding: EdgeInsets.all(16.00),
+                              child: Column(children: [
+                                Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(loc.weeklyActivity,
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17.sp))),
+                                SizedBox(height: 2.h),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        loc.gamesPlayed,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          decoration: TextDecoration.none,
+                                          fontFamily: "Urbanist",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0.sp,
+                                        ),
+                                      ),
+                                      flex: 1,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        gamesPlayed.value.toString(),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          decoration: TextDecoration.none,
+                                          fontFamily: "Urbanist",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0.sp,
+                                        ),
+                                        textAlign: TextAlign.right,
+                                      ),
+                                      flex: 1,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        loc.recentGame,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          decoration: TextDecoration.none,
+                                          fontFamily: "Urbanist",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0.sp,
+                                        ),
+                                      ),
+                                      flex: 1,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        latestGame.value,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          decoration: TextDecoration.none,
+                                          fontFamily: "Urbanist",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0.sp,
+                                        ),
+                                        textAlign: TextAlign.right,
+                                      ),
+                                      flex: 1,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        loc.totalTimeSpent,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          decoration: TextDecoration.none,
+                                          fontFamily: "Urbanist",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0.sp,
+                                        ),
+                                      ),
+                                      flex: 1,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        timeSpent.value,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          decoration: TextDecoration.none,
+                                          fontFamily: "Urbanist",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0.sp,
+                                        ),
+                                        textAlign: TextAlign.right,
+                                      ),
+                                      flex: 1,
+                                    ),
+                                  ],
+                                ),
+                              ]))),
+                      SizedBox(height: 2.h),
+                      Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          flex: 1,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 2.h),
-                    Column(
-                      children: [
-                        Text(
-                          firstScore.value != 0
-                              ? firstScoreDisplay.value
-                              : loc.noScoresThisWeek,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        SizedBox(height: 1.h),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          secondScore.value != 0
-                              ? secondScoreDisplay.value
-                              : '',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        SizedBox(height: 1.h),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          thirdScore.value != 0 ? thirdScoreDisplay.value : '',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        SizedBox(height: 1.h),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          fourthScore.value != 0
-                              ? fourthScoreDisplay.value
-                              : '',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        SizedBox(height: 1.h),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          fifthScore.value != 0 ? fifthScoreDisplay.value : '',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        SizedBox(height: 1.h),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          sixthScore.value != 0 ? sixthScoreDisplay.value : '',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        SizedBox(height: 1.h),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          seventhScore.value != 0
-                              ? seventhScoreDisplay.value
-                              : '',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        SizedBox(height: 1.h),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          eighthScore.value != 0
-                              ? eighthScoreDisplay.value
-                              : '',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        SizedBox(height: 1.h),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          ninthScore.value != 0 ? ninthScoreDisplay.value : '',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        SizedBox(height: 1.h),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          tenthScore.value != 0 ? tenthScoreDisplay.value : '',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        SizedBox(height: 1.h),
-                      ],
-                    ),
-                    SizedBox(height: 50.h),
-                  ],
-                ),
+                          child: Padding(
+                              padding: EdgeInsets.all(16.00),
+                              child: Column(children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        loc.wormGameBestHighscore,
+                                        style: theme.textTheme.bodySmall,
+                                      ),
+                                      flex: 1,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                          padding: EdgeInsets.only(left: 10.0),
+                                          child: Text(
+                                            allTimeWormGameHighscore.value
+                                                .toString(),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              decoration: TextDecoration.none,
+                                              fontFamily: "Urbanist",
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16.0.sp,
+                                            ),
+                                            textAlign: TextAlign.right,
+                                          )),
+                                      flex: 1,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 1.h),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        'Highscore date',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          decoration: TextDecoration.none,
+                                          fontFamily: "Urbanist",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0.sp,
+                                        ),
+                                      ),
+                                      flex: 1,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                          padding: EdgeInsets.only(left: 10.0),
+                                          child: Text(
+                                            snakeHighscoreDate.value,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              decoration: TextDecoration.none,
+                                              fontFamily: "Urbanist",
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16.0.sp,
+                                            ),
+                                            textAlign: TextAlign.right,
+                                          )),
+                                      flex: 1,
+                                    ),
+                                  ],
+                                )
+                              ]))),
+                      SizedBox(height: 3.h),
+                      Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Column(children: [
+                            Padding(
+                                padding: EdgeInsets.all(16.00),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        loc.weeklyPlaytimeMinutes,
+                                        style: theme.textTheme.bodySmall,
+                                      ),
+                                      flex: 1,
+                                    )
+                                  ],
+                                )),
+                            SizedBox(height: 20.h),
+                            SizedBox(
+                                width: 300,
+                                height: 150,
+                                child: BarChart(
+                                  BarChartData(
+                                    barTouchData: barTouchData,
+                                    titlesData: titlesData(context),
+                                    borderData: borderData,
+                                    barGroups: barGroups(),
+                                    gridData: const FlGridData(show: false),
+                                    alignment: BarChartAlignment.spaceAround,
+                                    maxY: 20,
+                                  ),
+                                )),
+                          ])),
+                      SizedBox(height: 2.h),
+                      Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Padding(
+                              padding: EdgeInsets.all(16.00),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            loc.wormGameWeeklyHighscores,
+                                            style: theme.textTheme.bodySmall,
+                                          ),
+                                          flex: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 2.h),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          firstScore.value != 0
+                                              ? firstScoreDisplay.value
+                                              : loc.noScoresThisWeek,
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 1.h),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          secondScore.value != 0
+                                              ? secondScoreDisplay.value
+                                              : '',
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 1.h),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          thirdScore.value != 0
+                                              ? thirdScoreDisplay.value
+                                              : '',
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 1.h),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          fourthScore.value != 0
+                                              ? fourthScoreDisplay.value
+                                              : '',
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 1.h),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          fifthScore.value != 0
+                                              ? fifthScoreDisplay.value
+                                              : '',
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 1.h),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          sixthScore.value != 0
+                                              ? sixthScoreDisplay.value
+                                              : '',
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 1.h),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          seventhScore.value != 0
+                                              ? seventhScoreDisplay.value
+                                              : '',
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 1.h),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          eighthScore.value != 0
+                                              ? eighthScoreDisplay.value
+                                              : '',
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 1.h),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          ninthScore.value != 0
+                                              ? ninthScoreDisplay.value
+                                              : '',
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 1.h),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          tenthScore.value != 0
+                                              ? tenthScoreDisplay.value
+                                              : '',
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 1.h),
+                                      ],
+                                    ),
+                                  ]))),
+                      SizedBox(height: 50.h),
+                    ]),
               ),
             ),
           ),
