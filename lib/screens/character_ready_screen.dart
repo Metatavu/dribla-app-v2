@@ -88,10 +88,6 @@ class CharacterReadyScreen extends HookConsumerWidget {
                     Container(
                       width: double.infinity,
                       height: 40.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.black.withOpacity(0.6),
-                      ),
                       child: Image.asset(
                         getFinalAsset(
                             chosenCharacter, chosenOutfit, chosenShoes),

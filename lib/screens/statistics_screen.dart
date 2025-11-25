@@ -291,70 +291,70 @@ class StatisticsScreen extends HookConsumerWidget {
                 firstScoreWeekday.value = localDateFormat
                     .format(weeklySnakeGameSessions[i].createdAt!);
                 firstScoreDisplay.value =
-                    '${firstScore.value} - ${firstScoreWeekday.value}';
+                    '${firstScore.value} ${loc.pointsStat}';
                 break;
               case 1:
                 secondScore.value = weeklySnakeGameSessions[i].score ?? 0;
                 secondScoreWeekday.value = localDateFormat
                     .format(weeklySnakeGameSessions[i].createdAt!);
                 secondScoreDisplay.value =
-                    '${secondScore.value} - ${secondScoreWeekday.value}';
+                    '${secondScore.value} ${loc.pointsStat}';
                 break;
               case 2:
                 thirdScore.value = weeklySnakeGameSessions[i].score ?? 0;
                 thirdScoreWeekday.value = localDateFormat
                     .format(weeklySnakeGameSessions[i].createdAt!);
                 thirdScoreDisplay.value =
-                    '${thirdScore.value} - ${thirdScoreWeekday.value}';
+                    '${thirdScore.value} ${loc.pointsStat}';
                 break;
               case 3:
                 fourthScore.value = weeklySnakeGameSessions[i].score ?? 0;
                 fourthScoreWeekday.value = localDateFormat
                     .format(weeklySnakeGameSessions[i].createdAt!);
                 fourthScoreDisplay.value =
-                    '${fourthScore.value} - ${fourthScoreWeekday.value}';
+                    '${fourthScore.value} ${loc.pointsStat}';
                 break;
               case 4:
                 fifthScore.value = weeklySnakeGameSessions[i].score ?? 0;
                 fifthScoreWeekday.value = localDateFormat
                     .format(weeklySnakeGameSessions[i].createdAt!);
                 fifthScoreDisplay.value =
-                    '${fifthScore.value} - ${fifthScoreWeekday.value}';
+                    '${fifthScore.value} ${loc.pointsStat}';
                 break;
               case 5:
                 sixthScore.value = weeklySnakeGameSessions[i].score ?? 0;
                 sixthScoreWeekday.value = localDateFormat
                     .format(weeklySnakeGameSessions[i].createdAt!);
                 sixthScoreDisplay.value =
-                    '${sixthScore.value} - ${sixthScoreWeekday.value}';
+                    '${sixthScore.value} ${loc.pointsStat}';
                 break;
               case 6:
                 seventhScore.value = weeklySnakeGameSessions[i].score ?? 0;
                 seventhScoreWeekday.value = localDateFormat
                     .format(weeklySnakeGameSessions[i].createdAt!);
                 seventhScoreDisplay.value =
-                    '${seventhScore.value} - ${seventhScoreWeekday.value}';
+                    '${seventhScore.value} ${loc.pointsStat}';
                 break;
               case 7:
                 eighthScore.value = weeklySnakeGameSessions[i].score ?? 0;
                 eighthScoreWeekday.value = localDateFormat
                     .format(weeklySnakeGameSessions[i].createdAt!);
                 eighthScoreDisplay.value =
-                    '${eighthScore.value} - ${eighthScoreWeekday.value}';
+                    '${eighthScore.value} ${loc.pointsStat}';
                 break;
               case 8:
                 ninthScore.value = weeklySnakeGameSessions[i].score ?? 0;
                 ninthScoreWeekday.value = localDateFormat
                     .format(weeklySnakeGameSessions[i].createdAt!);
                 ninthScoreDisplay.value =
-                    '${ninthScore.value} - ${ninthScoreWeekday.value}';
+                    '${ninthScore.value} ${loc.pointsStat}';
                 break;
               case 9:
                 tenthScore.value = weeklySnakeGameSessions[i].score ?? 0;
                 tenthScoreWeekday.value = localDateFormat
                     .format(weeklySnakeGameSessions[i].createdAt!);
                 tenthScoreDisplay.value =
-                    '${tenthScore.value} - ${tenthScoreWeekday.value}';
+                    '${tenthScore.value} ${loc.pointsStat}';
                 break;
               default:
             }
@@ -540,39 +540,57 @@ class StatisticsScreen extends HookConsumerWidget {
                       SizedBox(height: 2.h),
                       // Week navigation row
                       Container(
+                          height: 10.h,
+                          width: double.infinity,
                           child: Column(children: [
-                        Text(
-                          '${loc.week} ${getWeekNumber(currentWeekStart.value)}',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold, fontSize: 20.sp),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.arrow_back),
-                              color: DriblaColors.orange,
-                              onPressed: () {
-                                currentWeekStart.value = currentWeekStart.value
-                                    .subtract(const Duration(days: 7));
-                              },
-                            ),
-                            Text(
-                              "${localDateFormat.format(currentWeekStart.value)} - ${localDateFormat.format(currentWeekStart.value.add(const Duration(days: 6)))}",
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.bold, fontSize: 17.sp),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.arrow_forward),
-                              color: DriblaColors.orange,
-                              onPressed: () {
-                                currentWeekStart.value = currentWeekStart.value
-                                    .add(const Duration(days: 7));
-                              },
-                            ),
-                          ],
-                        )
-                      ])),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                    width: 9.w,
+                                    child: IconButton(
+                                      icon: const Icon(Icons.arrow_back_ios),
+                                      color: DriblaColors.orange,
+                                      onPressed: () {
+                                        currentWeekStart.value =
+                                            currentWeekStart.value.subtract(
+                                                const Duration(days: 7));
+                                      },
+                                    )),
+                                SizedBox(width: 5.w),
+                                SizedBox(
+                                    width: 54.w,
+                                    child: Column(children: [
+                                      Text(
+                                        '${loc.week} ${getWeekNumber(currentWeekStart.value)}',
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20.sp),
+                                      ),
+                                      Text(
+                                        "${localDateFormat.format(currentWeekStart.value)} - ${localDateFormat.format(currentWeekStart.value.add(const Duration(days: 6)))}",
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17.sp),
+                                      )
+                                    ])),
+                                SizedBox(width: 5.w),
+                                SizedBox(
+                                    width: 9.w,
+                                    child: IconButton(
+                                      icon: const Icon(Icons.arrow_forward_ios),
+                                      color: DriblaColors.orange,
+                                      onPressed: () {
+                                        currentWeekStart.value =
+                                            currentWeekStart.value
+                                                .add(const Duration(days: 7));
+                                      },
+                                    )),
+                              ],
+                            )
+                          ])),
                       Container(
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.5),
@@ -814,114 +832,254 @@ class StatisticsScreen extends HookConsumerWidget {
                                       ],
                                     ),
                                     SizedBox(height: 2.h),
-                                    Column(
+                                    Row(
                                       children: [
-                                        Text(
-                                          firstScore.value != 0
-                                              ? firstScoreDisplay.value
-                                              : loc.noScoresThisWeek,
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                        SizedBox(height: 1.h),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              firstScore.value != 0
+                                                  ? firstScoreDisplay.value
+                                                  : loc.noScoresThisWeek,
+                                              style: theme.textTheme.bodySmall,
+                                            )),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              firstScoreWeekday.value,
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                decoration: TextDecoration.none,
+                                                fontFamily: "Urbanist",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                            )),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
-                                        Text(
-                                          secondScore.value != 0
-                                              ? secondScoreDisplay.value
-                                              : '',
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                        SizedBox(height: 1.h),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              secondScore.value != 0
+                                                  ? secondScoreDisplay.value
+                                                  : '',
+                                              style: theme.textTheme.bodySmall,
+                                            )),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              secondScoreWeekday.value,
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                decoration: TextDecoration.none,
+                                                fontFamily: "Urbanist",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                            )),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
-                                        Text(
-                                          thirdScore.value != 0
-                                              ? thirdScoreDisplay.value
-                                              : '',
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                        SizedBox(height: 1.h),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              thirdScore.value != 0
+                                                  ? thirdScoreDisplay.value
+                                                  : '',
+                                              style: theme.textTheme.bodySmall,
+                                            )),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              thirdScoreWeekday.value,
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                decoration: TextDecoration.none,
+                                                fontFamily: "Urbanist",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                            )),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
-                                        Text(
-                                          fourthScore.value != 0
-                                              ? fourthScoreDisplay.value
-                                              : '',
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                        SizedBox(height: 1.h),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              fourthScore.value != 0
+                                                  ? fourthScoreDisplay.value
+                                                  : '',
+                                              style: theme.textTheme.bodySmall,
+                                            )),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              fourthScoreWeekday.value,
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                decoration: TextDecoration.none,
+                                                fontFamily: "Urbanist",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                            )),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
-                                        Text(
-                                          fifthScore.value != 0
-                                              ? fifthScoreDisplay.value
-                                              : '',
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                        SizedBox(height: 1.h),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              fifthScore.value != 0
+                                                  ? fifthScoreDisplay.value
+                                                  : '',
+                                              style: theme.textTheme.bodySmall,
+                                            )),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              fifthScoreWeekday.value,
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                decoration: TextDecoration.none,
+                                                fontFamily: "Urbanist",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                            )),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
-                                        Text(
-                                          sixthScore.value != 0
-                                              ? sixthScoreDisplay.value
-                                              : '',
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                        SizedBox(height: 1.h),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              sixthScore.value != 0
+                                                  ? sixthScoreDisplay.value
+                                                  : '',
+                                              style: theme.textTheme.bodySmall,
+                                            )),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              sixthScoreWeekday.value,
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                decoration: TextDecoration.none,
+                                                fontFamily: "Urbanist",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                            )),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
-                                        Text(
-                                          seventhScore.value != 0
-                                              ? seventhScoreDisplay.value
-                                              : '',
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                        SizedBox(height: 1.h),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              seventhScore.value != 0
+                                                  ? seventhScoreDisplay.value
+                                                  : '',
+                                              style: theme.textTheme.bodySmall,
+                                            )),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              seventhScoreWeekday.value,
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                decoration: TextDecoration.none,
+                                                fontFamily: "Urbanist",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                            )),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
-                                        Text(
-                                          eighthScore.value != 0
-                                              ? eighthScoreDisplay.value
-                                              : '',
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                        SizedBox(height: 1.h),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              eighthScore.value != 0
+                                                  ? eighthScoreDisplay.value
+                                                  : '',
+                                              style: theme.textTheme.bodySmall,
+                                            )),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              eighthScoreWeekday.value,
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                decoration: TextDecoration.none,
+                                                fontFamily: "Urbanist",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                            )),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
-                                        Text(
-                                          ninthScore.value != 0
-                                              ? ninthScoreDisplay.value
-                                              : '',
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                        SizedBox(height: 1.h),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              ninthScore.value != 0
+                                                  ? ninthScoreDisplay.value
+                                                  : '',
+                                              style: theme.textTheme.bodySmall,
+                                            )),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              ninthScoreWeekday.value,
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                decoration: TextDecoration.none,
+                                                fontFamily: "Urbanist",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                            )),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
-                                        Text(
-                                          tenthScore.value != 0
-                                              ? tenthScoreDisplay.value
-                                              : '',
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                        SizedBox(height: 1.h),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              tenthScore.value != 0
+                                                  ? tenthScoreDisplay.value
+                                                  : '',
+                                              style: theme.textTheme.bodySmall,
+                                            )),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              tenthScoreWeekday.value,
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                decoration: TextDecoration.none,
+                                                fontFamily: "Urbanist",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                            )),
                                       ],
                                     ),
                                   ]))),

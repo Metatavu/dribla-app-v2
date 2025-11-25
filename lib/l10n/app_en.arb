@@ -151,5 +151,6 @@
     "codeRegistrationFailed": "The code is wrong or not recognized.",
     "showCodes": "Show codes",
     "character": "Character",
-    "week": "Week"
+    "week": "Week",
+    "pointsStat": "points"
 }

@@ -152,5 +152,6 @@
     "codeRegistrationFailed": "Koodi on väärä tai sitä ei tunnistettu.",
     "showCodes": "Näytä koodit",
     "character": "Character",
-    "week": "Week"
+    "week": "Week",
+    "pointsStat": "pistettä"
 }
