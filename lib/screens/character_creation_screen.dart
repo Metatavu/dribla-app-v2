@@ -21,6 +21,15 @@ class CharacterCreationScreen extends HookConsumerWidget {
     return switch (index) {
       0 => "assets/avatars/avatar_01/avatar_01_base.png",
       1 => "assets/avatars/avatar_02/avatar_02_base.png",
+      2 => "assets/avatars/avatar_03/avatar_03_base.png",
+      3 => "assets/avatars/avatar_04/avatar_04_base.png",
+      4 => "assets/avatars/avatar_05/avatar_05_base.png",
+      5 => "assets/avatars/avatar_06/avatar_06_base.png",
+      6 => "assets/avatars/avatar_07/avatar_07_base.png",
+      7 => "assets/avatars/avatar_08/avatar_08_base.png",
+      8 => "assets/avatars/avatar_09/avatar_09_base.png",
+      9 => "assets/avatars/avatar_10/avatar_10_base.png",
+      10 => "assets/avatars/avatar_11/avatar_11_base.png",
       _ => "assets/avatars/avatar_01/avatar_01_base.png",
     };
   }
@@ -101,7 +110,7 @@ class CharacterCreationScreen extends HookConsumerWidget {
                                     ],
                                   );
                                 },
-                                itemCount: 2,
+                                itemCount: 11,
                                 loop: false,
                                 onIndexChanged: (index) =>
                                     chosenCharacter.value = index,
@@ -154,7 +163,7 @@ class CharacterCreationScreen extends HookConsumerWidget {
                                       Container(
                                           child: Expanded(
                                               child: Text(
-                                        '${chosenCharacter.value + 1} / 2',
+                                        '${chosenCharacter.value + 1} / 11',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 18,

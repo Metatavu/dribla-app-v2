@@ -151,5 +151,6 @@
     "codeRegistrationSuccessful": "Koodin rekisteröinti onnistui!",
     "codeRegistrationFailed": "Koodi on väärä tai sitä ei tunnistettu.",
     "showCodes": "Näytä koodit",
-    "character": "Character"
+    "character": "Character",
+    "week": "Week"
 }

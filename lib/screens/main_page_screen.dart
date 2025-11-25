@@ -16,6 +16,9 @@ class MainPageScreen extends HookConsumerWidget {
   const MainPageScreen({super.key});
 
   static String getFinalAsset(int character, int outfit, int shoes) {
+    if (character > 8) {
+      return "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_0${outfit + 1}_shoes_0${shoes + 1}.png";
+    }
     return "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_0${shoes + 1}.png";
   }
 

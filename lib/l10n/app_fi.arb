@@ -174,5 +174,6 @@
     "codeRegistrationSuccessful": "Koodin rekisteröinti onnistui!",
     "codeRegistrationFailed": "Koodi on väärä tai sitä ei tunnistettu.",
     "showCodes": "Näytä koodit",
-    "character": "Hahmo"
+    "character": "Hahmo",
+    "week": "Viikko"
 }

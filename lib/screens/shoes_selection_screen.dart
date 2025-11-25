@@ -22,6 +22,24 @@ class ShoesSelectionScreen extends HookConsumerWidget {
   final int chosenOutfit;
 
   static String getShoesAsset(int index, int character, int outfit) {
+    if (character > 8) {
+      return switch (index) {
+        0 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_0${outfit + 1}_shoes_01.png",
+        1 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_0${outfit + 1}_shoes_02.png",
+        2 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_0${outfit + 1}_shoes_03.png",
+        3 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_0${outfit + 1}_shoes_04.png",
+        4 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_0${outfit + 1}_shoes_05.png",
+        5 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_0${outfit + 1}_shoes_06.png",
+        _ =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_0${outfit + 1}_shoes_01.png",
+      };
+    }
     return switch (index) {
       0 =>
         "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_0${outfit + 1}_shoes_01.png",

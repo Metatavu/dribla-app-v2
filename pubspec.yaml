@@ -158,6 +158,15 @@ flutter:
     - assets/avatars/
     - assets/avatars/avatar_01/
     - assets/avatars/avatar_02/
+    - assets/avatars/avatar_03/
+    - assets/avatars/avatar_04/
+    - assets/avatars/avatar_05/
+    - assets/avatars/avatar_06/
+    - assets/avatars/avatar_07/
+    - assets/avatars/avatar_08/
+    - assets/avatars/avatar_09/
+    - assets/avatars/avatar_10/
+    - assets/avatars/avatar_11/
   generate: true
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -150,5 +150,6 @@
     "codeRegistrationSuccessful": "Code registration successful!",
     "codeRegistrationFailed": "The code is wrong or not recognized.",
     "showCodes": "Show codes",
-    "character": "Character"
+    "character": "Character",
+    "week": "Week"
 }

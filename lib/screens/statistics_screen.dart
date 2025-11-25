@@ -119,6 +119,15 @@ class StatisticsScreen extends HookConsumerWidget {
       DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1)),
     );
 
+    // Calculate week number for currentWeekStart
+    int getWeekNumber(DateTime date) {
+      // ISO 8601 week number calculation
+      final firstThursday = date.subtract(Duration(days: date.weekday - 4));
+      final firstDayOfYear = DateTime(date.year, 1, 1);
+      final daysOffset = (firstThursday.difference(firstDayOfYear).inDays);
+      return ((daysOffset) / 7).floor() + 1;
+    }
+
     final mondayDuration = useState<double>(0);
     final tuesdayDuration = useState<double>(0);
     final wednesdayDuration = useState<double>(0);
@@ -516,7 +525,7 @@ class StatisticsScreen extends HookConsumerWidget {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(32.0),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -525,31 +534,38 @@ class StatisticsScreen extends HookConsumerWidget {
                     Text(username, style: theme.textTheme.bodyMedium),
                     SizedBox(height: 2.h),
                     // Week navigation row
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          color: DriblaColors.orange,
-                          onPressed: () {
-                            currentWeekStart.value = currentWeekStart.value
-                                .subtract(const Duration(days: 7));
-                          },
-                        ),
-                        Text(
-                          "${localDateFormat.format(currentWeekStart.value)} - ${localDateFormat.format(currentWeekStart.value.add(const Duration(days: 6)))}",
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.arrow_forward),
-                          color: DriblaColors.orange,
-                          onPressed: () {
-                            currentWeekStart.value = currentWeekStart.value
-                                .add(const Duration(days: 7));
-                          },
-                        ),
-                      ],
-                    ),
+                    Column(children: [
+                      Text(
+                        '${loc.week} ${getWeekNumber(currentWeekStart.value)}',
+                        style: theme.textTheme.bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.arrow_back),
+                            color: DriblaColors.orange,
+                            onPressed: () {
+                              currentWeekStart.value = currentWeekStart.value
+                                  .subtract(const Duration(days: 7));
+                            },
+                          ),
+                          Text(
+                            "${localDateFormat.format(currentWeekStart.value)} - ${localDateFormat.format(currentWeekStart.value.add(const Duration(days: 6)))}",
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.arrow_forward),
+                            color: DriblaColors.orange,
+                            onPressed: () {
+                              currentWeekStart.value = currentWeekStart.value
+                                  .add(const Duration(days: 7));
+                            },
+                          ),
+                        ],
+                      )
+                    ]),
                     Text(loc.weeklyActivity, style: theme.textTheme.bodyMedium),
                     SizedBox(height: 2.h),
                     Row(
