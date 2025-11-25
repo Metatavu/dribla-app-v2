@@ -268,24 +268,43 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
             actions: [
               if (DeviceConnection.connectionStatus ==
                   ConnectionStatus.bleConnected)
-                OutlinedButton(
+                ElevatedButton(
                   onPressed: DeviceConnection.shutDownDevice,
-                  child: Text(localizations.shutdown),
+                  child: Text(localizations.shutdown,
+                      style: theme.textTheme.bodyMedium),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    side: const BorderSide(
+                      color: Colors.white,
+                      width: 2,
+                    ),
+                  ),
                 ),
               if (DeviceConnection.connectedDeviceId.isNotEmpty)
-                OutlinedButton(
+                ElevatedButton(
                   onPressed: () => setState(() {
                     DeviceConnection.clearDeviceId();
                     DeviceConnection.deinit();
                     DeviceConnection.init();
                   }),
-                  child: Text(localizations.forget),
+                  child: Text(localizations.forget,
+                      style: theme.textTheme.bodyMedium),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    side: const BorderSide(
+                      color: Colors.white,
+                      width: 2,
+                    ),
+                  ),
                 ),
               ElevatedButton(
                 style: theme.elevatedButtonTheme.style?.copyWith(
                   foregroundColor: WidgetStateProperty.all(Colors.white),
                 ),
-                child: Text(localizations.ok),
+                child:
+                    Text(localizations.ok, style: theme.textTheme.bodyMedium),
                 onPressed: () => Navigator.pop(context),
               )
             ],

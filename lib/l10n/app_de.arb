@@ -153,5 +153,6 @@
     "showCodes": "Näytä koodit",
     "character": "Character",
     "week": "Week",
-    "pointsStat": "pistettä"
+    "pointsStat": "pistettä",
+    "highscoreDate": "Ennätyksen päiväys"
 }

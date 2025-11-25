@@ -743,7 +743,7 @@ class StatisticsScreen extends HookConsumerWidget {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        'Highscore date',
+                                        loc.highscoreDate,
                                         style: TextStyle(
                                           color: Colors.white,
                                           decoration: TextDecoration.none,

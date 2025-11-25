@@ -98,7 +98,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
             foregroundColor: WidgetStateProperty.all(Colors.white),
           ),
           onPressed: () => Navigator.pop(context, settings),
-          child: Text(localizations.save),
+          child: Text(localizations.save, style: theme.textTheme.bodyMedium),
         ),
       ],
     );

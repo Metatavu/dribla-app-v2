@@ -176,5 +176,6 @@
     "showCodes": "Näytä koodit",
     "character": "Hahmo",
     "week": "Viikko",
-    "pointsStat": "pistettä"
+    "pointsStat": "pistettä",
+    "highscoreDate": "Ennätyksen päiväys"
 }

@@ -152,5 +152,6 @@
     "showCodes": "Show codes",
     "character": "Character",
     "week": "Week",
-    "pointsStat": "points"
+    "pointsStat": "points",
+    "highscoreDate": "Highscore date"
 }
