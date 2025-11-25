@@ -41,7 +41,7 @@ class LoginScreen extends HookConsumerWidget {
               ),
             ),
             child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(32.0),
                 child: SingleChildScrollView(
                     child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
