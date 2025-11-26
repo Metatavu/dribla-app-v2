@@ -183,7 +183,7 @@ class OutfitSelectionScreen extends HookConsumerWidget {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 5.w),
+                                        SizedBox(width: 3.w),
                                         Container(
                                             child: Expanded(
                                                 child: Text(
@@ -194,7 +194,7 @@ class OutfitSelectionScreen extends HookConsumerWidget {
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ))),
-                                        SizedBox(width: 5.w),
+                                        SizedBox(width: 3.w),
                                         Container(
                                           height: 12.w,
                                           width: 30.w,
