@@ -32,6 +32,8 @@
     "snake": "Snake",
     "memoryGame": "Memory Game",
     "starGameText": "Star",
+    "bluefrogGameText": "Blue frog",
+    "followTheRabbitGameText": "Follow the rabbit",
     "noConnection": "No connection with the mat, ensure that Bluetooth is enabled and the device is turned on.",
     "gameNotAvailable": "The game is not available on the connected device",
     "results": "Results 🏆",

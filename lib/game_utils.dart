@@ -1,3 +1,5 @@
+import "package:dribla_app_v2/games/bluefrog_game.dart";
+import "package:dribla_app_v2/games/follow_the_rabbit_game.dart";
 import "package:dribla_app_v2/games/letter_game.dart";
 import "package:dribla_app_v2/games/memory_game.dart";
 import "package:dribla_app_v2/games/minefield_game.dart";
@@ -37,6 +39,11 @@ class GameUtils {
         MemoryGame().getAllowedNumberOfSensors().contains(connectedSensors),
       StarGame.index =>
         StarGame().getAllowedNumberOfSensors().contains(connectedSensors),
+      BluefrogGame.index =>
+        BluefrogGame().getAllowedNumberOfSensors().contains(connectedSensors),
+      FollowTheRabbitGame.index => FollowTheRabbitGame()
+          .getAllowedNumberOfSensors()
+          .contains(connectedSensors),
       _ => false
     };
   }
@@ -53,6 +60,8 @@ class GameUtils {
       TenTurnsGame.index => TenTurnsGame(),
       MemoryGame.index => MemoryGame(),
       StarGame.index => StarGame(),
+      BluefrogGame.index => BluefrogGame(),
+      FollowTheRabbitGame.index => FollowTheRabbitGame(),
       _ => TenGame()
     };
   }
@@ -84,6 +93,8 @@ class GameUtils {
       TenTurnsGame.index => TenTurnsGame.iconAnimation,
       MemoryGame.index => MemoryGame.iconAnimation,
       StarGame.index => StarGame.iconAnimation,
+      BluefrogGame.index => BluefrogGame.iconAnimation,
+      FollowTheRabbitGame.index => FollowTheRabbitGame.iconAnimation,
       _ => [IconAnimationUtils.all(Colors.white)]
     };
   }
@@ -100,6 +111,8 @@ class GameUtils {
       TenTurnsGame.index => TenTurnsGame.iconAnimationSpeed,
       MemoryGame.index => MemoryGame.iconAnimationSpeed,
       StarGame.index => StarGame.iconAnimationSpeed,
+      BluefrogGame.index => BluefrogGame.iconAnimationSpeed,
+      FollowTheRabbitGame.index => FollowTheRabbitGame.iconAnimationSpeed,
       _ => 200
     };
   }
@@ -118,6 +131,9 @@ class GameUtils {
       TenTurnsGame.index => TenTurnsGame().getGameSettingKeys().isNotEmpty,
       MemoryGame.index => MemoryGame().getGameSettingKeys().isNotEmpty,
       StarGame.index => StarGame().getGameSettingKeys().isNotEmpty,
+      BluefrogGame.index => BluefrogGame().getGameSettingKeys().isNotEmpty,
+      FollowTheRabbitGame.index =>
+        FollowTheRabbitGame().getGameSettingKeys().isNotEmpty,
       _ => false
     };
   }
@@ -134,6 +150,9 @@ class GameUtils {
       TenTurnsGame.index => await TenTurnsGame().getGameSettings(),
       MemoryGame.index => await MemoryGame().getGameSettings(),
       StarGame.index => await StarGame().getGameSettings(),
+      BluefrogGame.index => await BluefrogGame().getGameSettings(),
+      FollowTheRabbitGame.index =>
+        await FollowTheRabbitGame().getGameSettings(),
       _ => <String, String?>{}
     };
   }
@@ -154,6 +173,9 @@ class GameUtils {
       TenTurnsGame.index => await TenTurnsGame().setGameSettings(settings),
       MemoryGame.index => await MemoryGame().setGameSettings(settings),
       StarGame.index => await StarGame().setGameSettings(settings),
+      BluefrogGame.index => await BluefrogGame().setGameSettings(settings),
+      FollowTheRabbitGame.index =>
+        await FollowTheRabbitGame().setGameSettings(settings),
       _ => <String, String?>{}
     };
   }

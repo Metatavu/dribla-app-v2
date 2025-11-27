@@ -56,6 +56,8 @@
     "snake": "Matopeli",
     "memoryGame": "Muistipeli",
     "starGameText": "Tähtipeli",
+    "bluefrogGameText": "Blue frog",
+    "followTheRabbitGameText": "Follow the rabbit",
     "noConnection": "Ei yhteyttä mattoon, varmista että bluetooth sekä laite on kytketty päälle.",
     "gameNotAvailable": "Peli ei ole käytettävissä yhdistetyllä laitteella.",
     "results": "Tulokset 🏆",

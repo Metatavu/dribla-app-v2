@@ -6,6 +6,8 @@ import "package:dribla_app_v2/components/game_settings_dialog.dart";
 import "package:dribla_app_v2/components/styled_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
+import "package:dribla_app_v2/games/bluefrog_game.dart";
+import "package:dribla_app_v2/games/follow_the_rabbit_game.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/game_utils.dart";
 import "package:dribla_app_v2/games/letter_game.dart";
@@ -45,6 +47,8 @@ class ChooseGameScreen extends HookConsumerWidget {
       TenTurnsGame.index => localizations.tenturns,
       MemoryGame.index => localizations.memoryGame,
       StarGame.index => localizations.starGameText,
+      BluefrogGame.index => localizations.bluefrogGameText,
+      FollowTheRabbitGame.index => localizations.followTheRabbitGameText,
       _ => ""
     };
   }
@@ -135,7 +139,7 @@ class ChooseGameScreen extends HookConsumerWidget {
                                   ],
                                 );
                               },
-                              itemCount: 9,
+                              itemCount: 11,
                               loop: false,
                               onIndexChanged: (index) =>
                                   chosenGame.value = index,
