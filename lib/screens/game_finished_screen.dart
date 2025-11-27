@@ -79,6 +79,12 @@ class GameFinishedScreen extends HookConsumerWidget {
         case 9:
           game = 'game_memory_game';
           break;
+        case 10:
+          game = 'game_bluefrog';
+          break;
+        case 11:
+          game = 'game_follow_the_rabbit';
+          break;
         default:
           game = "game_unknown";
       }

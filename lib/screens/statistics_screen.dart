@@ -394,6 +394,12 @@ class StatisticsScreen extends HookConsumerWidget {
               case 'game_memory_game':
                 latestGame.value = loc.memoryGame;
                 break;
+              case 'game_bluefrog':
+                latestGame.value = loc.bluefrogGameText;
+                break;
+              case 'game_follow_the_rabbit':
+                latestGame.value = loc.followTheRabbitGameText;
+                break;
               default:
                 latestGame.value = latestSession.game ?? "";
             }

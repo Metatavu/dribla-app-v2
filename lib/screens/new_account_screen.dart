@@ -116,22 +116,23 @@ class NewAccountScreen extends HookConsumerWidget {
                   SizedBox(
                     height: 3.h,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const PaymentsScreen()),
-                        );
-                      },
-                      child: Text(
-                        loc.createNewSub,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ),
-                  ),
+                  // payments disabled, uncomment for testing
+                  // SizedBox(
+                  //   width: double.infinity,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => const PaymentsScreen()),
+                  //       );
+                  //     },
+                  //     child: Text(
+                  //       loc.createNewSub,
+                  //       style: theme.textTheme.bodyMedium,
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(
                     height: 3.h,
                   ),

@@ -139,7 +139,7 @@ class ChooseGameScreen extends HookConsumerWidget {
                                   ],
                                 );
                               },
-                              itemCount: 11,
+                              itemCount: 12,
                               loop: false,
                               onIndexChanged: (index) =>
                                   chosenGame.value = index,

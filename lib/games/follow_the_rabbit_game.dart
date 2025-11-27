@@ -1,8 +1,10 @@
 import "dart:async";
+import "dart:math";
 
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:dribla_app_v2/games/game.dart";
+import "package:dribla_app_v2/timer_formatters.dart";
 import "package:flutter/material.dart";
 
 import "../audio_players.dart";
@@ -38,7 +40,7 @@ class FollowTheRabbitGame extends Game {
 
   @override
   String getFinalScore(BuildContext context) {
-    return "";
+    return TimerFormatter.format(getElapsedTime());
   }
 
   @override
@@ -55,9 +57,9 @@ class FollowTheRabbitGame extends Game {
   @override
   void onGameTimerUpdate(int timeElapsed) {
     if (!failed && started) {
-      onGameScoreUpdate("");
+      onGameScoreUpdate(TimerFormatter.format(timeElapsed));
     }
-    if (timeElapsed > 1000 * 60 * 10) {
+    if (timeElapsed > 1000 * 60 * 3) {
       changeTimer?.cancel();
       finish(true);
     } else if (timeElapsed > 1000 * 60 * (lastBonusSoundMinutes + 1)) {
@@ -88,7 +90,7 @@ class FollowTheRabbitGame extends Game {
     if (current >= path.length) {
       current = 0;
     }
-    speedMs = speedMs * 0.8;
+    speedMs = max(speedMs * 0.95, 800);
     DeviceConnection.setSingleLedActive(
         LedColors.green, path[current], LedColors.red);
     changeTimer = Timer(Duration(milliseconds: speedMs.round()), () {

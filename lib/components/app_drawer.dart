@@ -56,18 +56,19 @@ class AppDrawer extends StatelessWidget {
               Navigator.of(context).pushReplacementNamed('/character');
             },
           ),
-          ListTile(
-            leading: Icon(Icons.subscriptions),
-            title: Text(loc.subscription),
-            trailing: IconButton(
-                icon: Icon(Icons.arrow_forward),
-                onPressed: () {
-                  Navigator.of(context).pushReplacementNamed('/payments');
-                }),
-            onTap: () {
-              Navigator.of(context).pushReplacementNamed('/payments');
-            },
-          ),
+          // payments disabled, uncomment for testing
+          // ListTile(
+          //   leading: Icon(Icons.subscriptions),
+          //   title: Text(loc.subscription),
+          //   trailing: IconButton(
+          //       icon: Icon(Icons.arrow_forward),
+          //       onPressed: () {
+          //         Navigator.of(context).pushReplacementNamed('/payments');
+          //       }),
+          //   onTap: () {
+          //     Navigator.of(context).pushReplacementNamed('/payments');
+          //   },
+          // ),
           ListTile(
             leading: Icon(Icons.bar_chart),
             title: Text(loc.statistics),
