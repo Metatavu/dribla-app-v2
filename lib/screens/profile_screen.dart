@@ -135,10 +135,7 @@ class ProfileScreen extends HookConsumerWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/dribla_new_background.jpg"),
-                fit: BoxFit.cover,
-              ),
+              color: theme.scaffoldBackgroundColor,
             ),
             child: Padding(
               padding: EdgeInsets.fromLTRB(32.0, 0, 32.0, 32.0),

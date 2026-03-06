@@ -35,10 +35,7 @@ class LoginScreen extends HookConsumerWidget {
             child: Stack(children: [
           Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/dribla_new_background.jpg"),
-                fit: BoxFit.cover,
-              ),
+              color: theme.scaffoldBackgroundColor,
             ),
             child: Padding(
                 padding: EdgeInsets.all(32.0),
