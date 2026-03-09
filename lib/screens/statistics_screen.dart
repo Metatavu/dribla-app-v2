@@ -532,7 +532,7 @@ class StatisticsScreen extends HookConsumerWidget {
               color: theme.scaffoldBackgroundColor,
             ),
             child: Padding(
-              padding: EdgeInsets.all(32.0),
+              padding: EdgeInsets.all(30.0),
               child: SingleChildScrollView(
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -543,14 +543,14 @@ class StatisticsScreen extends HookConsumerWidget {
                       SizedBox(height: 2.h),
                       // Week navigation row
                       Container(
-                          height: 10.h,
+                          height: 15.h,
                           width: double.infinity,
                           child: Column(children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SizedBox(
-                                    width: 9.w,
+                                    width: 7.w,
                                     child: IconButton(
                                       icon: const Icon(Icons.arrow_back_ios),
                                       color: DriblaColors.orange,
@@ -562,7 +562,7 @@ class StatisticsScreen extends HookConsumerWidget {
                                     )),
                                 SizedBox(width: 5.w),
                                 SizedBox(
-                                    width: 54.w,
+                                    width: 58.w,
                                     child: Column(children: [
                                       Text(
                                         '${loc.week} ${getWeekNumber(currentWeekStart.value)}',
@@ -581,7 +581,7 @@ class StatisticsScreen extends HookConsumerWidget {
                                     ])),
                                 SizedBox(width: 5.w),
                                 SizedBox(
-                                    width: 9.w,
+                                    width: 7.w,
                                     child: IconButton(
                                       icon: const Icon(Icons.arrow_forward_ios),
                                       color: DriblaColors.orange,

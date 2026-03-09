@@ -151,7 +151,7 @@ class ProfileScreen extends HookConsumerWidget {
                           SizedBox(height: 1.h),
                           Text(username, style: theme.textTheme.headlineSmall),
                         ]),
-                        width: 25.w),
+                        width: 35.w),
                     Container(
                       child: Column(children: [
                         SizedBox(height: 5.h),
@@ -159,11 +159,11 @@ class ProfileScreen extends HookConsumerWidget {
                             child: Image.asset(
                           getFinalAsset(characterType.value, outfitType.value,
                               shoesType.value),
-                          height: 28.h,
+                          height: 26.h,
                           fit: BoxFit.contain,
                         ))
                       ]),
-                      width: 45.w,
+                      width: 35.w,
                       margin: EdgeInsets.only(left: 11.w),
                     ),
                   ]),
