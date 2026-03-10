@@ -111,7 +111,7 @@ class StatisticsScreen extends HookConsumerWidget {
     String? username = auth.value?.accessToken.preferred_username ?? "";
 
     final DateFormat localDateFormat = DateFormat(
-      locale == 'fi' ? 'dd.MM.yyyy' : 'MM/dd/yyyy',
+      locale == 'fi' ? 'dd.MM.' : 'MM/dd/',
     );
 
     // Track the currently displayed week (Monday)
@@ -550,7 +550,7 @@ class StatisticsScreen extends HookConsumerWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SizedBox(
-                                    width: 7.w,
+                                    width: 8.w,
                                     child: IconButton(
                                       icon: const Icon(Icons.arrow_back_ios),
                                       color: DriblaColors.orange,
@@ -581,7 +581,7 @@ class StatisticsScreen extends HookConsumerWidget {
                                     ])),
                                 SizedBox(width: 5.w),
                                 SizedBox(
-                                    width: 7.w,
+                                    width: 8.w,
                                     child: IconButton(
                                       icon: const Icon(Icons.arrow_forward_ios),
                                       color: DriblaColors.orange,
