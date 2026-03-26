@@ -1,15 +1,9 @@
 import "package:dribla_app_v2/components/app_drawer.dart";
 import "package:dribla_app_v2/components/app_footer.dart";
-import "package:dribla_app_v2/components/app_header_appbar.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
-import "package:dribla_app_v2/components/game_icon.dart";
-import "package:dribla_app_v2/components/game_settings_dialog.dart";
-import "package:dribla_app_v2/components/styled_dialog.dart";
-import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/screens/outfit_selection_screen.dart";
 import "package:dribla_app_v2/theme/theme.dart";
-import "package:dribla_app_v2/game_utils.dart";
 import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -27,6 +21,15 @@ class CharacterCreationScreen extends HookConsumerWidget {
     return switch (index) {
       0 => "assets/avatars/avatar_01/avatar_01_base.png",
       1 => "assets/avatars/avatar_02/avatar_02_base.png",
+      2 => "assets/avatars/avatar_03/avatar_03_base.png",
+      3 => "assets/avatars/avatar_04/avatar_04_base.png",
+      4 => "assets/avatars/avatar_05/avatar_05_base.png",
+      5 => "assets/avatars/avatar_06/avatar_06_base.png",
+      6 => "assets/avatars/avatar_07/avatar_07_base.png",
+      7 => "assets/avatars/avatar_08/avatar_08_base.png",
+      8 => "assets/avatars/avatar_09/avatar_09_base.png",
+      9 => "assets/avatars/avatar_10/avatar_10_base.png",
+      10 => "assets/avatars/avatar_11/avatar_11_base.png",
       _ => "assets/avatars/avatar_01/avatar_01_base.png",
     };
   }
@@ -51,130 +54,163 @@ class CharacterCreationScreen extends HookConsumerWidget {
       extendBodyBehindAppBar: false,
       appBar: const ConnectionStatusAppBar(),
       drawer: const AppDrawer(),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/dribla_new_background.jpg"),
-              fit: BoxFit.cover,
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: theme.scaffoldBackgroundColor,
             ),
-          ),
-          child: Column(
-            children: [
-              Text(loc.editAvatar, style: theme.textTheme.headlineMedium),
-              Text(
-                loc.editCharType,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Expanded(
-                child: SizedBox(
-                  child: Swiper(
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Padding(padding: EdgeInsets.only(top: 8.h)),
-                          Image.asset(
-                            getCharacterAsset(index),
-                            width: 60.w,
-                            height: 60.w,
-                          ),
-                        ],
-                      );
-                    },
-                    itemCount: 2,
-                    loop: false,
-                    onIndexChanged: (index) => chosenCharacter.value = index,
-                    control: const SwiperControl(color: DriblaColors.white),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 80.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 12.w,
-                      width: 32.w,
-                      child: ElevatedButton(
-                        style: theme.elevatedButtonTheme.style,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ChooseGameScreen(),
-                            ),
-                          );
-                        },
-                        child: Row(
+            child: Padding(
+                padding: EdgeInsets.all(35.00),
+                child: SingleChildScrollView(
+                    child: Container(
+                        width: double.infinity,
+                        child: Column(
                           children: [
-                            const SizedBox(width: 5),
-                            const Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(loc.character,
+                                  style: theme.textTheme.headlineMedium),
                             ),
-                            const SizedBox(width: 5),
-                            Text(
-                              loc.backButton,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16),
+                            SizedBox(height: 1.h),
+                            Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  loc.editCharType,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    decoration: TextDecoration.none,
+                                    fontFamily: "Urbanist",
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16.0.sp,
+                                  ),
+                                )),
+                            SizedBox(height: 1.h),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.black.withOpacity(0.6),
+                              ),
+                              width: double.infinity,
+                              height: 45.h,
+                              child: Swiper(
+                                itemBuilder: (context, index) {
+                                  return Column(
+                                    children: [
+                                      Padding(
+                                          padding: EdgeInsets.only(top: 8.h)),
+                                      Image.asset(
+                                        getCharacterAsset(index),
+                                        width: 60.w,
+                                        height: 60.w,
+                                      ),
+                                    ],
+                                  );
+                                },
+                                itemCount: 11,
+                                loop: false,
+                                onIndexChanged: (index) =>
+                                    chosenCharacter.value = index,
+                                control: const SwiperControl(
+                                    color: DriblaColors.orange),
+                              ),
                             ),
-                            const SizedBox(width: 5),
+                            SizedBox(
+                              height: 30.h,
+                              child: Container(
+                                  width: double.infinity,
+                                  margin: EdgeInsets.only(bottom: 20.h),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: 12.w,
+                                        width: 32.w,
+                                        child: ElevatedButton(
+                                          style:
+                                              theme.elevatedButtonTheme.style,
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const ChooseGameScreen(),
+                                              ),
+                                            );
+                                          },
+                                          child: Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.arrow_back,
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(width: 2.w),
+                                              Text(
+                                                loc.cancelButton,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16.sp),
+                                              ),
+                                              const SizedBox(width: 5),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 3.w),
+                                      Container(
+                                          child: Expanded(
+                                              child: Text(
+                                        '${chosenCharacter.value + 1} / 11',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ))),
+                                      SizedBox(width: 3.w),
+                                      Container(
+                                        height: 12.w,
+                                        width: 30.w,
+                                        child: ElevatedButton(
+                                          style:
+                                              theme.elevatedButtonTheme.style,
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OutfitSelectionScreen(
+                                                          chosenCharacter:
+                                                              chosenCharacter
+                                                                  .value)),
+                                            );
+                                          },
+                                          child: Row(
+                                            children: [
+                                              SizedBox(width: 4.w),
+                                              Text(
+                                                loc.nextButton,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16.sp),
+                                              ),
+                                              SizedBox(width: 2.w),
+                                              const Icon(
+                                                Icons.arrow_forward,
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            )
                           ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 5.w),
-                    Text(
-                      '${chosenCharacter.value + 1} / 2',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(width: 5.w),
-                    Container(
-                      height: 12.w,
-                      width: 33.w,
-                      child: ElevatedButton(
-                        style: theme.elevatedButtonTheme.style,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OutfitSelectionScreen(
-                                    chosenCharacter: chosenCharacter.value)),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 5),
-                            Text(
-                              loc.nextButton,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16),
-                            ),
-                            const SizedBox(width: 5),
-                            const Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const AppFooter(),
-            ],
+                        )))),
           ),
-        ),
+          const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
+        ],
       ),
     );
   }

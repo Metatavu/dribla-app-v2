@@ -1,3 +1,5 @@
+import "package:dribla_app_v2/components/connection_status_appbar.dart";
+import "package:dribla_app_v2/services/api.dart";
 import "package:dribla_app_v2/theme/theme.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -19,34 +21,29 @@ class LoginScreen extends HookConsumerWidget {
     // navigate back to app on successful login
     useEffect(() {
       if (authAsync.hasValue && authAsync.value != null) {
-        //print('User logged in: ${authAsync.value.toString()}');
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.of(context).pushReplacementNamed('/main');
+          Navigator.of(context).pushReplacementNamed('/new_user');
         });
       }
       return null;
     }, [authAsync.value]);
 
     return Scaffold(
+        appBar: const ConnectionStatusAppBar(shouldShowMenu: false),
         extendBodyBehindAppBar: false,
         body: SafeArea(
             child: Stack(children: [
           Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/dribla_new_background.jpg"),
-                fit: BoxFit.cover,
-              ),
+              color: theme.scaffoldBackgroundColor,
             ),
             child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
+                padding: EdgeInsets.all(32.0),
+                child: SingleChildScrollView(
+                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                      child: Image.asset('assets/dribla_logo.png',
-                          width: 30.w, height: 30.w),
-                    ),
+                    SizedBox(height: 5.h),
                     Center(
                         child: Text(loc.login,
                             style: theme.textTheme.headlineMedium)),
@@ -79,8 +76,9 @@ class LoginScreen extends HookConsumerWidget {
                     SizedBox(height: 2.h),
                     if (authAsync.hasError)
                       Text(loc.loginError, style: TextStyle(color: Colors.red)),
+                    SizedBox(height: 50.h),
                   ],
-                )),
+                ))),
           ),
         ])));
   }

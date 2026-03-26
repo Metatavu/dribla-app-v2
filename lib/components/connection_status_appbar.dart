@@ -19,10 +19,12 @@ class ConnectionStatusAppBar extends StatefulWidget
   const ConnectionStatusAppBar({
     super.key,
     this.onMenuPressed,
+    this.shouldShowMenu = true,
   }) : preferredSize = const Size.fromHeight(kToolbarHeight);
 
   @override
   final Size preferredSize; // default is 56.0
+  final bool shouldShowMenu;
 
   @override
   State<StatefulWidget> createState() => _ConnectionStatusAppBar();
@@ -72,17 +74,39 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
   Future<void> _checkBatteryLevel() async {
     final batteryLevel = await DeviceConnection.readBatteryLevel();
     //developer.log("Got battery level: " + batteryLevel.toString());
+    if (!mounted) return;
     setState(() {
       _batteryLevel = batteryLevel;
     });
   }
 
-  Widget _getConnectionStatusIcon(ConnectionStatus connectionStatus) {
+  Widget _getConnectionStatusIcon(
+      ConnectionStatus connectionStatus, ThemeData theme) {
     return switch (connectionStatus) {
-      ConnectionStatus.bleDisabled => const Icon(Icons.bluetooth_disabled),
-      ConnectionStatus.bleDisconnected => const Icon(Icons.bluetooth_disabled),
-      ConnectionStatus.bleConnecting => const Icon(Icons.bluetooth_searching),
-      ConnectionStatus.bleConnected => const Icon(Icons.bluetooth_connected)
+      ConnectionStatus.bleDisabled => IconButton(
+          icon: const Icon(Icons.bluetooth_disabled, color: Colors.red),
+          onPressed: () {
+            _openConnectionStatusDialog(context, theme);
+          },
+        ),
+      ConnectionStatus.bleDisconnected => IconButton(
+          icon: const Icon(Icons.bluetooth_disabled, color: Colors.red),
+          onPressed: () {
+            _openConnectionStatusDialog(context, theme);
+          },
+        ),
+      ConnectionStatus.bleConnecting => IconButton(
+          icon: const Icon(Icons.bluetooth_searching, color: Colors.blue),
+          onPressed: () {
+            _openConnectionStatusDialog(context, theme);
+          },
+        ),
+      ConnectionStatus.bleConnected => IconButton(
+          icon: const Icon(Icons.bluetooth_connected, color: Colors.green),
+          onPressed: () {
+            _openConnectionStatusDialog(context, theme);
+          },
+        ),
     };
   }
 
@@ -244,21 +268,43 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
             actions: [
               if (DeviceConnection.connectionStatus ==
                   ConnectionStatus.bleConnected)
-                OutlinedButton(
+                ElevatedButton(
                   onPressed: DeviceConnection.shutDownDevice,
-                  child: Text(localizations.shutdown),
+                  child: Text(localizations.shutdown,
+                      style: theme.textTheme.bodyMedium),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    side: const BorderSide(
+                      color: Colors.white,
+                      width: 2,
+                    ),
+                  ),
                 ),
               if (DeviceConnection.connectedDeviceId.isNotEmpty)
-                OutlinedButton(
+                ElevatedButton(
                   onPressed: () => setState(() {
                     DeviceConnection.clearDeviceId();
                     DeviceConnection.deinit();
                     DeviceConnection.init();
                   }),
-                  child: Text(localizations.forget),
+                  child: Text(localizations.forget,
+                      style: theme.textTheme.bodyMedium),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    side: const BorderSide(
+                      color: Colors.white,
+                      width: 2,
+                    ),
+                  ),
                 ),
-              StyledElevatedButton(
-                child: Text(localizations.ok),
+              ElevatedButton(
+                style: theme.elevatedButtonTheme.style?.copyWith(
+                  foregroundColor: WidgetStateProperty.all(Colors.white),
+                ),
+                child:
+                    Text(localizations.ok, style: theme.textTheme.bodyMedium),
                 onPressed: () => Navigator.pop(context),
               )
             ],
@@ -279,13 +325,15 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
       foregroundColor: Colors.white,
       leading: Row(children: [
         SizedBox(width: 2.w),
-        IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: widget.onMenuPressed ??
-              () {
-                Scaffold.of(context).openDrawer();
-              },
-        ),
+        widget.shouldShowMenu
+            ? IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: widget.onMenuPressed ??
+                    () {
+                      Scaffold.of(context).openDrawer();
+                    },
+              )
+            : Container(),
       ]),
       title: Container(
         alignment: Alignment.center,
@@ -312,16 +360,9 @@ class _ConnectionStatusAppBar extends State<ConnectionStatusAppBar> {
         StreamBuilder<ConnectionStatus>(
           stream: _connectionStatusStream,
           builder: (context, state) => _getConnectionStatusIcon(
-            state.data ?? DeviceConnection.connectionStatus,
-          ),
+              state.data ?? DeviceConnection.connectionStatus, theme),
         ),
         SizedBox(width: 2.w),
-        IconButton(
-          onPressed: () {
-            _openConnectionStatusDialog(context, theme);
-          },
-          icon: const Icon(Icons.settings),
-        )
       ],
     );
   }

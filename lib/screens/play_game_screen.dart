@@ -110,6 +110,7 @@ class _PlayGameScreen extends State<PlayGameScreen>
             win: win,
             skipEndingFanfare: widget.selectedGame.skipEndingFanfare(),
             gameIndex: widget.selectedGame.getIndex(),
+            elapsedTime: widget.selectedGame.getElapsedTime(),
           ),
         ),
       );

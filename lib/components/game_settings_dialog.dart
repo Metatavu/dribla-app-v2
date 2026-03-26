@@ -1,6 +1,7 @@
 import "package:dribla_app_v2/components/styled_dialog.dart";
 import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/game_utils.dart";
+import "package:dribla_app_v2/games/bluefrog_game.dart";
 import "package:dribla_app_v2/games/memory_game.dart";
 import "package:dribla_app_v2/games/star_game.dart";
 import "package:dribla_app_v2/games/ten_game_two_players.dart";
@@ -53,6 +54,7 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
       TenTurnsGame.index => _buildTenTurnsGameSettingsDialog(context),
       MemoryGame.index => _buildMemoryGameSettingsDialog(context),
       StarGame.index => _buildStarSettingsDialog(context),
+      BluefrogGame.index => _buildBlueFrogGameSettingsDialog(context),
       _ => _buildDefaultSettingsDialog(context)
     };
   }
@@ -92,12 +94,13 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
         const SizedBox(
           height: 25,
         ),
-        StyledElevatedButton(
+        ElevatedButton(
           style: theme.elevatedButtonTheme.style?.copyWith(
             fixedSize: WidgetStatePropertyAll(Size(80.w, 5.h)),
+            foregroundColor: WidgetStateProperty.all(Colors.white),
           ),
           onPressed: () => Navigator.pop(context, settings),
-          child: Text(localizations.save),
+          child: Text(localizations.save, style: theme.textTheme.bodyMedium),
         ),
       ],
     );
@@ -185,6 +188,28 @@ class _GameSettingsDialog extends State<GameSettingsDialog> {
         max: 10,
         onChanged: (value) =>
             setState(() => settings[key] = value.round().toString()),
+      ),
+      actions: [_buildSettingsDialogActions(context)],
+    );
+  }
+
+  Widget _buildBlueFrogGameSettingsDialog(BuildContext context) {
+    var key = BluefrogGame.difficultySettingKey;
+    final localizations = AppLocalizations.of(context)!;
+    return StyledDialog(
+      smallTitle: true,
+      title: localizations.difficulty,
+      content: DropdownMenu<String>(
+        enableSearch: false,
+        initialSelection: _getStringSetting(key, "NORMAL"),
+        onSelected: (value) => setState(() {
+          if (value != null) settings[key] = value;
+        }),
+        dropdownMenuEntries: [
+          DropdownMenuEntry(value: "EASY", label: localizations.easy),
+          DropdownMenuEntry(value: "NORMAL", label: localizations.normal),
+          DropdownMenuEntry(value: "HARD", label: localizations.hard),
+        ],
       ),
       actions: [_buildSettingsDialogActions(context)],
     );

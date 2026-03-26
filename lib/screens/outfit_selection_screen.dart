@@ -1,18 +1,10 @@
 import "package:dribla_app_v2/components/app_drawer.dart";
 import "package:dribla_app_v2/components/app_footer.dart";
-import "package:dribla_app_v2/components/app_header_appbar.dart";
 import "package:dribla_app_v2/components/connection_status_appbar.dart";
-import "package:dribla_app_v2/components/game_icon.dart";
-import "package:dribla_app_v2/components/game_settings_dialog.dart";
-import "package:dribla_app_v2/components/styled_dialog.dart";
-import "package:dribla_app_v2/components/styled_elevated_button.dart";
 import "package:dribla_app_v2/device_connection.dart";
 import "package:dribla_app_v2/screens/character_creation_screen.dart";
-import "package:dribla_app_v2/screens/character_ready_screen.dart";
 import "package:dribla_app_v2/screens/shoes_selection_screen.dart";
 import "package:dribla_app_v2/theme/theme.dart";
-import "package:dribla_app_v2/game_utils.dart";
-import "package:dribla_app_v2/screens/choose_game_screen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_swiper_plus/flutter_swiper_plus.dart";
@@ -28,6 +20,24 @@ class OutfitSelectionScreen extends HookConsumerWidget {
   final int chosenCharacter;
 
   static String getOutfitAsset(int index, int character) {
+    if (character > 8) {
+      return switch (index) {
+        0 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_01_shoes_01.png",
+        1 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_02_shoes_01.png",
+        2 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_03_shoes_01.png",
+        3 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_04_shoes_01.png",
+        4 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_05_shoes_01.png",
+        5 =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_06_shoes_01.png",
+        _ =>
+          "assets/avatars/avatar_${character + 1}/avatar_${character + 1}_clothes_01_shoes_01.png",
+      };
+    }
     return switch (index) {
       0 =>
         "assets/avatars/avatar_0${character + 1}/avatar_0${character + 1}_clothes_01_shoes_01.png",
@@ -63,136 +73,171 @@ class OutfitSelectionScreen extends HookConsumerWidget {
     }, [isAuthExpired]);
 
     return Scaffold(
-      extendBodyBehindAppBar: false,
-      appBar: const ConnectionStatusAppBar(),
-      drawer: const AppDrawer(),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/dribla_new_background.jpg"),
-              fit: BoxFit.cover,
+        extendBodyBehindAppBar: false,
+        appBar: const ConnectionStatusAppBar(),
+        drawer: const AppDrawer(),
+        body: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: theme.scaffoldBackgroundColor,
+              ),
+              child: Padding(
+                  padding: EdgeInsets.all(35.00),
+                  child: SingleChildScrollView(
+                      child: Container(
+                          width: double.infinity,
+                          child: Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(loc.outfit,
+                                    style: theme.textTheme.headlineMedium),
+                              ),
+                              SizedBox(height: 1.h),
+                              Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    loc.editCharOutfit,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      decoration: TextDecoration.none,
+                                      fontFamily: "Urbanist",
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16.0.sp,
+                                    ),
+                                  )),
+                              SizedBox(height: 1.h),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.black.withOpacity(0.6),
+                                ),
+                                width: double.infinity,
+                                height: 45.h,
+                                child: Swiper(
+                                  itemBuilder: (context, index) {
+                                    return Column(
+                                      children: [
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 8.h)),
+                                        Image.asset(
+                                          getOutfitAsset(
+                                              index, chosenCharacter),
+                                          width: 60.w,
+                                          height: 60.w,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                  itemCount: 6,
+                                  loop: false,
+                                  onIndexChanged: (index) =>
+                                      chosenOutfit.value = index,
+                                  control: const SwiperControl(
+                                      color: DriblaColors.orange),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 30.h,
+                                child: Container(
+                                    width: double.infinity,
+                                    margin: EdgeInsets.only(bottom: 20.h),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 12.w,
+                                          width: 32.w,
+                                          child: ElevatedButton(
+                                            style:
+                                                theme.elevatedButtonTheme.style,
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const CharacterCreationScreen(),
+                                                ),
+                                              );
+                                            },
+                                            child: Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.arrow_back,
+                                                  color: Colors.white,
+                                                ),
+                                                SizedBox(width: 2.w),
+                                                Text(
+                                                  loc.backButtonText,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16.sp),
+                                                ),
+                                                const SizedBox(width: 5),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 3.w),
+                                        Container(
+                                            child: Expanded(
+                                                child: Text(
+                                          '${chosenOutfit.value + 1} / 6',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ))),
+                                        SizedBox(width: 3.w),
+                                        Container(
+                                          height: 12.w,
+                                          width: 30.w,
+                                          child: ElevatedButton(
+                                            style:
+                                                theme.elevatedButtonTheme.style,
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ShoesSelectionScreen(
+                                                          chosenCharacter:
+                                                              chosenCharacter,
+                                                          chosenOutfit:
+                                                              chosenOutfit
+                                                                  .value,
+                                                        )),
+                                              );
+                                            },
+                                            child: Row(
+                                              children: [
+                                                SizedBox(width: 4.w),
+                                                Text(
+                                                  loc.nextButton,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16.sp),
+                                                ),
+                                                SizedBox(width: 2.w),
+                                                const Icon(
+                                                  Icons.arrow_forward,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              )
+                            ],
+                          )))),
             ),
-          ),
-          child: Column(
-            children: [
-              Text(loc.outfit, style: theme.textTheme.headlineMedium),
-              Text(
-                loc.editCharOutfit,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Expanded(
-                child: SizedBox(
-                  child: Swiper(
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Padding(padding: EdgeInsets.only(top: 8.h)),
-                          Image.asset(
-                            getOutfitAsset(index, chosenCharacter),
-                            width: 60.w,
-                            height: 60.w,
-                          ),
-                        ],
-                      );
-                    },
-                    itemCount: 6,
-                    loop: false,
-                    onIndexChanged: (index) => chosenOutfit.value = index,
-                    control: const SwiperControl(color: DriblaColors.white),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 80.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 12.w,
-                      width: 32.w,
-                      child: ElevatedButton(
-                        style: theme.elevatedButtonTheme.style,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const CharacterCreationScreen(),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 5),
-                            const Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              loc.backButton,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16),
-                            ),
-                            const SizedBox(width: 5),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 5.w),
-                    Text(
-                      '${chosenOutfit.value + 1} / 6',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(width: 5.w),
-                    Container(
-                      height: 12.w,
-                      width: 33.w,
-                      child: ElevatedButton(
-                        style: theme.elevatedButtonTheme.style,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ShoesSelectionScreen(
-                                    chosenCharacter: chosenCharacter,
-                                    chosenOutfit: chosenOutfit.value)),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 5),
-                            Text(
-                              loc.nextButton,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16),
-                            ),
-                            const SizedBox(width: 5),
-                            const Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const AppFooter(),
-            ],
-          ),
-        ),
-      ),
-    );
+            const Positioned(bottom: 0, left: 0, right: 0, child: AppFooter()),
+          ],
+        ));
   }
 }

@@ -2,6 +2,9 @@
 class Env {
   Env._();
   
+  /// API base URL
+  static const apiBaseUrl = String.fromEnvironment('API_BASE_URL');
+
   /// Keycloak API URL
   static const kcUrl = String.fromEnvironment('KC_URL');
 

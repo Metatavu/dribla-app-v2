@@ -25,15 +25,16 @@ class _AppFooter extends State<AppFooter> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    return SafeArea(
-      child: Container(
-        decoration: BoxDecoration(
-          border: const Border(top: BorderSide(color: Colors.white24)),
-        ),
-        child: Row(
+    final currentRoute = ModalRoute.of(context)?.settings.name;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black,
+        border: const Border(top: BorderSide(color: Colors.white24)),
+      ),
+      child: Column(children: [
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          // TODO replace routes with actual ones
-          // TODO orange highlight for selected or active button
           children: [
             _FooterButton(
               icon: Icons.person_pin,
@@ -41,6 +42,7 @@ class _AppFooter extends State<AppFooter> {
               onPressed: () {
                 Navigator.of(context).pushReplacementNamed('/main');
               },
+              isActive: currentRoute == '/main',
             ),
             SizedBox(width: 4.w),
             _FooterButton(
@@ -49,18 +51,21 @@ class _AppFooter extends State<AppFooter> {
               onPressed: () {
                 Navigator.of(context).pushReplacementNamed('/games');
               },
+              isActive: currentRoute == '/games',
             ),
             SizedBox(width: 4.w),
             _FooterButton(
-              icon: Icons.person,
-              label: loc.teams,
+              icon: Icons.bar_chart,
+              label: loc.statistics,
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed('/profile');
+                Navigator.of(context).pushReplacementNamed('/statistics');
               },
+              isActive: currentRoute == '/statistics',
             ),
           ],
         ),
-      ),
+        SizedBox(height: 5.h),
+      ]),
     );
   }
 }
@@ -69,11 +74,13 @@ class _FooterButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onPressed;
+  final bool isActive;
 
   const _FooterButton({
     required this.icon,
     required this.label,
     required this.onPressed,
+    this.isActive = false,
     Key? key,
   }) : super(key: key);
 
@@ -94,6 +101,13 @@ class _FooterButton extends StatelessWidget {
               .bodySmall
               ?.copyWith(color: Colors.white),
         ),
+        if (isActive)
+          Container(
+            margin: const EdgeInsets.only(top: 4),
+            height: 2,
+            width: 15.w,
+            color: DriblaColors.newBtnColor,
+          ),
       ],
     );
   }

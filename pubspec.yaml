@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.8+8
+version: 1.1.6+16
 
 environment:
   sdk: ">=3.0.3 <4.0.0"
@@ -60,6 +60,11 @@ dependencies:
   freezed_annotation: ^2.4.4
   hooks_riverpod: ^2.6.1
   flutter_hooks: ^0.20.0
+  dio: ^5.7.0
+  dribla_api:
+    path: packages/dribla_api
+  fl_chart: 1.0.0
+  share_plus: ^12.0.1
 
 dev_dependencies:
   flutter_test:
@@ -70,9 +75,10 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
+  openapi_generator: ^6.1.0
   flutter_lints: ^4.0.0
   dart_define: ^2.1.1
-  json_serializable: ^6.9.5
+  json_serializable: ^6.9.0
   freezed: ^2.5.2
   build_runner: ^2.4.13
   riverpod_generator: ^2.4.0
@@ -152,6 +158,15 @@ flutter:
     - assets/avatars/
     - assets/avatars/avatar_01/
     - assets/avatars/avatar_02/
+    - assets/avatars/avatar_03/
+    - assets/avatars/avatar_04/
+    - assets/avatars/avatar_05/
+    - assets/avatars/avatar_06/
+    - assets/avatars/avatar_07/
+    - assets/avatars/avatar_08/
+    - assets/avatars/avatar_09/
+    - assets/avatars/avatar_10/
+    - assets/avatars/avatar_11/
   generate: true
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -184,6 +199,8 @@ dart_define:
   dart_path: lib/app/env.gen.dart
   class_name: env
   variables:
+    - name: API_BASE_URL
+      description: API base URL
     - name: KC_URL
       description: Keycloak API URL
     - name: KC_REALM
